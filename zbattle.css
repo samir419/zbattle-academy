@@ -1,0 +1,74 @@
+#engine{
+   display:grid;
+   grid-template-columns:2fr 1fr;
+}
+#game-ui{
+   display:grid;
+   grid-template-columns:1fr 1fr;
+}
+#game-log{
+    max-height:400px;
+    overflow-y:auto;
+    border:solid;
+    flex: 1;
+}
+.player-div{
+    
+}
+.profile-info{
+    display: flex;
+}
+.player-name{}
+.player-health{
+   display:flex;
+   flex-wrap:wrap;
+   margin: 5px;
+}
+.player-status{
+    
+}
+.player-image{
+    width: 100px;
+    height: 100px;
+}
+.move-div{
+    display:flex;
+}
+.move-prompt{gap: 10px;}
+.move-btn{
+    width: 70px;
+    height:70px;
+}
+.move-img{
+    width: 100%;
+    height:100%;
+}
+.normal-moves{}
+.normal-btn{
+    
+}
+.health-bar{
+    background-color:yellow;
+    width: 15px;
+    height: 25px;
+    margin:2px;
+}
+.boss-div{
+    
+}
+.primary{
+    background-color:#FD3C3C;
+    margin: 2px;
+    border-radius: 10px;
+    padding: 0px;
+    color: white;
+}
+.secondary{
+    margin: 2px;
+    border-radius: 10px;
+    padding: 10px;
+}
+.moveset-list{
+   
+}
+        

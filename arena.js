@@ -1,0 +1,157 @@
+
+zbattle_moves = [
+    'Strike',
+    'Replenish',
+    'Blast Cannon',
+    'Heal',
+    'Force Field',
+    'Holy Blade',
+    'Shield Strike',
+    'Demon Charge',
+    'Covenant of Carnage',
+    'Mirror Match',
+    'Power Up',
+    'Baneful Binding', 
+    'Repair',
+    'Attack Up',
+    'fusion xyz',
+    'Beast Mode',
+    'Malevonent Armor',
+    'Angel Guard',
+]
+let img_list = [
+    'battle engine/assets/profiles/aisha.jpg',
+    'battle engine/assets/profiles/blake.jpg',
+    'battle engine/assets/profiles/quetzie.jpg',
+    'battle engine/assets/profiles/pumkin.jpg',
+    'battle engine/assets/profiles/red.jpg',
+    'battle engine/assets/ZBATTLELOGO.png'
+]
+class Arena{
+	constructor(elem){
+		this.elem = elem
+		this.event_handler
+
+		this.game
+
+		this.opponent_select_screen = document.getElementById('opponent-select')
+		this.move_select_screen = document.getElementById('moveset-select')
+		this.engine_elem = document.getElementById('engine')
+
+		this.opponent_select_screen.style.display = 'flex'
+	    this.move_select_screen.style.display = 'none'
+	    this.engine_elem.style.display = 'none'
+
+	    this.selected_set = []
+
+	    this.opponents =[
+	    	{name:'cpu',moves:[],type:'cpu', img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'pumkin',moves:['Replenish','Demon Charge','Baneful Binding', 'Repair','Attack Up','Malevonent Armor',],type:'cpu', img:'battle engine/assets/profiles/pumkin.jpg'},
+	    	{name:'pipsqueak',health:1000,moves:['Strike','Repair','Baneful Binding','Power Up' ],type:'cpu', img:'battle engine/assets/ZBATTLELOGO.png'},
+	    ]
+
+	    this.selected_opponents=[]
+
+	}
+	init(game){
+		this.game=game
+		this.render_opponent_select()
+		let data = JSON.parse(localStorage.getItem('zbattle academy data'))
+		data.movesets.forEach(moveset=>{
+			let div = document.createElement('div')
+			for(let i=0;i<moveset.length;i++){
+				let mv = document.createElement('span')
+				mv.textContent=moveset[i]
+				div.appendChild(mv)
+			}
+			let play = document.createElement('button');play.textContent='play'
+			play.onclick=()=>{
+				this.selected_set = moveset
+				this.single_1v1(this.game)
+			}
+			div.appendChild(play)
+			document.getElementById('arena-moveset-list').append(div)
+		})
+	}
+	render_opponent_select(){
+		for(let i=0;i<this.opponents.length;i++){
+			let div = document.createElement('div')
+			let img = document.createElement('img');img.style.width='100px';img.style.height='100px'
+			let btn = document.createElement('button')
+			img.src = this.opponents[i].img
+			btn.textContent='challenge '+this.opponents[i].name
+			btn.onclick=()=>{
+				this.selected_opponents.push(this.opponents[i])
+				this.opponent_select_screen.style.display = 'none'
+			    this.move_select_screen.style.display = 'flex'
+			    this.engine_elem.style.display = 'none'
+			}
+			div.append(img,btn)
+			document.getElementById('opponent-list').append(div)
+		}
+	}
+	display(){
+		let txt = document.createElement('p')
+		txt.textContent='lorem ipsum'
+		this.elem.appendChild(txt)
+	}
+	single_1v1(game){
+	    game.format='free for all'
+	    let data = JSON.parse(localStorage.getItem('zbattle academy data'))
+	    let player = game.set_player({name:data.name,moves:this.selected_set,type:'player', img:img_list[Math.floor(Math.random() * img_list.length)]})
+	    game.players.push(player)
+
+	    let cpu = game.set_player(this.selected_opponents[0])
+	    if(cpu.moves.length==0){
+	    	let availableMoves = [...moves];
+		    for (let i = 0; i < 6 && availableMoves.length > 0; i++) {
+		        const index = Math.floor(Math.random() * availableMoves.length);
+		        const new_move = availableMoves.splice(index, 1)[0]; // remove it
+		        cpu.add_move(new_move);
+		    }
+	    }
+	    game.players.push(cpu)
+	    
+    	game.start()
+        let quit = document.createElement('button');
+        quit.textContent='quit'
+        quit.onclick=()=>{
+            game.log_data.innerHTML = ''
+            game.current_turn = 0
+            game.players = []
+            game.player_queue = []
+            game.set_format() 
+            this.selected_opponents=[]
+            this.opponent_select_screen.style.display = 'flex'
+		    this.move_select_screen.style.display = 'none'
+		    this.engine_elem.style.display = 'none'
+        }
+        game.ui.append(quit)
+	    this.opponent_select_screen.style.display = 'none'
+	    this.move_select_screen.style.display = 'none'
+	    this.engine_elem.style.display = 'flex'
+	}
+	handle_event(data){
+		if(data.message=='player victory'){
+            let dt = JSON.parse(localStorage.getItem('zbattle academy data'))
+            if(data.name==dt.name){
+            	for(let i=0;i<this.selected_opponents.length;i++){
+            		dt.money+=100
+            	}
+            	this.event_handler.broadcast({message:'save data',data:dt})
+            	alert('you won')
+            	game.log_data.innerHTML = ''
+	            game.current_turn = 0
+	            game.players = []
+	            game.player_queue = []
+	            game.set_format() 
+	            this.selected_opponents=[]
+	            this.opponent_select_screen.style.display = 'flex'
+			    this.move_select_screen.style.display = 'none'
+			    this.engine_elem.style.display = 'none'
+            }else{
+	        	alert('you lost')
+	        }
+        }
+	}
+}

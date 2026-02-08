@@ -1,0 +1,220 @@
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="samir.css">
+	<link rel="stylesheet" href="zbattle.css">
+	<style>
+		html,body{
+			margin: 0;
+  			height: 100%;
+		}
+		#main{
+			max-width:1080px;
+			max-height: 620px;
+
+			aspect-ratio: 16 / 9;
+
+			width: min(100vw, calc(100vh * 16 / 9));
+			height: min(100vh, calc(100vw * 9 / 16));
+
+			background: #222;
+		}
+		button{
+			padding:10px;
+			margin:5px;
+			width: fit-content;
+			height:fit-content;
+		}
+	</style>
+</head>
+<body>
+	<div id="frame" class="flex one center outline screen column">
+		<div id="main" class="flex column outline relative">
+
+			<div id="notifs" class="flex full primary-bg column absolute priority-1" style="display:none;background-color:rgba(0,0,0,0.5)">
+				<p>notif 1</p>
+				<button onclick="document.getElementById('notifs').style.display='none'">close</button>
+			</div>
+
+			<div id="map" class="tab flex full outline center">
+				<div class="flex full row" style="display:grid;grid-template-columns: 1fr 2fr;">
+					<div class="flex one column scrollable-y" id="locations">
+						<button>dorm</button>
+						<button onclick="switch_tab('arena')">arena</button>
+					</div>
+					<div class="flex two primary-bg column">
+						<div class="flex row">
+							<button onclick="document.getElementById('notifs').style.display='flex'">notifs</button>
+							<button onclick="document.getElementById('main').requestFullscreen()">fullscreen</button>
+						</div>
+						<img src="game assets/map.jpg" alt="" class="full">
+					</div>
+				</div>
+			</div>
+
+			<div id="dorm" class="tab flex full outline center">
+				<div class="flex full column">
+					<div class="flex row" id="dorm-tab-buttons">
+						<button>save</button>
+						<button>movesets</button>
+						<button onclick="switch_tab('map')">back to map</button>
+					</div>
+					<div id="dorm-save" class="flex full column">
+						<div id="dorm-player-data"></div>
+						<div>
+							<button id="dorm-save-btn">save</button>
+							<input type="file" name="" id="save-file-input">
+							<button id="dorm-load-btn">load</button>
+						</div>
+					</div>
+					<div id="dorm-movesets" class="flex full column">
+						<h2>move sets</h2>
+						<div id="player-movesets"></div>
+						<div>
+							<button id="create-moveset-btn">create new moveset</button>
+						</div>
+					</div>
+					<div id="create-moveset-form" class="flex full column">
+						<h2>create moveset</h2>
+						<div class="flex full row" style="display:grid;grid-template-columns: 2fr 1fr;">
+							<div id="available-move-list" class="flex row wrappable scrollable-y"></div>
+							<div>
+								<div id="selected-move-list" class="flex row wrappable"></div>
+								<button id="finish-moveset-creation">finish</button>
+							</div>
+							
+						</div>
+						
+
+					</div>
+				</div>
+			</div>
+
+			<div id="arena" class="tab flex full outline center scrollable-y">
+				<div id="opponent-select" class="flex full column">
+					<div class="flex row primary-bg">
+						<button onclick="document.getElementById('notifs').style.display='flex'">notifs</button>
+						<button onclick="switch_tab('map')">back to map</button>
+					</div>
+					<h2>select opponent</h2>
+					<div id="opponent-list"></div>
+				</div>
+				<div id="moveset-select" class="flex full column">
+					<h2>select move set</h2>
+					<div id="arena-moveset-list"></div>
+				</div>
+				<div id="engine" class="flex full scrollable-y"></div>
+			</div>
+
+		</div>
+	</div>
+	<script src="map.js"></script>
+	<script src="dorm.js"></script>
+	<script src="arena.js"></script>
+	<script src="battle engine/moves.js"></script>
+	<script src="battle engine/zbattle.js"></script>
+	<script src="battle engine/eventHandler.js"></script>
+	<script>
+		game_data = {
+			name:'player',
+			level:1,
+			money:0,
+			movesets:[
+				['Strike','Replenish','Blast Cannon'],
+				['Heal','Shield Strike','Force Field']
+			],
+			available_moves:[
+			    'Strike',
+			    'Replenish',
+			    'Blast Cannon',
+			    'Heal',
+			    'Force Field',
+			    'Holy Blade',
+			    'Shield Strike',
+			    'Demon Charge',
+			    'Covenant of Carnage',
+			    'Mirror Match',
+			    'Power Up',
+			    'Baneful Binding', 
+			    'Repair',
+			    'Attack Up',
+			    'fusion xyz',
+			    'Beast Mode',
+			    'Malevonent Armor',
+			    'Angel Guard',
+			],
+
+		}
+		if(localStorage.getItem('zbattle academy data')){
+			game_data = JSON.parse(localStorage.getItem('zbattle academy data'))
+		}else{
+			localStorage.setItem('zbattle academy data', JSON.stringify(game_data))
+		}
+		class event_brocker{
+			constructor(){
+				this.subscribers=[]
+			}
+			add_subscriber(obj){
+				obj.event_handler = this
+				this.subscribers.push(obj)
+				//obj.elem.innerHTML+='added event handler'
+			}
+			broadcast(data){
+				if(data.message=='switch'){
+					switch_tab(data.tab)
+				}
+				if(data.message=='player victory'){
+                    alert(data.name)
+                }
+                if(data.message=='restart'){
+                    let quit = document.createElement('button');quit.className='primary'
+                    quit.textContent='quit'
+                    quit.onclick=()=>{
+                        game.log_data.innerHTML = ''
+                        game.current_turn = 0
+                        game.players = []
+                        game.player_queue = []
+                        game.set_format()
+                        document.getElementById('engine').style.display='none'
+                        document.getElementById('menu').style.display='block'
+                    }
+                    game.ui.append(quit)
+                }
+                if(data.message=='newgame'){
+                    document.getElementById('engine').style.display='none'
+                    document.getElementById('menu').style.display='block'
+                }
+                if(data.message=='save data'){
+                	localStorage.setItem('zbattle academy data', JSON.stringify(data.data))
+                }
+				this.subscribers.forEach(sub=>{
+					sub.handle_event(data)
+				})
+			}
+		}
+		function switch_tab(tab){
+			let tabs = document.querySelectorAll('.tab')
+			for(let i=0;i<tabs.length;i++){
+				tabs[i].style.display='none'
+				if(tabs[i].id==tab){
+					tabs[i].style.display='flex'
+				}
+			}
+			event_handler.broadcast({message:'tab switch',tab:tab})
+		}
+		let event_handler = new event_brocker()
+		let map = new Map(document.getElementById('map'))
+		let dorm = new Dorm(document.getElementById('dorm'))
+		let arena = new Arena(document.getElementById('arena'))
+		event_handler.add_subscriber(map)
+		event_handler.add_subscriber(dorm)
+		event_handler.add_subscriber(arena)
+		switch_tab('map')
+		let game = new Game()
+		event_handler.add_subscriber(game)
+		arena.init(game)
+	</script>
+</body>
+</html>										
