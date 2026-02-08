@@ -451,7 +451,7 @@ class Game {
         // if only one team remains alive, they win
         if (aliveTeams.length === 1) {
             this.log(`${aliveTeams[0]} wins`);
-            this.event_handler.broadcast({message:'team victoy',name:aliveTeams[0]})
+            this.event_handler.broadcast({message:'team victory',name:aliveTeams[0]})
             this.state = 'end';
             this.handle_finished_game()
         }
@@ -536,7 +536,7 @@ class Game {
             this.player_queue = []
             this.set_format()
         }
-        this.log_data.append(restart, new_game)
+        //this.log_data.append(restart, new_game)
     }
     apply_data(data) {
         data.forEach(p => {

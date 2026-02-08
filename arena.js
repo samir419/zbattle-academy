@@ -114,20 +114,6 @@ class Arena{
 	single_1v1(game){
 	    game.format='teams'
 	    let data = JSON.parse(localStorage.getItem('zbattle academy data'))
-	    for(let i=0;i<this.selected_opponents.length;i++){
-	    	this.selected_opponents[i].team='opponent'
-	    	let cpu = game.set_player(this.selected_opponents[i])
-		    if(cpu.moves.length==0){
-		    	let availableMoves = [...moves];
-			    for (let i = 0; i < 6 && availableMoves.length > 0; i++) {
-			        const index = Math.floor(Math.random() * availableMoves.length);
-			        const new_move = availableMoves.splice(index, 1)[0]; // remove it
-			        cpu.add_move(new_move);
-			    }
-		    }
-		    game.players.push(cpu)
-	    }
-
 	    let player = game.set_player({name:data.name,moves:this.selected_set,type:'player',team:'player', img:img_list[Math.floor(Math.random() * img_list.length)]})
 	    game.players.push(player)
 
@@ -144,6 +130,22 @@ class Arena{
 		    }
 		    game.players.push(cpu)
 	    }
+	    
+	    for(let i=0;i<this.selected_opponents.length;i++){
+	    	this.selected_opponents[i].team='opponent'
+	    	let cpu = game.set_player(this.selected_opponents[i])
+		    if(cpu.moves.length==0){
+		    	let availableMoves = [...moves];
+			    for (let i = 0; i < 6 && availableMoves.length > 0; i++) {
+			        const index = Math.floor(Math.random() * availableMoves.length);
+			        const new_move = availableMoves.splice(index, 1)[0]; // remove it
+			        cpu.add_move(new_move);
+			    }
+		    }
+		    game.players.push(cpu)
+	    }
+
+	    
 	    
 
 	    
@@ -220,9 +222,9 @@ class Arena{
 
 	}
 	handle_event(data){
-		if(data.message=='player victory'){
+		if(data.message=='player victory'||data.message=='team victory'){
             let dt = JSON.parse(localStorage.getItem('zbattle academy data'))
-            if(data.name==dt.name){
+            if(data.name==dt.name||data.name == 'player'){
             	for(let i=0;i<this.selected_opponents.length;i++){
             		dt.money+=100
             	}
