@@ -51,6 +51,7 @@ class Arena{
 	    ]
 
 	    this.selected_opponents=[]
+	    this.selected_allies=[]
 
 	}
 	init(game){
@@ -74,20 +75,35 @@ class Arena{
 		})
 	}
 	render_opponent_select(){
+		document.getElementById('opponent-list').innerHTML=''
 		for(let i=0;i<this.opponents.length;i++){
-			let div = document.createElement('div')
+			let div = document.createElement('div');div.className='flex column outline'
 			let img = document.createElement('img');img.style.width='100px';img.style.height='100px'
+			let name = document.createElement('p');name.textContent=this.opponents[i].name
 			let btn = document.createElement('button')
+			let requit = document.createElement('button')
 			img.src = this.opponents[i].img
-			btn.textContent='challenge '+this.opponents[i].name
+			btn.textContent='challenge '
 			btn.onclick=()=>{
 				this.selected_opponents.push(this.opponents[i])
-				this.opponent_select_screen.style.display = 'none'
-			    this.move_select_screen.style.display = 'flex'
-			    this.engine_elem.style.display = 'none'
+				btn.disabled =true
+				requit.disabled=true
+				this.render_selected_opponent(this.selected_opponents)
 			}
-			div.append(img,btn)
+			requit.textContent='requit'
+			requit.onclick=()=>{
+				this.selected_allies.push(this.opponents[i])
+				btn.disabled =true
+				requit.disabled=true
+				this.render_selected_allies(this.selected_opponents)
+			}
+			div.append(img,name,btn,requit)
 			document.getElementById('opponent-list').append(div)
+		}
+		document.getElementById("commence-battle").onclick=()=>{
+			this.opponent_select_screen.style.display = 'none'
+		    this.move_select_screen.style.display = 'flex'
+		    this.engine_elem.style.display = 'none'
 		}
 	}
 	display(){
@@ -96,21 +112,42 @@ class Arena{
 		this.elem.appendChild(txt)
 	}
 	single_1v1(game){
-	    game.format='free for all'
+	    game.format='teams'
 	    let data = JSON.parse(localStorage.getItem('zbattle academy data'))
-	    let player = game.set_player({name:data.name,moves:this.selected_set,type:'player', img:img_list[Math.floor(Math.random() * img_list.length)]})
+	    for(let i=0;i<this.selected_opponents.length;i++){
+	    	this.selected_opponents[i].team='opponent'
+	    	let cpu = game.set_player(this.selected_opponents[i])
+		    if(cpu.moves.length==0){
+		    	let availableMoves = [...moves];
+			    for (let i = 0; i < 6 && availableMoves.length > 0; i++) {
+			        const index = Math.floor(Math.random() * availableMoves.length);
+			        const new_move = availableMoves.splice(index, 1)[0]; // remove it
+			        cpu.add_move(new_move);
+			    }
+		    }
+		    game.players.push(cpu)
+	    }
+
+	    let player = game.set_player({name:data.name,moves:this.selected_set,type:'player',team:'player', img:img_list[Math.floor(Math.random() * img_list.length)]})
 	    game.players.push(player)
 
-	    let cpu = game.set_player(this.selected_opponents[0])
-	    if(cpu.moves.length==0){
-	    	let availableMoves = [...moves];
-		    for (let i = 0; i < 6 && availableMoves.length > 0; i++) {
-		        const index = Math.floor(Math.random() * availableMoves.length);
-		        const new_move = availableMoves.splice(index, 1)[0]; // remove it
-		        cpu.add_move(new_move);
+	    for(let i=0;i<this.selected_allies.length;i++){
+	    	this.selected_allies[i].team='player'
+	    	let cpu = game.set_player(this.selected_allies[i])
+		    if(cpu.moves.length==0){
+		    	let availableMoves = [...moves];
+			    for (let i = 0; i < 6 && availableMoves.length > 0; i++) {
+			        const index = Math.floor(Math.random() * availableMoves.length);
+			        const new_move = availableMoves.splice(index, 1)[0]; // remove it
+			        cpu.add_move(new_move);
+			    }
 		    }
+		    game.players.push(cpu)
 	    }
-	    game.players.push(cpu)
+	    
+
+	    
+	    
 	    
     	game.start()
         let quit = document.createElement('button');
@@ -125,11 +162,62 @@ class Arena{
             this.opponent_select_screen.style.display = 'flex'
 		    this.move_select_screen.style.display = 'none'
 		    this.engine_elem.style.display = 'none'
+		    this.reset()
         }
         game.ui.append(quit)
 	    this.opponent_select_screen.style.display = 'none'
 	    this.move_select_screen.style.display = 'none'
 	    this.engine_elem.style.display = 'flex'
+	}
+	render_selected_opponent(){
+		let parent = document.getElementById("selected-opponents")
+		parent.innerHTML=''
+		console.log(this.selected_opponents)
+		for(let i = 0;i<this.selected_opponents.length;i++){
+			let div = document.createElement('div');div.className='flex column outline'
+			let img = document.createElement('img');img.style.width='100px';img.style.height='100px'
+			let remove = document.createElement('button')
+			img.src = this.selected_opponents[i].img
+			remove.textContent='remove'
+			remove.onclick=()=>{
+				this.selected_opponents.splice(i,1)
+				this.render_selected_opponent()
+			}
+			div.append(img,remove)
+			parent.append(div)
+		}
+	}
+	render_selected_allies(){
+		let parent = document.getElementById("selected-allies")
+		parent.innerHTML=''
+		for(let i = 0;i<this.selected_allies.length;i++){
+			let div = document.createElement('div');div.className='flex column outline'
+			let img = document.createElement('img');img.style.width='100px';img.style.height='100px'
+			let remove = document.createElement('button')
+			img.src = this.selected_allies[i].img
+			remove.textContent='remove'
+			remove.onclick=()=>{
+				this.selected_allies.splice(i,1)
+				this.render_selected_allies()
+			}
+			div.append(img,remove)
+			parent.append(div)
+		}
+	}
+	reset(){
+		this.opponent_select_screen.style.display = 'flex'
+	    this.move_select_screen.style.display = 'none'
+	    this.engine_elem.style.display = 'none'
+
+		this.selected_opponents=[]
+	    this.selected_allies=[]
+
+	    this.render_opponent_select()
+	    this.render_selected_allies()
+	    this.render_selected_opponent()
+
+	    this.event_handler.broadcast({message:'reset battle'})
+
 	}
 	handle_event(data){
 		if(data.message=='player victory'){
@@ -152,6 +240,7 @@ class Arena{
             }else{
 	        	alert('you lost')
 	        }
+	        this.reset()
         }
 	}
 }

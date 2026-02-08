@@ -544,7 +544,15 @@ class Game {
             this.players.push(player)
         })
     }
-    handle_event(data){}
+    handle_event(data){
+        if(data.message=='reset battle'){
+            this.log_data.innerHTML = ''
+            this.current_turn = 0
+            this.players = []
+            this.player_queue = []
+            this.set_format()
+        }
+    }
 }
 
 let attack = new move(

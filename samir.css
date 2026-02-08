@@ -27,8 +27,8 @@ body{
     align-items: center;
 }
 
-.one{flex:one;}
-.two{flex:two;}
+.one{flex:1;}
+.two{flex:2;}
 
 .padding{padding: 10px;}
 .auto-padding{padding: auto;}

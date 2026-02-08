@@ -32,7 +32,8 @@
     height: 100px;
 }
 .move-div{
-    display:flex;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
 }
 .move-prompt{gap: 10px;}
 .move-btn{

@@ -84,10 +84,7 @@
 								<div id="selected-move-list" class="flex row wrappable"></div>
 								<button id="finish-moveset-creation">finish</button>
 							</div>
-							
 						</div>
-						
-
 					</div>
 				</div>
 			</div>
@@ -98,8 +95,25 @@
 						<button onclick="document.getElementById('notifs').style.display='flex'">notifs</button>
 						<button onclick="switch_tab('map')">back to map</button>
 					</div>
-					<h2>select opponent</h2>
-					<div id="opponent-list"></div>
+					<div class="flex full">
+						<div class="flex two column outline">
+							<h2>select opponent</h2>
+							<div id="opponent-list" class="flex row wrappable"></div>
+						</div>
+						<div class="flex one column outline">
+							<div class="flex one column scrollable-y">
+								<h2>selected opponents</h2>
+								<div id="selected-opponents" class="flex row wrappable"></div>
+							</div>
+							<div class="flex one column scrollable-y">
+								<h2>selected allies</h2>
+								<div id="selected-allies" class="flex row wrappable"></div>
+							</div>
+							<div>
+								<button id="commence-battle">battle</button>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div id="moveset-select" class="flex full column">
 					<h2>select move set</h2>
