@@ -1,4 +1,4 @@
- class Player{
+ class Pong_Player{
     constructor(num){
         this.num = num
         this.x = 0

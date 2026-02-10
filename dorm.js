@@ -8,7 +8,8 @@ class Dorm{
 		this.sections = [
 			document.getElementById('dorm-save'),
 			document.getElementById('dorm-movesets'),
-			document.getElementById('create-moveset-form')
+			document.getElementById('create-moveset-form'),
+			document.getElementById('dorm-calendar')
 		]
 
 		this.tabButtons[0].onclick =()=>{
@@ -17,11 +18,19 @@ class Dorm{
 		this.tabButtons[1].onclick =()=>{
 			this.switch_tab('dorm-movesets')
 		}
+		this.tabButtons[2].onclick =()=>{
+			this.switch_tab('dorm-calendar')
+		}
 		this.switch_tab('dorm-save')
 
 		document.getElementById('create-moveset-btn').onclick=()=>{
 			this.switch_tab('create-moveset-form')
 			this.setupMoveCreation()
+		}
+
+		document.getElementById('sleep-btn').onclick=()=>{
+			this.event_handler.broadcast({message:'time foward',hour:2400})
+			this.event_handler.broadcast({message:'time foward',hour:700})
 		}
 	}
 	displayUserData() {

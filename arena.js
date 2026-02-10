@@ -45,9 +45,9 @@ class Arena{
 	    this.selected_set = []
 
 	    this.opponents =[
-	    	{name:'cpu',moves:[],type:'cpu', img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'pumkin',moves:['Replenish','Demon Charge','Baneful Binding', 'Repair','Attack Up','Malevonent Armor',],type:'cpu', img:'battle engine/assets/profiles/pumkin.jpg'},
-	    	{name:'pipsqueak',health:1000,moves:['Strike','Repair','Baneful Binding','Power Up' ],type:'cpu', img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'cpu',moves:[],level:5,type:'cpu', img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'pumkin',moves:['Replenish','Demon Charge','Baneful Binding', 'Repair','Attack Up','Malevonent Armor',],type:'cpu',level:10, img:'battle engine/assets/profiles/pumkin.jpg'},
+	    	{name:'pipsqueak',health:1000,moves:['Strike','Repair','Baneful Binding','Power Up' ],type:'cpu',level:1, img:'battle engine/assets/ZBATTLELOGO.png'},
 	    ]
 
 	    this.selected_opponents=[]
@@ -76,6 +76,7 @@ class Arena{
 	}
 	render_opponent_select(){
 		document.getElementById('opponent-list').innerHTML=''
+		let data = JSON.parse(localStorage.getItem('zbattle academy data'))
 		for(let i=0;i<this.opponents.length;i++){
 			let div = document.createElement('div');div.className='flex column outline'
 			let img = document.createElement('img');img.style.width='100px';img.style.height='100px'
@@ -83,19 +84,27 @@ class Arena{
 			let btn = document.createElement('button')
 			let requit = document.createElement('button')
 			img.src = this.opponents[i].img
-			btn.textContent='challenge '
-			btn.onclick=()=>{
-				this.selected_opponents.push(this.opponents[i])
-				btn.disabled =true
-				requit.disabled=true
-				this.render_selected_opponent(this.selected_opponents)
+			if(data.level+5>this.opponents[i].level){
+				btn.textContent='challenge '
+				btn.onclick=()=>{
+					this.selected_opponents.push(this.opponents[i])
+					btn.disabled =true
+					requit.disabled=true
+					this.render_selected_opponent(this.selected_opponents)
+				}
+			}else{
+				btn.textContent=`level ${this.opponents[i].level-4} required`
 			}
-			requit.textContent='requit'
-			requit.onclick=()=>{
-				this.selected_allies.push(this.opponents[i])
-				btn.disabled =true
-				requit.disabled=true
-				this.render_selected_allies(this.selected_opponents)
+			if(data.level>=this.opponents[i].level){
+				requit.textContent='requit'
+				requit.onclick=()=>{
+					this.selected_allies.push(this.opponents[i])
+					btn.disabled =true
+					requit.disabled=true
+					this.render_selected_allies(this.selected_opponents)
+				}
+			}else{
+				requit.textContent=`level ${this.opponents[i].level} required`
 			}
 			div.append(img,name,btn,requit)
 			document.getElementById('opponent-list').append(div)
@@ -243,6 +252,7 @@ class Arena{
 	        	alert('you lost')
 	        }
 	        this.reset()
+	        this.event_handler.broadcast({message:'time foward',hour:200})
         }
 	}
 }
