@@ -28,6 +28,8 @@ class Pong_Game{
         this.background.src = 'game assets/arena.png'
         this.meterbar = new Image()
         this.meterbar.src = 'game assets/meter bar.png'
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle='black'
         ctx.drawImage(this.background,0,0, canvas.width, canvas.height);
         
         this.event_handler

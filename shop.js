@@ -17,7 +17,7 @@ class Shop{
 		this.tabButtons[2].onclick =()=>{
 			this.switch_tab('shop-gacha-roullete')
 		}
-		this.switch_tab('item-shop')
+		
 
 		this.item_list=[
 			{name:'item',price:10,quantity:1},
@@ -43,6 +43,7 @@ class Shop{
 			    'Malevonent Armor',
 			    'Angel Guard',
 			]
+		this.switch_tab('item-shop')
 	}
 	init(){
 		let data = JSON.parse(localStorage.getItem('zbattle academy data'));
