@@ -20,8 +20,13 @@ class Shop{
 		
 
 		this.item_list=[
-			{name:'item',price:10,quantity:1},
-			{name:'item2',price:11,quantity:1},
+			{name:'candy',price:10,quantity:1,tags:['gift']},
+			{name:'cheese cake',price:40,quantity:1,tags:['basic','cooking']},
+			{name:'flour', price:5, quantity:1, tags:['basic','cooking']},
+		    {name:'premium chocolate', price:30, quantity:1, tags:['sweet','luxury','gift','cooking']},
+		    {name:'energy drink', price:25, quantity:1, tags:['boost','athletic','combat']},
+		    {name:'mystic truffle', price:80, quantity:1, tags:['rare','luxury','gift','cooking']},
+		    {name:'ancient textbook', price:50, quantity:1, tags:['intellectual','gift']},
 		]
 		this.card_list = [
 			    'Strike',

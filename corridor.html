@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Corridor Dash</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+    #score {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="score">Score: 0</div>
+<canvas id="game"></canvas>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+const scoreDisplay = document.getElementById("score");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let player = {
+  width: 40,
+  height: 60,
+  x: canvas.width / 2 - 20,
+  y: canvas.height - 100,
+  speed: 6
+};
+
+let obstacles = [];
+let keys = {};
+let score = 0;
+let gameOver = false;
+let spawnTimer = 0;
+let spawnInterval = 60; // frames
+
+document.addEventListener("keydown", e => keys[e.key] = true);
+document.addEventListener("keyup", e => keys[e.key] = false);
+
+function spawnObstacle() {
+  let width = 40 + Math.random() * 40;
+  obstacles.push({
+    width: width,
+    height: 30,
+    x: Math.random() * (canvas.width - width),
+    y: -30,
+    speed: 3 + score * 0.02
+  });
+}
+
+function update() {
+  if (gameOver) return;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Corridor walls
+  ctx.fillStyle = "#222";
+  ctx.fillRect(0, 0, 100, canvas.height);
+  ctx.fillRect(canvas.width - 100, 0, 100, canvas.height);
+
+  // Player movement
+  if (keys["ArrowLeft"]) player.x -= player.speed;
+  if (keys["ArrowRight"]) player.x += player.speed;
+
+  // Prevent leaving corridor
+  if (player.x < 100) player.x = 100;
+  if (player.x + player.width > canvas.width - 100)
+    player.x = canvas.width - 100 - player.width;
+
+  // Draw player
+  ctx.fillStyle = "cyan";
+  ctx.fillRect(player.x, player.y, player.width, player.height);
+
+  // Spawn obstacles
+  spawnTimer++;
+  if (spawnTimer > spawnInterval) {
+    spawnObstacle();
+    spawnTimer = 0;
+    if (spawnInterval > 30) spawnInterval -= 1; // difficulty increase
+  }
+
+  // Update obstacles
+  ctx.fillStyle = "red";
+  for (let i = obstacles.length - 1; i >= 0; i--) {
+    let o = obstacles[i];
+    o.y += o.speed;
+    ctx.fillRect(o.x, o.y, o.width, o.height);
+
+    // Collision
+    if (
+      player.x < o.x + o.width &&
+      player.x + player.width > o.x &&
+      player.y < o.y + o.height &&
+      player.y + player.height > o.y
+    ) {
+      gameOver = true;
+      alert("Game Over! Final Score: " + score);
+      location.reload();
+    }
+
+    // Remove off-screen
+    if (o.y > canvas.height) {
+      obstacles.splice(i, 1);
+      score++;
+      scoreDisplay.textContent = "Score: " + score;
+    }
+  }
+
+  requestAnimationFrame(update);
+}
+
+update();
+</script>
+
+</body>
+</html>

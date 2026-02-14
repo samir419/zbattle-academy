@@ -175,6 +175,7 @@
 				<div class="flex full column">
 					<div class="flex row" id="park-tab-buttons">
 						<button>tennis game</button>
+						<button>obstacle race</button>
 						<button onclick="switch_tab('map')">back to map</button>
 					</div>
 					<div id="tennis-game" class="flex full column center">
@@ -206,6 +207,32 @@
 							</div>
 						</div>
 					</div>
+					<div id="obstacle-race" class="flex full column center">
+						<div class="flex one row">
+							<div class="flex one column center">
+								<div class="flex row center">
+									<div style="height: 100px;width: 100px;border: solid;" id="obstacle-game-left">move left</div>
+								</div>
+							</div>
+							<div class="flex four column center relative">
+								<div id="obstacle-game-ui" class="flex center absolute full">
+									<button onclick="document.getElementById('obstacle-game-ui').style.display='none';
+										obstacle_game.init({players:[1]})">obstacle game</button>
+								</div>
+								<canvas id="obstacle-game-canvas" class="full-width"></canvas>
+							</div>
+							<div class="flex one column center">
+								<button onclick="obstacle_game.pause()">pause</button>
+								<div>
+									<span id="obstacle-game-coin-count"></span>
+									<span id="obstacle-game-score"></span>
+								</div>
+								<div class="flex row center">
+									<div style="height: 100px;width: 100px;border: solid;" id="obstacle-game-right">move right</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 			
@@ -226,6 +253,7 @@
     <script src="z pong/moves.js"></script>
     <script src="z pong/pong.js"></script>
     <script src="z pong/controls.js"></script>
+    <script src="obstacle race/game.js"></script>
 	<script>
 		let username = 'player'
 		if(!localStorage.getItem('zbattle academy data')){
@@ -328,6 +356,7 @@
 		switch_tab('map')
 		let game = new Game()
 		event_handler.add_subscriber(game)
+		event_handler.add_subscriber(obstacle_game)
 		arena.init(game)
 	</script>
 </body>

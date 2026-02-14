@@ -46,8 +46,11 @@ class Arena{
 
 	    this.opponents =[
 	    	{name:'cpu',moves:[],level:5,type:'cpu', img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'aisha',health:1000,moves:['Strike','Repair','Heal','Replenish' ],type:'cpu',level:3, img:'battle engine/assets/profiles/aisha.jpg'},
+	    	{name:'blake',health:1300,moves:['Strike','Repair','Shield Strike','Force Field' ],type:'cpu',level:4, img:'battle engine/assets/profiles/blake.jpg'},
 	    	{name:'pumkin',moves:['Replenish','Demon Charge','Baneful Binding', 'Repair','Attack Up','Malevonent Armor',],type:'cpu',level:10, img:'battle engine/assets/profiles/pumkin.jpg'},
-	    	{name:'pipsqueak',health:1000,moves:['Strike','Repair','Baneful Binding','Power Up' ],type:'cpu',level:1, img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'quetzie',health:1500,moves:['Strike','Blast Cannon','Baneful Binding','Power Up','Covenant of Carnage','fusion xyz', ],type:'cpu',level:1, img:'battle engine/assets/profiles/quetzie.jpg'},
+	    	{name:'red',health:1500,moves:['Strike','Repair','Beast Mode','Power Up','Attack Up', 'Demon Charge',],type:'cpu',level:1, img:'battle engine/assets/profiles/red.jpg'},
 	    ]
 
 	    this.selected_opponents=[]

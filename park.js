@@ -7,10 +7,14 @@ class Park{
 
 		this.sections = [
 			document.getElementById('tennis-game'),
+			document.getElementById('obstacle-race')
 		]
 
 		this.tabButtons[0].onclick =()=>{
 			this.switch_tab('tennis-game')
+		}
+		this.tabButtons[1].onclick =()=>{
+			this.switch_tab('obstacle-race')
 		}
 		this.switch_tab('tennis-game')
 	}
@@ -32,17 +36,23 @@ class Park{
 			this.handleOnSwitch()
 		}
 		if(data.message=='player win tennis'){
-			let data = JSON.parse(localStorage.getItem('zbattle academy data'))
-			data.money+=100
+			let player_data = JSON.parse(localStorage.getItem('zbattle academy data'))
+			player_data.money+=100
         	this.event_handler.broadcast({message:'save data',data:data})
         	alert('you won')
 	        this.event_handler.broadcast({message:'time foward',hour:200})
 		}
 		if(data.message=='player loose tennis'){
 			alert('you lost')
-			let data = JSON.parse(localStorage.getItem('zbattle academy data'))
-			data.money-=50
-        	this.event_handler.broadcast({message:'save data',data:data})
+			let player_data = JSON.parse(localStorage.getItem('zbattle academy data'))
+			player_data.money-=50
+        	this.event_handler.broadcast({message:'save data',data:player_data})
+	        this.event_handler.broadcast({message:'time foward',hour:200})
+		}
+		if(data.message=='player loose obstacle race'){
+			let player_data = JSON.parse(localStorage.getItem('zbattle academy data'))
+			player_data.money+=data.coins
+        	this.event_handler.broadcast({message:'save data',data:player_data})
 	        this.event_handler.broadcast({message:'time foward',hour:200})
 		}
 	}
