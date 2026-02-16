@@ -46,6 +46,7 @@ class Arena{
 
 	    this.opponents =[
 	    	{name:'cpu',moves:[],level:5,type:'cpu', img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'peapsqueak',moves:['Repair','Strike','Attack Up'],level:1,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'aisha',health:1000,moves:['Strike','Repair','Heal','Replenish' ],type:'cpu',level:3, img:'battle engine/assets/profiles/aisha.jpg'},
 	    	{name:'blake',health:1300,moves:['Strike','Repair','Shield Strike','Force Field' ],type:'cpu',level:4, img:'battle engine/assets/profiles/blake.jpg'},
 	    	{name:'pumkin',moves:['Replenish','Demon Charge','Baneful Binding', 'Repair','Attack Up','Malevonent Armor',],type:'cpu',level:10, img:'battle engine/assets/profiles/pumkin.jpg'},
@@ -238,7 +239,8 @@ class Arena{
             let dt = JSON.parse(localStorage.getItem('zbattle academy data'))
             if(data.name==dt.name||data.name == 'player'){
             	for(let i=0;i<this.selected_opponents.length;i++){
-            		dt.money+=100
+            		dt.level+=Math.ceil(this.selected_opponents[i].level / 5)
+            		dt.money+=this.selected_opponents[i].level*25
             	}
             	this.event_handler.broadcast({message:'save data',data:dt})
             	alert('you won')

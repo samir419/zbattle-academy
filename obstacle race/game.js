@@ -23,49 +23,46 @@ class Obstacle_race{
 		document.addEventListener("keydown", e => this.keys[e.key] = true);
 		document.addEventListener("keyup", e => this.keys[e.key] = false);
 
-		document.getElementById('obstacle-game-left').addEventListener("touchstart", function (e) {
-		    this.keys["a"]=true
-		})
-		document.getElementById('obstacle-game-left').addEventListener("touchend", function (e) {
-		   this.keys["a"]=false
-		})
+		document.getElementById('obstacle-game-left')
+		  .addEventListener("touchstart", (e) => {
+		    e.preventDefault();
+		    this.keys["a"] = true;
+		});
 
-		document.getElementById('obstacle-game-right').addEventListener("touchstart", function (e) {
-		    this.keys["d"]=true
-		})
-		document.getElementById('obstacle-game-right').addEventListener("touchend", function (e) {
-		   this.keys["d"]=false
-		})
+		document.getElementById('obstacle-game-left')
+		  .addEventListener("touchend", (e) => {
+		    e.preventDefault();
+		    this.keys["a"] = false;
+		});
+
+		document.getElementById('obstacle-game-right')
+		  .addEventListener("touchstart", (e) => {
+		    e.preventDefault();
+		    this.keys["d"] = true;
+		});
+
+		document.getElementById('obstacle-game-right')
+		  .addEventListener("touchend", (e) => {
+		    e.preventDefault();
+		    this.keys["d"] = false;
+		});
+
 
 
 	}
 	init(data){
 		data.players.forEach(player=>{
-			this.players.push({x:480/2,y:320-32,width:32,height:32,color:'yellow',dx:0,dy:0,state:'normal'})
+			this.players.push({x:480/2,y:320-32,width:32,height:32,color:'yellow',dx:0,dy:0,state:'normal',speed:200})
 		})
 		this.state='running'
 		requestAnimationFrame(this.update);
 	}
 	spawnObstacle() {
-		let chance = Math.random()*10
+		let chance = Math.floor(Math.random() * 10)//0to9
 		let speed = 200 + this.score * 0.2
 	  	if(chance<2){
-	  		let chance2 = Math.random()*10
-	  		if(chance2<=8){
-	  			this.obstacles.push({
-		  			color:'yellow',
-				    width: 16,
-				    height: 16,
-				    x: Math.random() * (this.canvas.width - 16),
-				    y: -30,
-				    speed: speed,
-				    onhit:function(game,index){
-				    	game.obstacles.splice(index, 1);
-				    	game.coins+=1
-				    	document.getElementById("obstacle-game-coin-count").textContent='coins: '+game.coins
-				    }
-				  })
-	  		}else{
+	  		let chance2 = Math.floor(Math.random() * 10)
+	  		if(chance2==9){
 	  			this.obstacles.push({
 		  			color:'orange',
 				    width: 24,
@@ -76,6 +73,46 @@ class Obstacle_race{
 				    onhit:function(game,index){
 				    	game.obstacles.splice(index, 1);
 				    	game.coins+=10
+				    	document.getElementById("obstacle-game-coin-count").textContent='coins: '+game.coins
+				    }
+				  })
+	  		}if(chance2==8){
+		  		this.obstacles.push({
+			  			color:'green',
+					    width: 24,
+					    height: 24,
+					    x: Math.random() * (this.canvas.width - 16),
+					    y: -30,
+					    speed: speed,
+					    onhit:function(game,index){
+					    	game.obstacles.splice(index, 1);
+					    	game.powerups.push({frame:1000,bar_color:'green',
+					    		update:function(game,index){
+					    			if(this.frame==1000){
+					    				game.players[0].speed*=2
+					    			}
+					    			if(game.players[0].speed==200){game.players[0].speed*=2}
+					    			this.frame--
+					    			if(this.frame<=0){
+					    				game.players[0].speed=200
+					    				game.powerups.splice(index, 1);
+					    			}
+					    		}
+					    	})
+					    }
+					  })
+		  	}else{
+	  			
+	  			this.obstacles.push({
+		  			color:'yellow',
+				    width: 16,
+				    height: 16,
+				    x: Math.random() * (this.canvas.width - 16),
+				    y: -30,
+				    speed: speed,
+				    onhit:function(game,index){
+				    	game.obstacles.splice(index, 1);
+				    	game.coins+=1
 				    	document.getElementById("obstacle-game-coin-count").textContent='coins: '+game.coins
 				    }
 				  })
@@ -113,8 +150,8 @@ class Obstacle_race{
 		let dt = (timeStamp - this.lastTime) / 1000;
     	this.lastTime = timeStamp;
 		
-		if (this.keys["a"]) this.players[0].x -= 200*dt;
-  		if (this.keys["d"]) this.players[0].x += 200*dt;
+		if (this.keys["a"]) this.players[0].x -= this.players[0].speed*dt;
+  		if (this.keys["d"]) this.players[0].x += this.players[0].speed*dt;
 
   		if (this.players[0].x < 0) this.players[0].x = 0;
 		if (this.players[0].x + this.players[0].width > this.canvas.width)
@@ -148,6 +185,9 @@ class Obstacle_race{
   			  this.scoreDisplay.textContent = "Score: " + this.score;
 		    }
 		  }
+	  	for(let i=0;i<this.powerups.length;i++){
+	  		this.powerups[i].update(this,i)
+	  	}
 		this.render();
 		requestAnimationFrame(this.update);
 	}
@@ -166,6 +206,10 @@ class Obstacle_race{
 		    let o = this.obstacles[i];
 		    ctx.fillStyle = o.color;
 		    ctx.fillRect(o.x, o.y, o.width, o.height);
+		 }
+		 for (let i = 0; i < this.powerups.length; i++) {
+		 	ctx.fillStyle=this.powerups[i].bar_color
+		    ctx.fillRect(i*10,10, this.powerups[i].frame/10, 10);
 		 }
 
 	}

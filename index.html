@@ -27,6 +27,26 @@
 			width: fit-content;
 			height:fit-content;
 		}
+		#boiling-bar-container {
+		    position: relative;
+		    width: 300px;
+		    height: 20px;
+		    background: #222;
+		}
+
+		#boiling-bar {
+		    height: 100%;
+		    width: 0%;
+		    background: white;
+		}
+
+		#boiling-target {
+		    position: absolute;
+		    top: 0;
+		    height: 100%;
+		    background: rgba(0,255,0,0.4);
+		}
+
 	</style>
 </head>
 <body>
@@ -63,6 +83,7 @@
 						<button>save</button>
 						<button>movesets</button>
 						<button>calendar</button>
+						<button>kitchen</button>
 						<button onclick="switch_tab('map')">back to map</button>
 					</div>
 					<div id="dorm-save" class="flex full column">
@@ -96,6 +117,55 @@
 								<button id="finish-moveset-creation">finish</button>
 							</div>
 						</div>
+					</div>
+					<div id="kitchen" class="flex full column scrollable-y relative">
+						<div id="food-info" class="flex column absolute priority-2" style="background-color:rgba(100,100,100,1)">
+							<button style="right:0;" onclick="document.getElementById('food-info').style.display='none'">close</button>
+							<div>
+								<h3>food data</h3>
+								<div id="food-data"></div>
+							</div>
+							<div>
+								<h3>available actions</h3>
+								<div id="food-actions"></div>
+							</div>
+							<div>
+								<h3>send to</h3>
+								<div id="food-locations"></div>
+							</div>
+						</div>
+						<h2>kitchen</h2>
+						<div class="flex row">
+							<div class="flex one column outline scrollable-y">
+								<h3>pot</h3>
+								<div id="pot"></div>
+								<button id="boil-button">boil</button>
+								<div id="boiling-bar-container">
+								    <div id="boiling-bar"></div>
+								    <div id="boiling-target" class=""></div>
+								</div>
+
+								<button id="quick-time-button" style="display:'none'">quick time</button>
+							</div>
+							<div class="flex one column outline scrollable-y">
+								<h3>chopping board</h3>
+								<div id="chopping-board"></div>
+							</div>
+						</div>
+						<div class="flex row">
+							<div class="flex one column outline scrollable-y">
+								<h3>storage</h3>
+								<div id="food-raws"></div>
+							</div>
+							<div class="flex one column scrollable-y">
+								<h3>plate</h3>
+								<div id="plate" class="flex outline column"></div>
+								<div id="food-stats" class="flex outline column"></div>
+								<button id="serve-food">serve</button>
+							</div>
+							
+						</div>
+						
 					</div>
 				</div>
 			</div>
@@ -254,6 +324,7 @@
     <script src="z pong/pong.js"></script>
     <script src="z pong/controls.js"></script>
     <script src="obstacle race/game.js"></script>
+    <script src="cookinggame/cookinggame.js"></script>
 	<script>
 		let username = 'player'
 		if(!localStorage.getItem('zbattle academy data')){

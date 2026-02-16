@@ -544,6 +544,28 @@ class Game {
             this.players.push(player)
         })
     }
+    get_game_data(){
+        let data = {players:[],turn:this.current_turn,log_data:this.log_data.innerHTML}
+        for(let i = 0;i<this.players.length;i++){
+            let curr = this.players[i]
+            let curr_moves = []
+            for(let j = 0; j<curr.moves.length; j++){
+                let move = curr.moves[j]
+                curr_moves.push({
+                    name:move.name,
+                    durability:move.durability
+                })
+            }
+            let obj = {
+                name:curr.name,
+                health:curr.health,
+                moves:curr_moves
+            }
+            data.players.push(obj)
+        }
+        return data
+
+    }
     handle_event(data){
         if(data.message=='reset battle'){
             this.log_data.innerHTML = ''

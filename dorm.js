@@ -9,7 +9,8 @@ class Dorm{
 			document.getElementById('dorm-save'),
 			document.getElementById('dorm-movesets'),
 			document.getElementById('create-moveset-form'),
-			document.getElementById('dorm-calendar')
+			document.getElementById('dorm-calendar'),
+			document.getElementById('kitchen')
 		]
 
 		this.tabButtons[0].onclick =()=>{
@@ -20,6 +21,10 @@ class Dorm{
 		}
 		this.tabButtons[2].onclick =()=>{
 			this.switch_tab('dorm-calendar')
+		}
+		this.tabButtons[3].onclick =()=>{
+			this.switch_tab('kitchen')
+			init_cooking_game()
 		}
 		this.switch_tab('dorm-save')
 

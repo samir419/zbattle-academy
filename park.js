@@ -38,7 +38,7 @@ class Park{
 		if(data.message=='player win tennis'){
 			let player_data = JSON.parse(localStorage.getItem('zbattle academy data'))
 			player_data.money+=100
-        	this.event_handler.broadcast({message:'save data',data:data})
+        	this.event_handler.broadcast({message:'save data',data:player_data})
         	alert('you won')
 	        this.event_handler.broadcast({message:'time foward',hour:200})
 		}
