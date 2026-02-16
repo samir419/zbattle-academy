@@ -1,3 +1,93 @@
+let foods=[
+	{
+		name:'potatoes',
+		price:10,
+		sweet:0,
+		salty:0,
+		sour:0,
+		tender:0,
+		oily:0,
+		wet_to_dry:7,
+		conditions:[],
+		available_actions:['chop','boil'],
+		'boil':function(){
+			if(this.available_actions.includes('boil')){
+				this.conditions.push('boiled')
+				this.available_actions=['mash']
+				this.tender += 5;
+				this.wet_to_dry -= 5;   // becomes wetter
+				this.sweet -= 1;       // starch dilution
+
+			}else{
+				return 'no effect'
+			}
+		},
+		'chop':function(){
+			if(this.available_actions.includes('chop')){
+				this.name = 'chopped potatoes'
+				this.conditions.push('chopped')
+				this.available_actions=['fry','boil']
+			}else{
+				return 'no effect'
+			}
+		},
+		'fry':function(){
+			if(this.available_actions.includes('fry')){
+				this.name = 'fries'
+				this.conditions.push('fried')
+				this.available_actions=[]
+				if(this.conditions.includes('boiled')){
+					this.oily += 6;
+					this.sweet += 3;
+					this.tender += 3;
+				}else{
+					this.oily += 3;
+					this.tender += 1;
+				}
+
+			}else{
+				return 'no effect'
+			}
+		}
+	},
+	{
+		name:'carrots',
+		price:2,
+		sweet:0,
+		salty:0,
+		sour:0,
+		tender:0,
+		oily:0,
+		wet_to_dry:7,
+		conditions:[],
+		available_actions:['chop','boil'],
+		'boil':function(){
+			if(this.available_actions.includes('boil')){
+				this.conditions.push('boiled')
+				tthis.available_actions=[]
+			}else{
+				return 'no effect'
+			}
+		},
+		'chop':function(){
+			if(this.available_actions.includes('chop')){
+				this.conditions.push('chopped')
+				this.available_actions=[]
+			}else{
+				return 'no effect'
+			}
+		},
+		'fry':function(){
+			if(this.available_actions.includes('fry')){
+				this.conditions.push('fried')
+				this.available_actions=[]
+			}else{
+				return 'no effect'
+			}
+		}
+	},
+]
+
 class Shop{
 	constructor(elem){
 		this.elem = elem
@@ -6,6 +96,7 @@ class Shop{
 		this.sections = [
 			document.getElementById('item-shop'),
 			document.getElementById('card-shop'),
+			document.getElementById('food-market'),
 			document.getElementById('shop-gacha-roullete')
 		]
 		this.tabButtons[0].onclick =()=>{
@@ -15,6 +106,9 @@ class Shop{
 			this.switch_tab('card-shop')
 		}
 		this.tabButtons[2].onclick =()=>{
+			this.switch_tab('food-market')
+		}
+		this.tabButtons[3].onclick =()=>{
 			this.switch_tab('shop-gacha-roullete')
 		}
 		
@@ -60,6 +154,9 @@ class Shop{
 		let sellable_cards = document.getElementById('sellable-cards');sellable_cards.innerHTML=''
 		let shopboy_div = document.getElementById('shop boy');shopboy_div.innerHTML=''
 
+		let buyable_foods = document.getElementById('buyable-foods');buyable_foods.innerHTML=''
+		let shopwoman_div = document.getElementById('shop woman');shopwoman_div.innerHTML=''
+
 	    this.set_shop_data(this.item_list,buyable_items,'buy')
 	    this.set_shop_data(data.items,sellable_items,'sell')
 	    let div = document.createElement('div')
@@ -71,6 +168,11 @@ class Shop{
 	    let div2 = document.createElement('div')
 	    div2.textContent = 'money:'+data.money+'z'
 	    shopboy_div.appendChild(div2)
+
+	    this.set_shop_data(foods,buyable_foods,'buy')
+	    let div3 = document.createElement('div')
+	    div3.textContent = 'money:'+data.money+'z'
+	    shopwoman_div.appendChild(div3)
 
 	    this.setup_gacha()
 	}

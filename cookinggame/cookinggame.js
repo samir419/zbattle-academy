@@ -56,97 +56,14 @@ let chopping_board={
 }
 raws={
 	name:'storage',
-	items:[
-	{
-		name:'potatoes',
-		sweet:0,
-		salty:0,
-		sour:0,
-		tender:0,
-		oily:0,
-		wet_to_dry:7,
-		conditions:[],
-		available_actions:['chop','boil'],
-		'boil':function(){
-			if(this.available_actions.includes('boil')){
-				this.conditions.push('boiled')
-				this.available_actions=['mash']
-				this.tender += 5;
-				this.wet_to_dry -= 5;   // becomes wetter
-				this.sweet -= 1;       // starch dilution
-
-			}else{
-				return 'no effect'
-			}
-		},
-		'chop':function(){
-			if(this.available_actions.includes('chop')){
-				this.name = 'chopped potatoes'
-				this.conditions.push('chopped')
-				this.available_actions=['fry','boil']
-			}else{
-				return 'no effect'
-			}
-		},
-		'fry':function(){
-			if(this.available_actions.includes('fry')){
-				this.name = 'fries'
-				this.conditions.push('fried')
-				this.available_actions=[]
-				if(this.conditions.includes('boiled')){
-					this.oily += 6;
-					this.sweet += 3;
-					this.tender += 3;
-				}else{
-					this.oily += 3;
-					this.tender += 1;
-				}
-
-			}else{
-				return 'no effect'
-			}
-		}
-	},
-	{
-		name:'carrots',
-		sweet:0,
-		salty:0,
-		sour:0,
-		tender:0,
-		oily:0,
-		wet_to_dry:7,
-		conditions:[],
-		available_actions:['chop','boil'],
-		'boil':function(){
-			if(this.available_actions.includes('boil')){
-				this.conditions.push('boiled')
-				tthis.available_actions=[]
-			}else{
-				return 'no effect'
-			}
-		},
-		'chop':function(){
-			if(this.available_actions.includes('chop')){
-				this.conditions.push('chopped')
-				this.available_actions=[]
-			}else{
-				return 'no effect'
-			}
-		},
-		'fry':function(){
-			if(this.available_actions.includes('fry')){
-				this.conditions.push('fried')
-				this.available_actions=[]
-			}else{
-				return 'no effect'
-			}
-		}
-	},
-],
+	items:[],
 	available_actions:[]
 }
 
-function init_cooking_game(){
+function init_cooking_game(data){
+	for(let i=0;i<data.length;i++){
+		raws.items.push(data[i])
+	}
 	document.getElementById('food-info').style.display='none'
 	document.getElementById("quick-time-button").style.display='none'
 	display()
@@ -353,6 +270,7 @@ function set_board(){
 }
 
 function render_info(location,index){
+	if(!location.items[index].conditions)return
 	document.getElementById('food-info').style.display='flex'
 
 	let data = document.getElementById('food-data');data.innerHTML=''

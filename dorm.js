@@ -24,7 +24,14 @@ class Dorm{
 		}
 		this.tabButtons[3].onclick =()=>{
 			this.switch_tab('kitchen')
-			init_cooking_game()
+
+			let foods=[]
+			 let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+			 for(let i=0;i<data.items.length;i++){
+		 		foods.push(data.items[i])
+			 }
+			 console.log(foods)
+			init_cooking_game(foods)
 		}
 		this.switch_tab('dorm-save')
 
@@ -126,6 +133,8 @@ class Dorm{
 				section.style.display='flex'
 			}
 		})
+		this.displayUserData()
+		this.display_movesets()
 	}
 	delete_moveset(index) {
 	    let data = JSON.parse(localStorage.getItem('zbattle academy data'));
