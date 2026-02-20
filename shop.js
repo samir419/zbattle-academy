@@ -1,32 +1,23 @@
-let foods=[
+let food_list=[
 	{
-		name:'potatoes',
+		name:'raw potatoes',
 		price:10,
 		sweet:0,
 		salty:0,
 		sour:0,
 		tender:0,
 		oily:0,
-		wet_to_dry:7,
+		wet_to_dry:5,//<5 is wet, >5 is dry
 		conditions:[],
-		available_actions:['chop','boil'],
+		available_actions:['chop','boil','roast'],
 		'boil':function(){
 			if(this.available_actions.includes('boil')){
 				this.conditions.push('boiled')
-				this.available_actions=['mash']
+				this.available_actions=['fry']
 				this.tender += 5;
 				this.wet_to_dry -= 5;   // becomes wetter
 				this.sweet -= 1;       // starch dilution
 
-			}else{
-				return 'no effect'
-			}
-		},
-		'chop':function(){
-			if(this.available_actions.includes('chop')){
-				this.name = 'chopped potatoes'
-				this.conditions.push('chopped')
-				this.available_actions=['fry','boil']
 			}else{
 				return 'no effect'
 			}
@@ -44,11 +35,37 @@ let foods=[
 					this.oily += 3;
 					this.tender += 1;
 				}
-
 			}else{
 				return 'no effect'
 			}
-		}
+		},
+		'roast':function(){
+			if(this.available_actions.includes('roast')){
+				this.conditions.push('roasted')
+				this.available_actions=[]
+				this.wet_to_dry+=5
+				this.tender+=1
+			}else{
+				return 'no effect'
+			}
+		},
+		'chop':function(){
+			if(this.available_actions.includes('chop')){
+				this.name = 'chopped potatoes'
+				this.conditions.push('chopped')
+				this.available_actions=['fry','boil','roast']
+			}else{
+				return 'no effect'
+			}
+		},
+		'blend':function(){
+			if(this.available_actions.includes('blend')){
+				this.conditions.push('blended')
+				this.available_actions=[]
+			}else{
+				return 'no effect'
+			}
+		},
 	},
 	{
 		name:'carrots',
@@ -69,10 +86,11 @@ let foods=[
 				return 'no effect'
 			}
 		},
-		'chop':function(){
-			if(this.available_actions.includes('chop')){
-				this.conditions.push('chopped')
+		'roast':function(){
+			if(this.available_actions.includes('roast')){
+				this.conditions.push('roasted')
 				this.available_actions=[]
+				this.wet_to_dry-=5
 			}else{
 				return 'no effect'
 			}
@@ -84,8 +102,243 @@ let foods=[
 			}else{
 				return 'no effect'
 			}
+		},
+		'chop':function(){
+			if(this.available_actions.includes('chop')){
+				this.conditions.push('chopped')
+				this.available_actions=[]
+			}else{
+				return 'no effect'
+			}
+		},
+		'blend':function(){
+			if(this.available_actions.includes('blend')){
+				this.conditions.push('blended')
+				this.wet_to_dry-=3
+				this.sweet+=2
+				this.available_actions=[]
+			}else{
+				return 'no effect'
+			}
+		},
+	},
+	{
+		name:'onions',
+		price:3,
+		sweet:1,
+		salty:0,
+		sour:0,
+		tender:0,
+		oily:0,
+		wet_to_dry:6,
+		conditions:[],
+		available_actions:['chop','fry','boil'],
+		'boil':function(){
+			if(this.available_actions.includes('boil')){
+				this.conditions.push('boiled')
+				this.tender+=3
+				this.sweet+=1
+				this.wet_to_dry-=3
+				this.available_actions=[]
+			}else{return 'no effect'}
+		},
+		'fry':function(){
+			if(this.available_actions.includes('fry')){
+				this.conditions.push('fried')
+				this.sweet+=4 // caramelization
+				this.oily+=3
+				this.tender+=2
+				this.available_actions=[]
+			}else{return 'no effect'}
+		},
+		'chop':function(){
+			if(this.available_actions.includes('chop')){
+				this.conditions.push('chopped')
+				this.available_actions=['fry','boil']
+			}else{return 'no effect'}
+		},
+		'blend':function(){
+			if(this.available_actions.includes('blend')){
+				this.conditions.push('blended')
+				this.wet_to_dry-=2
+				this.available_actions=[]
+			}else{return 'no effect'}
 		}
 	},
+	{
+		name:'raw chicken',
+		price:12,
+		sweet:0,
+		salty:1,
+		sour:0,
+		tender:1,
+		oily:1,
+		wet_to_dry:4,
+		conditions:[],
+		available_actions:['chop','boil','fry','roast'],
+		'boil':function(){
+			if(this.available_actions.includes('boil')){
+				this.name='boiled chicken'
+				this.conditions.push('boiled')
+				this.tender+=4
+				this.wet_to_dry-=2
+				this.available_actions=['chop']
+			}else{return 'no effect'}
+		},
+		'fry':function(){
+			if(this.available_actions.includes('fry')){
+				this.name='fried chicken'
+				this.conditions.push('fried')
+				this.oily+=5
+				this.tender+=2
+				this.wet_to_dry+=3
+				this.available_actions=[]
+			}else{return 'no effect'}
+		},
+		'roast':function(){
+			if(this.available_actions.includes('roast')){
+				this.name='roasted chicken'
+				this.conditions.push('roasted')
+				this.tender+=3
+				this.wet_to_dry+=4
+				this.available_actions=[]
+			}else{return 'no effect'}
+		},
+		'chop':function(){
+			if(this.available_actions.includes('chop')){
+				this.conditions.push('chopped')
+				this.available_actions=['fry']
+			}else{return 'no effect'}
+		}
+	},
+	{
+		name:'eggs',
+		price:5,
+		sweet:0,
+		salty:0,
+		sour:0,
+		tender:2,
+		oily:0,
+		wet_to_dry:3,
+		conditions:[],
+		available_actions:['boil','fry','blend'],
+		'boil':function(){
+			if(this.available_actions.includes('boil')){
+				this.name='boiled eggs'
+				this.conditions.push('boiled')
+				this.tender+=2
+				this.available_actions=[]
+			}else{return 'no effect'}
+		},
+		'fry':function(){
+			if(this.available_actions.includes('fry')){
+				this.name='fried eggs'
+				this.conditions.push('fried')
+				this.oily+=3
+				this.tender+=1
+				this.available_actions=[]
+			}else{return 'no effect'}
+		},
+		'roast':function(){
+			if(this.available_actions.includes('roast')){
+				this.conditions.push('roasted')
+				this.available_actions=[]
+			}else{
+				return 'no effect'
+			}
+		},
+		'blend':function(){
+			if(this.available_actions.includes('blend')){
+				this.name='beaten eggs'
+				this.conditions.push('blended')
+				this.wet_to_dry-=2
+				this.available_actions=['fry']
+			}else{return 'no effect'}
+		}
+	},
+	{
+		name:'tomatoes',
+		price:4,
+		sweet:2,
+		salty:0,
+		sour:2,
+		tender:1,
+		oily:0,
+		wet_to_dry:2,
+		conditions:[],
+		available_actions:['chop','boil','blend'],
+		'boil':function(){
+			if(this.available_actions.includes('boil')){
+				this.name='tomato sauce'
+				this.conditions.push('boiled')
+				this.sour+=1
+				this.wet_to_dry-=3
+				this.available_actions=[]
+			}else{return 'no effect'}
+		},
+		'chop':function(){
+			if(this.available_actions.includes('chop')){
+				this.conditions.push('chopped')
+				this.available_actions=['boil','blend']
+			}else{return 'no effect'}
+		},
+		'blend':function(){
+			if(this.available_actions.includes('blend')){
+				this.name='tomato puree'
+				this.conditions.push('blended')
+				this.wet_to_dry-=4
+				this.available_actions=[]
+			}else{return 'no effect'}
+		},
+		'roast':function(){
+			if(this.available_actions.includes('roast')){
+				this.conditions.push('roasted')
+				this.available_actions=[]
+			}else{
+				return 'no effect'
+			}
+		},
+	},
+	{
+	name:'cheese',
+	price:8,
+	sweet:0,
+	salty:4,
+	sour:1,
+	tender:2,
+	oily:2,
+	wet_to_dry:6,
+	conditions:[],
+	available_actions:['chop','fry'],
+	'fry':function(){
+		if(this.available_actions.includes('fry')){
+			this.name='melted cheese'
+			this.conditions.push('melted')
+			this.oily+=3
+			this.tender+=3
+			this.wet_to_dry-=3
+			this.available_actions=[]
+		}else{return 'no effect'}
+	},
+	'chop':function(){
+		if(this.available_actions.includes('chop')){
+			this.conditions.push('chopped')
+			this.available_actions=['fry']
+		}else{return 'no effect'}
+	},
+	'boil':function(){
+		if(this.available_actions.includes('boil')){
+			this.conditions.push('boiled')
+		}else{
+			return 'no effect'
+		}
+	},
+}
+
+
+
+
+
 ]
 
 class Shop{
@@ -169,7 +422,7 @@ class Shop{
 	    div2.textContent = 'money:'+data.money+'z'
 	    shopboy_div.appendChild(div2)
 
-	    this.set_shop_data(foods,buyable_foods,'buy')
+	    this.set_shop_data(food_list,buyable_foods,'buy')
 	    let div3 = document.createElement('div')
 	    div3.textContent = 'money:'+data.money+'z'
 	    shopwoman_div.appendChild(div3)

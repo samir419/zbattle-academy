@@ -126,6 +126,14 @@ class Dorm{
 			index++
 		})
 	}
+	render_items(){
+		document.getElementById('dorm-items').innerHTML='<h2>items:</h2>'
+		let data = JSON.parse(localStorage.getItem('zbattle academy data'))
+		for(let i=0;i<data.items.length;i++){
+			document.getElementById('dorm-items').innerHTML+=data.items[i].name+','
+		}
+		
+	}
 	switch_tab(tab){
 		this.sections.forEach(section=>{
 			section.style.display='none'
@@ -135,6 +143,7 @@ class Dorm{
 		})
 		this.displayUserData()
 		this.display_movesets()
+		this.render_items()
 	}
 	delete_moveset(index) {
 	    let data = JSON.parse(localStorage.getItem('zbattle academy data'));

@@ -545,7 +545,10 @@ class Game {
         })
     }
     get_game_data(){
-        let data = {players:[],turn:this.current_turn,log_data:this.log_data.innerHTML}
+        let data = {
+            players:[],
+            turn:this.current_turn,log_data:this.log_data.innerHTML
+        }
         for(let i = 0;i<this.players.length;i++){
             let curr = this.players[i]
             let curr_moves = []
