@@ -1,5 +1,5 @@
 class move {
-    constructor(name, type, damage=0, healing=0,turns, durability=1, weight=1, effects,img,onhit,onupdate){
+    constructor(name, type, damage=0, healing=0,turns, durability=1, weight=1, effects,img,prompt_data,onhit,onupdate){
         this.name = name;
         this.type = type;
         this.damage = damage;
@@ -18,15 +18,20 @@ class move {
         this.user = null;
         this.target = null;
         this.target_moves = [];
+        this.prompt_data=prompt_data;
+        this.prompt_info;
         this.elem = null;
     }
-    use(user,target,game_instance){
+    use(data){
+        let user = data.user
+        let target = data.target
+        let game_instance = data.game
         if(!this.isenabled){
-            log('move is disabled')
+            game_instance.log('move is disabled')
             return
         }
         if(this.durability<=0){
-            log(`${this.name} has no durability left!`);
+            game_instance.log(`${this.name} has no durability left!`);
             return;
         }
         this.durability-=1;
@@ -35,21 +40,22 @@ class move {
         this.user = user;
         this.target = target;
         this.target_moves = [...user.moves, ...target.moves];
-        log(`${user.name} used ${this.name}`);
+        //this.prompt_info=prompt_info
+        game_instance.log(`${user.name} used ${this.name}`);
         let dmg = this.calc_damage(user,target);
         target.health -= dmg
         target.lastDamageReceived = dmg
         user.health += this.healing;
         if(this.damage>0){
-            log(`${target.name} took ${dmg} damage`);
+            game_instance.log(`${target.name} took ${dmg} damage`);
         }
         if(this.healing>0){
-            log(`${user.name} healed ${this.healing} health`);
+            game_instance.log(`${user.name} healed ${this.healing} health`);
         }
         if(this.elem && this.elem.children[1]){
             this.elem.children[1].textContent = `${this.name} (${this.durability})`
         }
-        this.onhit(user,target,game_instance);
+        this.onhit(data);
     }
     calc_damage(user,target){
         let damage = this.damage;
@@ -75,6 +81,7 @@ class move {
         if(this.isactive && this.turn_count>0){
             this.turn_count -= 1;
             if(this.onupdate){
+                console.log(this.user,this.target)
                 this.onupdate(this,this.user,this.target,this.target_moves)
             }
            
@@ -107,7 +114,8 @@ const moves = [
         3,               // weight
         [],              // effects
         'strike.png',    //image
-        function(user, target) {  // onhit
+         {msg:'strike prompt data'},            //prompt data
+        function(data) {  // onhit
             return;
         },
         function(self, user, target, moves) {  // update
@@ -124,7 +132,8 @@ const moves = [
         5,               // weight
         [],              // effects
         'spell.png',    //image
-        function(user, target) {  // onhit
+         {},            //prompt data
+        function(data) {  // onhit
             return;
         },
         function(self, user, target, moves) {  // update
@@ -141,7 +150,8 @@ const moves = [
         5,               // weight
         [],              // effects
         'move.png',    //image
-        function(user, target,game_instance) {  // onhit
+         {},            //prompt data
+        function(data) {  // onhit
             return;
         },
         function(self, user, target, moves) {  // update
@@ -158,7 +168,8 @@ const moves = [
         3,                // weight
         [],             // effects
          'spell.png',    //image
-        function(user, target) {   // onhit
+          {},            //prompt data
+        function(data) {   // onhit
             return;
         },
         function(self, user, target, moves) {  // update
@@ -175,8 +186,9 @@ const moves = [
         4,                // weight
         ['guard'],             // effects
          'move.png',    //image
-        function(user, target,game_instance) {   // onhit
-            user.status_effects.push('guard');
+          {},            //prompt data
+        function(data) {   // onhit
+            data.user.status_effects.push('guard');
         },
         function(self, user, target, moves) {  // update
                 if(self.turn_count==0){
@@ -198,7 +210,8 @@ const moves = [
         3,                // weight
         [],             // effects
          'move.png',    //image
-        function(user, target,game_instance) {   // onhit
+          {},            //prompt data
+        function(data) {   // onhit
             return;
         },
         function(self, user, target, moves) {  // update
@@ -215,9 +228,10 @@ const moves = [
         3,                // weight
         [],             // effects
          'move.png',    //image
-        function(user, target,game_instance) {   // onhit
-            user.health-=300
-            log('300 knockback damage')
+          {},            //prompt data
+        function(data) {   // onhit
+            data.user.health-=300
+            data.game.log('300 knockback damage')
         },
         function(self, user, target, moves) {  // update
            return;
@@ -233,8 +247,9 @@ const moves = [
         3,                // weight
         [],             // effects
          'move.png',    //image
-         function(user, target,game_instance) {   // onhit
-            user.status_effects.push('guard');
+          {},            //prompt data
+         function(data) {   // onhit
+            data.user.status_effects.push('guard');
         },
         function(self, user, target, moves) {  // update
                 if(self.turn_count==0){
@@ -256,7 +271,8 @@ const moves = [
         4,               // weight
         [],              // effects
          'move.png',    //image
-        function(user, target,game_instance) {  // onhit
+          {},            //prompt data
+        function(data) {  // onhit
             return;
         },
         function(self, user, target, moves) {  // update
@@ -285,7 +301,10 @@ const moves = [
         1,               // weight
         [],              // effects
          'move.png',    //image
-        function(user, target,game_instance) {  // onhit
+          {},            //prompt data
+        function(data) {  // onhit
+            let user = data.user 
+            let target = data.target
             if(target.lastmoveused && target.lastmoveused.name !== 'Mirror Match'){
                 let move_to_copy = target.lastmoveused;
                 let copied_move = new move(
@@ -298,10 +317,15 @@ const moves = [
                     move_to_copy.weight,
                     move_to_copy.effects,
                     null,
+                    move_to_copy.prompt_data,
                     move_to_copy.onhit,
                     move_to_copy.onupdate
                 );
-                copied_move.use(user, target);
+                data.prompt_info={
+                    selected_value:Math.floor(Math.random() * user.moves.length),
+                    selected_values:[Math.floor(Math.random() * user.moves.length),Math.floor(Math.random() * user.moves.length)]
+                }
+                copied_move.use(data);
             }else{
                 log(`No move to copy or last move was Mirror Match!`);
             }
@@ -320,8 +344,9 @@ const moves = [
         1,               // weight
         [],              // effects
          'move.png',    //image
-        function(user, target,game_instance) {  // onhit
-            user.status_effects.push('attack_buff');
+         {},            //prompt data
+        function(data) {  // onhit
+            data.user.status_effects.push('attack_buff');
         },
         function(self, user, target, moves) {  // update
             if(self.turn_count==0){
@@ -343,15 +368,20 @@ const moves = [
         2,               // weight
         [],              // effects
          'move.png',    //image
-        function(user, target,game_instance) {  // onhit
+         {msg:'select opponent move',type:'move select',},            //prompt data
+        function(data) {  // onhit
             (async () => {
+                let user = data.user 
+                let target = data.target
+                let game_instance = data.game
+
                 let state_ref = game_instance.state
                 game_instance.state = 'wait'
                 let options = []
                 target.moves.forEach(move => {options.push(move.name)})
                 let num = 0
                 if(user.type=='player'){
-                    num = await get_prompt('select move:',options);
+                    num = data.propmpt_info.selected_value
                 }else{
                     num = Math.floor(Math.random() * options.length)
                 }
@@ -423,15 +453,19 @@ const moves = [
         3,               // weight
         [],              // effects
          'spell.png',    //image
-        function(user, target,game_instance) {  // onhit
+          {message:'select your move',type:'player move select'},            //prompt data
+        function(data) {  // onhit
             (async () => {
+                let user = data.user 
+                let target = data.target
+                let game_instance = data.game
                 let state_ref = game_instance.state
                 game_instance.state = 'wait'
                  let options = []
                 user.moves.forEach(move => {options.push(move.name)})
                 let num = 0
                 if(user.type=='player'){
-                    num = await get_prompt('select move:',options);
+                    num = data.prompt_info.selected_value
                 }else{
                     num = Math.floor(Math.random() * options.length)
                 }
@@ -441,7 +475,7 @@ const moves = [
                      user.moves[num].elem.style.backgroundColor = null
                 }
                
-                log(`${user.name}'s move ${user.moves[num].name} is restored`);
+                game_instance.log(`${user.name}'s move ${user.moves[num].name} is restored`);
                 game_instance.state='running'
                 
             })();
@@ -460,15 +494,19 @@ const moves = [
         2,               // weight
         [],              // effects
          'move.png',    //image
-        function(user, target,game_instance) {  // onhit
+          {message:'select your move',type:'player move select'},            //prompt data
+        function(data) {  // onhit
             (async () => {
+                let user = data.user 
+                let target = data.target
+                let game_instance = data.game
                 let state_ref = game_instance.state
                 game_instance.state = 'wait'
                  let options = []
                 user.moves.forEach(move => {options.push(move.name)})
                 let num = 0
                 if(user.type=='player'){
-                    num = await get_prompt('select move:',options);
+                    num = data.prompt_info.selected_value
                 }else{
                     num = Math.floor(Math.random() * options.length)
                 }
@@ -496,25 +534,35 @@ const moves = [
         1,               // weight
         [],              // effects
          'move.png',    //image
-        async function(user, target,game_instance) {  // onhit
-            
+        {message:'select two moves',type:'player move select multiple',amount:2},            //prompt data
+        async function(data) {  // onhit
+            let user = data.user 
+            let target = data.target
+            let game_instance = data.game
             let state_ref = game_instance.state
-            game_instance.state = 'wait'
+            //game_instance.state = 'wait'
                 let options = []
             user.moves.forEach(move => {options.push(move.name)})
             let num = 0
             let num2 = 0
             if(user.type=='player'){
-                num = await get_prompt('select move:',options);
-                num2 = await get_prompt('select second move:',options);
+                num = data.prompt_info.selected_values[0];
+                num2 = data.prompt_info.selected_values[1];
             }else{
                 num = Math.floor(Math.random() * 6)
                 num2 = Math.floor(Math.random() * 6)
             }
-           
-            user.moves[num].use(user,target,game_instance)
+            let p_data ={
+                user:user,target:target,game:game_instance,
+                prompt_info:{
+                    selected_value:Math.floor(Math.random() * user.moves.length),
+                    selected_values:[Math.floor(Math.random() * user.moves.length),Math.floor(Math.random() * user.moves.length)]
+                },
+
+            }
+            user.moves[num].use(p_data)
             if(num2!=num){
-                user.moves[num2].use(user,target,game_instance)
+                user.moves[num2].use(p_data)
             }
             game_instance.state='running'
                 
@@ -534,8 +582,9 @@ const moves = [
         2,               // weight
         [],              // effects
          'move.png',    //image
-        function(user, target,game_instance) {  // onhit
-            user.status_effects.push('attack_buff2');
+          {},            //prompt data
+        function(data) {  // onhit
+            data.user.status_effects.push('attack_buff2');
         },
         function(self, user, target, moves) {  // update
             if(self.turn_count==0){
@@ -557,8 +606,9 @@ const moves = [
         2,               // weight
         ['thorns'],              // effects
          'move.png',    //image
-        function(user, target,game_instance) {  // onhit
-            user.status_effects.push('thorns');
+          {},            //prompt data
+        function(data) {  // onhit
+            data.user.status_effects.push('thorns');
         },
         function(self, user, target, moves) {  // update
             if(self.turn_count==0){
@@ -580,8 +630,9 @@ const moves = [
         3,                // weight
         ['guard'],             // effects
          'move.png',    //image
-        function(user, target,game_instance) {   // onhit
-            user.status_effects.push('guard');
+          {},            //prompt data
+        function(data) {   // onhit
+            data.user.status_effects.push('guard');
         },
         function(self, user, target, moves) {  // update
                 if(self.turn_count==0){

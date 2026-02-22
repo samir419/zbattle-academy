@@ -1,15 +1,16 @@
 :root {
-  --primary: #bebebe; /* 10% buttons,links,logo*/
+  --primary: rgb(237,28,36); /* 10% buttons,links,logo*/
   --secondary:rgb(37, 37, 37); /* 30% cards, sections*/
   --accent:rgb(255, 255, 255);/* highlights, icons*/
-  --neutral:#000000;/* 60% background*/
-  --neutral-2:rgb(229, 229, 229);/*text*/
+  --neutral:#113F8C;/* 60% background*/
+  --neutral-2:rgb(255, 255, 255);/*text*/
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body{
     background-color: var(--neutral);
     color: var(--neutral-2);
+    background-image: url('assets/N.png');
 }
 
 .flex{display: flex}
@@ -19,6 +20,7 @@ body{
 
 .wrappable{flex-wrap: wrap;}
 .scrollable-y{overflow-y:auto;}
+.scrollable-x{overflow-x:auto;}
 
 .justify-center{justify-content: center;}
 .align-center{align-items:center;}
@@ -56,6 +58,7 @@ body{
 .accent-bg{background-color: var(--accent);}
 .neutral-bg{background-color: var(--neutral);}
 .neutral-2-bg{background-color: var(--neutral-2);}
+.img-bg{background-image: url('assets/N.png');}
 
 .rounded{border-radius: 25px;}
 .rounded-10{border-radius: 5px;}

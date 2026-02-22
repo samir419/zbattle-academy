@@ -81,7 +81,7 @@ let foods=[
 		'boil':function(){
 			if(this.available_actions.includes('boil')){
 				this.conditions.push('boiled')
-				tthis.available_actions=[]
+				this.available_actions=[]
 			}else{
 				return 'no effect'
 			}
@@ -400,7 +400,28 @@ let chopping_board={
 raws={
 	name:'storage',
 	items:[],
-	available_actions:[]
+	available_actions:[],
+	on_add:function(){
+		let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+
+		for (let i = 0; i < this.items.length; i++) {
+		    let exists = false;
+
+		    for (let j = 0; j < data.items.length; j++) {
+		        if (data.items[j].name === this.items[i].name) {
+		            exists = true;
+		            break;
+		        }
+		    }
+
+		    if (!exists) {
+		        data.items.push(this.items[i]);
+		        console.log('added ' + this.items[i].name);
+		    }
+		}
+
+		localStorage.setItem('zbattle academy data', JSON.stringify(data));
+	}
 }
 
 function init_cooking_game(data){
@@ -453,6 +474,14 @@ function init_cooking_game(data){
 
 				// Boiling finished
 				for (let i = 0; i < pot.items.length; i++) {
+					let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+					for(let j=0;j<data.items.length;j++){
+						if(data.items[j].name==pot.items[i].name){
+							data.items.splice(j,1)
+							console.log('removed'+data.items[j])
+						}
+					}
+					localStorage.setItem('zbattle academy data', JSON.stringify(data))
 					console.log(pot.items[i])
 					pot.items[i].boil();
 				}
@@ -480,9 +509,15 @@ function init_cooking_game(data){
 		let portions = [];
 
 		for (let i = 0; i < plate.items.length; i++) {
-
+			let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+			for(let j=0;j<data.items.length;j++){
+				if(data.items[j].name==plate.items[i].name){
+					data.items.splice(j,1)
+					console.log('removed'+data.items[j])
+				}
+			}
+			localStorage.setItem('zbattle academy data', JSON.stringify(data))
 			let item = plate.items[i];
-
 			total.sweet += item.sweet;
 			total.salty += item.salty;
 			total.sour += item.sour;

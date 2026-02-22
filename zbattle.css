@@ -2,10 +2,6 @@
    display:grid;
    grid-template-columns:2fr 1fr;
 }
-#game-ui{
-   display:grid;
-   grid-template-columns:1fr 1fr;
-}
 #game-log{
     max-height:400px;
     overflow-y:auto;

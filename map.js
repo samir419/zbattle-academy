@@ -3,7 +3,7 @@ class Map{
 		this.elem = elem
 		this.event_handler
 		this.locations = document.getElementById('locations')
-		this.locations.children[0].onclick=()=>{this.event_handler.broadcast({message:'switch',tab:'dorm'})}
+		//this.locations.children[0].onclick=()=>{this.event_handler.broadcast({message:'switch',tab:'dorm'})}
 	}
 	display(){
 		let fullscreen = document.createElement('button')

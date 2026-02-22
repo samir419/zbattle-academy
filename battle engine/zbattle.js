@@ -20,28 +20,20 @@ class Game {
         this.state = 'wait'; // 'waiting', 'in_progress', 'finished'
         this.format = 'free for all'
         this.team_data = {}
-        this.ui = document.createElement('div')
-        this.ui.id = 'game-ui'
-        this.log_data = document.createElement('div')
-        this.log_data.id = 'game-log'
+        this.log_data =[]
         this.game_data = []
         this.event_handler
-        document.getElementById('engine').append(this.ui, this.log_data)
         this.set_format()
     }
     log(message) {
-        let msg = document.createElement('p')
-        msg.textContent = message
-        this.log_data.appendChild(msg);
-        this.log_data.scrollTop = this.log_data.scrollHeight;
+        this.log_data.push(message)
     }
     set_player(data) {
         let player = new Player(data)
-        this.log(`new player: ${player.name}`)
         return player
     }
     set_format() {
-        this.ui.innerHTML = ''
+        //this.ui.innerHTML = ''
         let parent = document.createElement('div')
         let text = document.createElement('p')
         text.textContent = 'select format'
@@ -58,10 +50,10 @@ class Game {
             this.prompt_players_select('add player 1')
         }
         parent.append(text, ffa, team)
-        this.ui.append(parent)
+        //this.ui.append(parent)
     }
     prompt_players_select(msg) {
-        this.ui.innerHTML = ''
+        //this.ui.innerHTML = ''
         let parent = document.createElement('div')
 
         let text = document.createElement('p')
@@ -106,12 +98,12 @@ class Game {
             finish.onclick = () => { this.start() }
             parent.appendChild(finish)
         }
-        this.ui.append(parent)
+        //this.ui.append(parent)
 
 
     }
     display_move_select(player) {
-        this.ui.innerHTML = ''
+        //this.ui.innerHTML = ''
         let parent = document.createElement('div')
         let title = document.createElement('p')
         title.textContent = 'select moves'
@@ -235,25 +227,14 @@ class Game {
             div.appendChild(btn)
         }
         parent.append(title, finish, random, save, load, move_set_list, div)
-        this.ui.append(parent)
+        //this.ui.append(parent)
     }
     start() {
         this.log('game started')
-        this.ui.innerHTML = ''
+        //this.ui.innerHTML = ''
         this.players.forEach(play => {
 
             let move_data = []
-            for (let i = 2; i < play.moves.length; i++) {
-                move_data.push(play.moves[i].name)
-            }
-            this.game_data.push({
-                name: play.name,
-                moves: move_data,
-                img: play.img,
-                type: play.type,
-                team: play.team
-            })
-
             play.moves.forEach((m, index) => {
                 play.weight += m.weight
             })
@@ -267,64 +248,14 @@ class Game {
                 }
 
             }
-            let div = document.createElement('div'); div.className = 'player-div'; div.id = play.name
-            let image = document.createElement('img'); image.className = 'player-image'; image.src = play.img
-            let health = document.createElement('div'); health.className = 'player-health'
-            let status = document.createElement('div'); status.className = 'player-status'
-            let move_prompt = document.createElement('div'); move_prompt.className = 'move-prompt'
-            let moves = document.createElement('div'); moves.className = 'move-div';
-            let normals = document.createElement('div'); normals.className = 'normal-moves'
-            if (play.type == 'player'||play.team=='boss') {
-                for (let i = 0; i < play.moves.length; i++) {
-                    let btn = document.createElement('button'); btn.className = 'move-btn'
-                    let m = play.moves[i]
-                    let image = document.createElement('img');image.className='move-img'
-                    image.src = `battle engine/assets/moves/${m.img}`
-                    btn.appendChild(image)
-                    let txt = document.createElement('span')
-                    txt.textContent=m.name
-                    //btn.appendChild(txt)
-                    btn.onclick = () => {
-                        let prompt = play.elem.querySelector('.move-prompt')
-                        prompt.innerHTML = `${m.name}`
-                        this.player_queue.forEach(p => {
-                            let btn = document.createElement('button');btn.className='secondary'
-                            if (p.team == play.team && p.team != 'none') {
-                                btn.style.backgroundColor = 'blue'
-                            }
-                            btn.textContent = p.name
-                            btn.onclick = () => { this.play(play, p, m); prompt.innerHTML = `` }
-                            prompt.appendChild(btn)
-                        })
-
-                    }
-                    m.elem = btn
-                    m.elem.title  = `name:${m.name}`
-                    if (i > 1) {
-                        moves.appendChild(btn)
-                    } else {
-                        btn.className = 'normal-btn'
-                        btn.removeChild(btn.children[0])
-                        btn.appendChild(txt)
-                        normals.appendChild(btn)
-                    }
-
-                }
-            }
-            let profile_info = document.createElement('div'); profile_info.className = 'profile-info'
-            profile_info.append(image, status)
-            if(play.team=='boss'){div.className+=' boss-div'}
-            div.append(profile_info, health, move_prompt, normals, moves)
-            this.ui.appendChild(div)
-            console.log(div)
-            play.elem = div
-            this.handle_cpu()
+            
         })
+        this.create_player_ui()
         this.player_queue = this.sortPlayerQueue(this.player_queue)
         this.current_player = this.player_queue[this.current]
         this.state = 'running'
         this.log(`${this.current_player.name} turn`)
-        this.update_ui()
+        this.handle_cpu()
     }
     update() {
         this.players.forEach(player => {
@@ -336,15 +267,15 @@ class Game {
 
         })
     }
-    play(user, target, move_instance) {
+    play(user, target, move_instance, prompt_info) {
         if (this.state === 'wait') return;
         if (this.state === 'end') {
-            log('game ended');
+            this.log('game ended');
             return;
         }
 
         if (this.current_player.id !== user.id) {
-            log('not your turn');
+            this.log('not your turn');
             return;
         }
 
@@ -352,7 +283,13 @@ class Game {
         if (this.current_player.health > 0) {
             user.moves.forEach(m => {
                 if (move_instance.name === m.name) {
-                    m.use(user, target, this);
+                    let obj={}
+                    obj.user = user
+                    obj.target = target
+                    obj.self = m
+                    obj.game = this
+                    obj.prompt_info = prompt_info
+                    m.use(obj);
                     user.lastmoveused = m;
                 }
             });
@@ -364,7 +301,7 @@ class Game {
         // If no players left, end immediately
         if (this.player_queue.length === 0) {
             this.state = 'end';
-            log('No players left');
+            this.log('No players left');
             return;
         }
 
@@ -379,40 +316,22 @@ class Game {
         if (this.current > this.player_queue.length - 1) {
             this.current = 0;
             this.current_turn += 1;
-            log(`-----------------turn ${Math.floor(this.current_turn)}-----------------`);
+            this.log(`-----------------turn ${Math.floor(this.current_turn)}-----------------`);
         }
 
         this.current_player = this.player_queue[this.current];
 
         this.update();
-        log(`${this.current_player.name} turn`);
-        this.update_ui();
+        this.log(`${this.current_player.name} turn`);
         this.check_winner();
         this.handle_cpu();
+        return this.get_game_data()
     }
-
-    update_ui() {
-        this.players.forEach(p => {
-            if (p.elem) {
-                let stat = p.elem.querySelector('.player-status')
-                stat.innerHTML = `<div>name:${p.name}</div>
-                            <div>health:${p.health}</div> 
-                            <div>status effects: ${p.status_effects.join(', ')}</div> 
-                            <div>last move used: ${p.lastmoveused ? p.lastmoveused.name : 'none'}</div> 
-                            <div>last damage received: ${p.lastDamageReceived}</div> 
-                            <div>team: ${p.team}</div>`
-                let health = p.elem.querySelector('.player-health')
-                health.innerHTML = ''
-                for (let i = 0; i < p.health; i += 100) {
-                    let healthbar = document.createElement('div')
-                    healthbar.className = 'health-bar'
-                    health.appendChild(healthbar)
-                }
-            }
-
-        })
+    create_player_ui(){
+        
 
     }
+    
 
 
     check_winner() {
@@ -463,55 +382,54 @@ class Game {
         });
     }
     handle_cpu() {
-        setTimeout(() => {
-            if (this.current_player.type === 'cpu' && this.state === 'running') {
-                cpu_state = 'active';
+        if (this.current_player.type === 'cpu' && this.state === 'running') {
+            cpu_state = 'active';
 
-                // Choose a random enabled move
-                const enabled_moves = this.current_player.moves.filter(m => m.isenabled);
-                if (enabled_moves.length === 0) return;
-                const move = enabled_moves[Math.floor(Math.random() * enabled_moves.length)];
+            // Choose a random enabled move
+            const enabled_moves = this.current_player.moves.filter(m => m.isenabled);
+            if (enabled_moves.length === 0) return;
+            const move = enabled_moves[Math.floor(Math.random() * enabled_moves.length)];
 
-                let target
-                let validTargets;
+            let target
+            let validTargets;
 
-                if (this.format === 'teams') {
-                    // Target players on a different team
-                    validTargets = this.players.filter(p =>
-                        p !== this.current_player &&
-                        p.team !== this.current_player.team &&
-                        p.health > 0
-                    );
-                } else {
-                    // Target any player except self
-                    validTargets = this.players.filter(p =>
-                        p !== this.current_player &&
-                        p.health > 0
-                    );
-                }
+            if (this.format === 'teams') {
+                // Target players on a different team
+                validTargets = this.players.filter(p =>
+                    p !== this.current_player &&
+                    p.team !== this.current_player.team &&
+                    p.health > 0
+                );
+            } else {
+                // Target any player except self
+                validTargets = this.players.filter(p =>
+                    p !== this.current_player &&
+                    p.health > 0
+                );
+            }
 
-                // If no valid targets remain, stop
-                if (validTargets.length === 0) {
-                    cpu_state = 'inactive';
-                    return;
-                }
-
-                // Pick a random valid target
-                target = validTargets[Math.floor(Math.random() * validTargets.length)];
-
-
-
-                // Execute the move
-                this.play(this.current_player, target, move);
-
+            // If no valid targets remain, stop
+            if (validTargets.length === 0) {
                 cpu_state = 'inactive';
+                return;
             }
 
-            // Continue checking if state changes back to 'wait'
-            if (this.state === 'wait') {
-                this.handle_cpu();
-            }
-        }, 1000);
+            // Pick a random valid target
+            target = validTargets[Math.floor(Math.random() * validTargets.length)];
+
+
+
+            // Execute the move
+            this.play(this.current_player, target, move);
+
+            cpu_state = 'inactive';
+        }
+
+        // Continue checking if state changes back to 'wait'
+        if (this.state === 'wait') {
+            this.handle_cpu();
+        }
+        
     }
     handle_finished_game() {
         let restart = document.createElement('button'); restart.textContent = 'restart'
@@ -539,15 +457,21 @@ class Game {
         //this.log_data.append(restart, new_game)
     }
     apply_data(data) {
-        data.forEach(p => {
+        this.format = data.format
+        data.players.forEach(p => {
             let player = this.set_player(p)
             this.players.push(player)
         })
+        this.start()
+        return this.get_game_data()
     }
     get_game_data(){
         let data = {
             players:[],
-            turn:this.current_turn,log_data:this.log_data.innerHTML
+            current_turn:this.current_turn,
+            current_player:this.current,
+            log_data:this.log_data,
+
         }
         for(let i = 0;i<this.players.length;i++){
             let curr = this.players[i]
@@ -556,17 +480,45 @@ class Game {
                 let move = curr.moves[j]
                 curr_moves.push({
                     name:move.name,
-                    durability:move.durability
-                })
+                    type:move.type,
+                    damage:move.damage,
+                    healing:move.healing,
+                    turns:move.turns,
+                    turn_count:move.turn_count,
+                    durability_ref:move.durability_ref,
+                    weight:move.weight,
+                    effects:move.effects,
+                    img:move.img,
+                    isactive:move.isactive,
+                    isenabled:move.isenabled,
+                    owner:curr.name,
+                    durability:move.durability,
+                    prompt_data:move.prompt_data
+                });
             }
             let obj = {
+                id:curr.id,
                 name:curr.name,
                 health:curr.health,
+                status_effects:curr.status_effects,
+                lastmoveused:curr.lastmoveused ? curr.lastmoveused.name : 'none',
+                lastDamageReceived:curr.lastDamageReceived,
+                team:curr.team,
+                type:curr.type,
+                img:curr.img,
                 moves:curr_moves
             }
             data.players.push(obj)
         }
         return data
+    }
+    handle_request(req){
+        if(req.type=='play'){
+            let user = this.player_queue.find(u => u.name === req.user);
+            let target = this.player_queue.find(u => u.name === req.target);
+            let move = user.moves.find(u => u.name === req.move);
+            return this.play(user,target,move,req.prompt_info)
+        }
 
     }
     handle_event(data){
@@ -590,7 +542,8 @@ let attack = new move(
     0,                // weight
     [],             // effects
     'move.png',    //image
-    function (user, target) {   // onhit
+    {},
+    function (data) {   // onhit
         return;
     },
     function (self, user, target, moves) {  // update
@@ -608,8 +561,9 @@ let defend = new move(
     0,                // weight
     [],             // effects
     'move.png',    //image
-    function (user, target, game_instance) {   // onhit
-        user.status_effects.push('guard');
+    {},
+    function (data) {   // onhit
+        data.user.status_effects.push('guard');
     },
     function (self, user, target, moves) {  // update
         if (self.turn_count == 0) {
@@ -629,7 +583,7 @@ class Player {
         this.health = data.health?data.health:1500;
         this.moves = [];
         this.status_effects = []; // e.g., ['stunned', 'poisoned']
-        this.lastmoveused
+        this.lastmoveused = 'none'
         this.lastDamageReceived = 0
         this.weight = 0
         this.type = data.type
@@ -652,7 +606,7 @@ class Player {
     }
     add_move(move_data) {
         this.moves.push(new move(move_data.name, move_data.type, move_data.damage, move_data.healing, move_data.turns, move_data.durability,
-            move_data.weight, move_data.effects, move_data.img, move_data.onhit, move_data.onupdate));
+            move_data.weight, move_data.effects, move_data.img, move_data.prompt_data, move_data.onhit, move_data.onupdate));
     }
     set_random_moves(){
         let availableMoves = [...moves];
@@ -670,7 +624,7 @@ class Player {
 function log(message) {
     let msg = document.createElement('p')
     msg.textContent = message
-    document.getElementById('game-log').appendChild(msg);
+    //document.getElementById('game-log').appendChild(msg);
 }
 
 function get_prompt(message, options) {

@@ -57,10 +57,16 @@ class Arena{
 	    this.selected_opponents=[]
 	    this.selected_allies=[]
 
+	    this.temp_storage={}
+
 	}
 	init(game){
 		this.game=game
 		this.render_opponent_select()
+		this.render_movesets()
+	}
+	render_movesets(){
+		document.getElementById('arena-moveset-list').innerHTML=''
 		let data = JSON.parse(localStorage.getItem('zbattle academy data'))
 		data.movesets.forEach(moveset=>{
 			let div = document.createElement('div')
@@ -125,46 +131,41 @@ class Arena{
 		this.elem.appendChild(txt)
 	}
 	single_1v1(game){
-	    game.format='teams'
+		let match_data = {players:[]}
+	    match_data.format='teams'
 	    let data = JSON.parse(localStorage.getItem('zbattle academy data'))
-	    let player = game.set_player({name:data.name,moves:this.selected_set,type:'player',team:'player', img:img_list[Math.floor(Math.random() * img_list.length)]})
-	    game.players.push(player)
+	    match_data.players.push({name:data.name,moves:this.selected_set,type:'player',team:'player', img:img_list[Math.floor(Math.random() * img_list.length)]})
 
 	    for(let i=0;i<this.selected_allies.length;i++){
 	    	this.selected_allies[i].team='player'
-	    	let cpu = game.set_player(this.selected_allies[i])
+	    	let cpu = this.selected_allies[i]
 		    if(cpu.moves.length==0){
-		    	let availableMoves = [...moves];
+		    	let availableMoves = [...zbattle_moves];
 			    for (let i = 0; i < 6 && availableMoves.length > 0; i++) {
 			        const index = Math.floor(Math.random() * availableMoves.length);
 			        const new_move = availableMoves.splice(index, 1)[0]; // remove it
-			        cpu.add_move(new_move);
+			        cpu.moves.push(new_move);
 			    }
 		    }
-		    game.players.push(cpu)
+		    match_data.players.push(cpu)
 	    }
 	    
 	    for(let i=0;i<this.selected_opponents.length;i++){
-	    	this.selected_opponents[i].team='opponent'
-	    	let cpu = game.set_player(this.selected_opponents[i])
+		   	this.selected_opponents[i].team='opponent'
+	    	let cpu = this.selected_opponents[i]
 		    if(cpu.moves.length==0){
-		    	let availableMoves = [...moves];
+		    	let availableMoves = [...zbattle_moves];
 			    for (let i = 0; i < 6 && availableMoves.length > 0; i++) {
 			        const index = Math.floor(Math.random() * availableMoves.length);
 			        const new_move = availableMoves.splice(index, 1)[0]; // remove it
-			        cpu.add_move(new_move);
+			        cpu.moves.push(new_move);
 			    }
 		    }
-		    game.players.push(cpu)
+		    match_data.players.push(cpu)
 	    }
 
-	    
-	    
-
-	    
-	    
-	    
-    	game.start()
+    	game.apply_data(match_data)
+    	this.update_ui(game)
         let quit = document.createElement('button');
         quit.textContent='quit'
         quit.onclick=()=>{
@@ -179,7 +180,7 @@ class Arena{
 		    this.engine_elem.style.display = 'none'
 		    this.reset()
         }
-        game.ui.append(quit)
+        //document.getElementById('game-ui').append(quit)
 	    this.opponent_select_screen.style.display = 'none'
 	    this.move_select_screen.style.display = 'none'
 	    this.engine_elem.style.display = 'flex'
@@ -234,6 +235,216 @@ class Arena{
 	    this.event_handler.broadcast({message:'reset battle'})
 
 	}
+	update_ui(game) {
+        let data = game.get_game_data()
+        document.getElementById('game-ui').innerHTML=''
+        let main_div=document.createElement('div');main_div.className='flex full column outline'
+        let log_info = document.createElement('div');log_info.className='flex column scrollable-y neutral-bg outline';
+        log_info.style.minHeight = '100px'
+        log_info.style.maxHeight = '100px'
+        log_info.style.marginLeft = '10%'
+        log_info.style.marginRight = '10%'
+        log_info.style.width = '80%'
+        let start = this.temp_storage.list_length ? this.temp_storage.list_length : 0;
+		for (let i = start; i < data.log_data.length; i++) {
+		    setTimeout(() => {
+		        let msg = document.createElement('p');
+		        msg.textContent = data.log_data[i];
+		        log_info.appendChild(msg);
+		        log_info.scrollTop = log_info.scrollHeight;
+		    }, 1000 * (i - start));
+		}
+        this.temp_storage.list_length = data.log_data.length
+        let opp_div = document.createElement('div');opp_div.className='flex center row full-width'
+        let player_div = document.createElement('div');player_div.className='flex center row full-width'
+        data.players.forEach(player=>{
+        	if(player.type=='cpu'&&player.team!='player'){
+        		let p_div = document.createElement('div');p_div.className='flex row center outline scrollable-y';
+        		p_div.style.maxHeight = '200px'
+        		let info_div=document.createElement('div');info_div.className='flex column'
+        		let image = document.createElement('img'); image.className = 'player-image'; image.src = player.img
+        		let name = document.createElement('h3');name.textContent=player.name
+	            let health = document.createElement('div'); health.className = 'player-health'
+	            for (let i = 0; i < player.health; i += 100) {
+	                let healthbar = document.createElement('div')
+	                healthbar.className = 'health-bar'
+	                health.appendChild(healthbar)
+	            }
+	            info_div.append(name,health)
+	            p_div.append(image,info_div)
+	            opp_div.append(p_div)
+        	}
+        	if(player.type=='player'||player.team=='player'){
+        		let p_div = document.createElement('div');p_div.className='flex row center outline scrollable-y';
+        		p_div.style.maxHeight = '200px'
+        		p_div.style.alignItems = 'flex-start'
+        		let info_div=document.createElement('div');info_div.className='flex column'
+        		let image = document.createElement('img'); image.className = 'player-image'; image.src = player.img
+        		let name = document.createElement('h3');name.textContent=player.name
+	            let health = document.createElement('div'); health.className = 'player-health'
+	            for (let i = 0; i < player.health; i += 100) {
+	                let healthbar = document.createElement('div')
+	                healthbar.className = 'health-bar'
+	                health.appendChild(healthbar)
+	            }
+	            let move_prompt = document.createElement('div'); move_prompt.className = 'move-prompt'
+	            let moves = document.createElement('div');moves.className='flex row wrappable'
+	            let normal_moves = document.createElement('div')
+            	for (let i = 0; i < player.moves.length; i++) {
+                    let btn = document.createElement('button'); btn.className = 'move-btn'
+                    let m = player.moves[i]
+                    let image = document.createElement('img');image.className='move-img'
+                    image.src = `battle engine/assets/moves/${m.img}`
+                    btn.appendChild(image)
+                    let txt = document.createElement('span')
+                    txt.textContent=m.name
+                    if(m.durability<=0){btn.enabled=false;btn.disabled=true}
+                    btn.onclick = () => {
+                        move_prompt.innerHTML = `${m.name}`
+                        data.players.forEach(p => {
+                            let btn = document.createElement('button');btn.className='secondary'
+                            if (p.team == player.team && p.team != 'none') {
+                                btn.style.backgroundColor = 'blue'
+                            }
+                            btn.textContent = p.name
+                            btn.onclick = () => {
+                            	if(m.prompt_data.type=='player move select'){
+                            		move_prompt.innerHTML = `${m.prompt_data.message}`
+                            		for(let i=0;i<player.moves.length;i++){
+                            			let prompt_btn = document.createElement('button');btn.className='secondary'
+			                         
+			                            prompt_btn.textContent = player.moves[i].name
+			                            prompt_btn.onclick=()=>{
+			                            	game.handle_request({type:'play',user:player.name,target:p.name,move:m.name,prompt_info:{selected_value:i}})
+			                            	prompt.innerHTML=``;
+                            				setTimeout(() => {this.update_ui(game)}, 1000);
+			                            }
+			                            move_prompt.appendChild(prompt_btn)
+                            		}
+                            	}if(m.prompt_data.type=='player move select multiple'){
+                            		move_prompt.innerHTML = `${m.prompt_data.message}`
+                            		let selected_values = []
+                            		let amount = 0
+                            		for(let i=0;i<player.moves.length;i++){
+                            			let prompt_btn = document.createElement('button');btn.className='secondary'
+			                            prompt_btn.textContent = player.moves[i].name
+			                            prompt_btn.onclick=()=>{
+			                            	prompt_btn.enabled=false;prompt_btn.disabled=true
+			                            	amount+=1
+			                            	selected_values.push(i)
+			                            	if(amount==m.prompt_data.amount){
+			                            		game.handle_request({type:'play',user:player.name,target:p.name,move:m.name,prompt_info:{selected_values:selected_values}})
+				                            	prompt.innerHTML=``;
+			                    				setTimeout(() => {this.update_ui(game)}, 1000);
+			                            	}
+			                            }
+			                            move_prompt.appendChild(prompt_btn)
+                            		}
+                            		
+                            	}else{
+                            		game.handle_request({type:'play',user:player.name,target:p.name,move:m.name,prompt_info:{prompt:'none'}})
+                            		prompt.innerHTML=``;
+                            		setTimeout(() => {this.update_ui(game)}, 1000);
+                            	}
+                            }
+                            move_prompt.appendChild(btn)
+                        })
+
+                    }
+                    btn.title  = `name:${m.name}`
+                    if (i > 1) {
+                        moves.appendChild(btn)
+                    } else {
+                        btn.className = 'normal-btn'
+                        btn.removeChild(btn.children[0])
+                        btn.appendChild(txt)
+                        normal_moves.appendChild(btn)
+                    }
+
+                }
+	            info_div.append(name,health,move_prompt,moves,normal_moves)
+	            p_div.append(image,info_div)
+	            player_div.append(p_div)
+        	}
+        })
+        main_div.append(opp_div,log_info,player_div)
+        document.getElementById('game-ui').append(main_div)
+        return
+        data.players.forEach(play=>{
+            let div = document.createElement('div'); div.className = 'player-div'; div.id = play.name
+            let image = document.createElement('img'); image.className = 'player-image'; image.src = play.img
+            let health = document.createElement('div'); health.className = 'player-health'
+            for (let i = 0; i < play.health; i += 100) {
+                let healthbar = document.createElement('div')
+                healthbar.className = 'health-bar'
+                health.appendChild(healthbar)
+            }
+            let status = document.createElement('div'); status.className = 'player-status'
+            status.innerHTML = `<div>name:${play.name}</div>
+                            <div>health:${play.health}</div> 
+                            <div>status effects: ${play.status_effects.join(', ')}</div> 
+                            <div>last move used: ${play.lastmoveused}</div> 
+                            <div>last damage received: ${play.lastDamageReceived}</div> 
+                            <div>team: ${play.team}</div>`
+            let move_prompt = document.createElement('div'); move_prompt.className = 'move-prompt'
+            let moves = document.createElement('div'); moves.className = 'move-div';
+            let normals = document.createElement('div'); normals.className = 'normal-moves'
+            if (play.type == 'player'||play.team=='boss') {
+                for (let i = 0; i < play.moves.length; i++) {
+                    let btn = document.createElement('button'); btn.className = 'move-btn'
+                    let m = play.moves[i]
+                    let image = document.createElement('img');image.className='move-img'
+                    image.src = `battle engine/assets/moves/${m.img}`
+                    btn.appendChild(image)
+                    let txt = document.createElement('span')
+                    txt.textContent=m.name
+                    //btn.appendChild(txt)
+                    btn.onclick = () => {
+                        move_prompt.innerHTML = `${m.name}`
+                        data.players.forEach(p => {
+                            let btn = document.createElement('button');btn.className='secondary'
+                            if (p.team == play.team && p.team != 'none') {
+                                btn.style.backgroundColor = 'blue'
+                            }
+                            btn.textContent = p.name
+                            btn.onclick = () => {
+                            	console.log(game.handle_request({type:'play',user:play.name,target:p.name,move:m.name}));
+                            	prompt.innerHTML=``;
+                            	this.update_ui(game);
+                            	setTimeout(() => {this.update_ui(game)}, 1000);
+                            }
+                            move_prompt.appendChild(btn)
+                        })
+
+                    }
+                    m.elem = btn
+                    m.elem.title  = `name:${m.name}`
+                    if (i > 1) {
+                        moves.appendChild(btn)
+                    } else {
+                        btn.className = 'normal-btn'
+                        btn.removeChild(btn.children[0])
+                        btn.appendChild(txt)
+                        normals.appendChild(btn)
+                    }
+
+                }
+            }
+            let profile_info = document.createElement('div'); profile_info.className = 'profile-info'
+            profile_info.append(image, status)
+            if(play.team=='boss'){div.className+=' boss-div'}
+            div.append(profile_info, health, move_prompt, normals, moves)
+            document.getElementById('game-ui').appendChild(div)
+        })
+        document.getElementById('game-log').innerHTML=''
+        data.log_data.forEach(mesg=>{
+            let msg = document.createElement('p')
+            msg.textContent = mesg
+            document.getElementById('game-log').appendChild(msg);
+            document.getElementById('game-log').scrollTop = document.getElementById('game-log').scrollHeight;
+        })
+    }
+
 	handle_event(data){
 		if(data.message=='player victory'||data.message=='team victory'){
             let dt = JSON.parse(localStorage.getItem('zbattle academy data'))

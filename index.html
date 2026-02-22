@@ -19,13 +19,17 @@
 			width: min(100vw, calc(100vh * 16 / 9));
 			height: min(100vh, calc(100vw * 9 / 16));
 
-			background: #222;
+			overflow-y:auto;
 		}
-		button{
+		.btn{
 			padding:10px;
 			margin:5px;
 			width: fit-content;
 			height:fit-content;
+			color:var(--neutral-2);
+			border-radius:10px;
+			font-size: 16px;
+			border:none;
 		}
 		#boiling-bar-container {
 		    position: relative;
@@ -46,6 +50,16 @@
 		    height: 100%;
 		    background: rgba(0,255,0,0.4);
 		}
+		.tab {
+		    opacity: 0;
+		    transition: opacity 1s ease;
+		    display: none;
+		}
+
+		.tab.active {
+		    display: flex;
+		    opacity: 1;
+		}
 
 	</style>
 </head>
@@ -58,52 +72,52 @@
 			</div>
 			<div class="flex absolute priority-2" style="top: 0;right: 0;">
 				<div id="date-time"></div>
-				<button onclick="event_handler.broadcast({message:'open notifs'})" id="notif-button">notifs</button>
+				<button class="btn primary-bg" onclick="event_handler.broadcast({message:'open notifs'})" id="notif-button">notifs</button>
 			</div>
-			<div id="map" class="tab flex full outline center">
-				<div class="flex full row" style="display:grid;grid-template-columns: 1fr 2fr;">
-					<div class="flex one column scrollable-y" id="locations">
-						<button>dorm</button>
-						<button onclick="switch_tab('arena')">arena</button>
-						<button onclick="switch_tab('shop')">shop</button>
-						<button onclick="switch_tab('park')">park</button>
+			<div id="map" class="tab flex full outline center img-bg">
+				<div class="flex full row">
+					<div class="flex one column scrollable-y outline center" id="locations">
+						<button class="btn primary-bg" onclick="switch_tab('dorm')">dorm</button>
+						<button class="btn primary-bg " onclick="switch_tab('arena')">arena</button>
+						<button class="btn primary-bg" onclick="switch_tab('shop')">shop</button>
+						<button class="btn primary-bg" onclick="switch_tab('park')">park</button>
 					</div>
-					<div class="flex two primary-bg column">
+					<div class="flex three img-bg column">
 						<div class="flex row">
-							<button onclick="document.getElementById('main').requestFullscreen()">fullscreen</button>
+							<button class="btn primary-bg" onclick="document.getElementById('main').requestFullscreen()">fullscreen</button>
 						</div>
 						<img src="game assets/map.jpg" alt="" class="full">
 					</div>
 				</div>
 			</div>
 
-			<div id="dorm" class="tab flex full outline center">
+			<div id="dorm" class="tab flex full outline center img-bg">
 				<div class="flex full column">
-					<div class="flex row" id="dorm-tab-buttons">
-						<button>save</button>
-						<button>movesets</button>
-						<button>calendar</button>
-						<button>kitchen</button>
-						<button onclick="switch_tab('map')">back to map</button>
+					<div class="flex row outline" id="dorm-tab-buttons">
+						<button class="btn primary-bg">save</button>
+						<button class="btn primary-bg">movesets</button>
+						<button class="btn primary-bg">calendar</button>
+						<button class="btn primary-bg">kitchen</button>
+						<button class="btn primary-bg" onclick="switch_tab('map')">back to map</button>
 					</div>
 					<div id="dorm-save" class="flex full column">
 						<div id="dorm-player-data"></div>
 						<div id="dorm-items" class="flex full column"></div>
 						<div>
-							<button id="dorm-save-btn">save</button>
+							<button class="btn primary-bg" id="dorm-save-btn">save</button>
 							<input type="file" name="" id="save-file-input">
-							<button id="dorm-load-btn">load</button>
-							<button onclick="">clear local storage</button>
+							<button class="btn primary-bg" id="dorm-load-btn">load</button>
+							<button class="btn primary-bg" onclick="">clear local storage</button>
 						</div>
 						<div>
-							<button id="sleep-btn">sleep</button>
+							<button class="btn primary-bg" id="sleep-btn">sleep</button>
 						</div>
 					</div>
 					<div id="dorm-movesets" class="flex full column">
 						<h2>move sets</h2>
 						<div id="player-movesets"></div>
 						<div>
-							<button id="create-moveset-btn">create new moveset</button>
+							<button class="btn primary-bg" id="create-moveset-btn">create new moveset</button>
 						</div>
 					</div>
 					<div id="dorm-calendar" class="flex full column center">
@@ -115,7 +129,7 @@
 							<div id="available-move-list" class="flex row wrappable scrollable-y"></div>
 							<div>
 								<div id="selected-move-list" class="flex row wrappable"></div>
-								<button id="finish-moveset-creation">finish</button>
+								<button class="btn primary-bg" id="finish-moveset-creation">finish</button>
 							</div>
 						</div>
 					</div>
@@ -171,11 +185,10 @@
 				</div>
 			</div>
 
-			<div id="arena" class="tab flex full outline center scrollable-y">
+			<div id="arena" class="tab flex full outline center scrollable-y img-bg">
 				<div id="opponent-select" class="flex full column">
-					<div class="flex row primary-bg">
-						<button onclick="document.getElementById('notifs').style.display='flex'">notifs</button>
-						<button onclick="switch_tab('map')">back to map</button>
+					<div class="flex row outline">
+						<button class="btn primary-bg" onclick="switch_tab('map')">back to map</button>
 					</div>
 					<div class="flex full">
 						<div class="flex two column outline">
@@ -191,8 +204,8 @@
 								<h2>selected allies</h2>
 								<div id="selected-allies" class="flex row wrappable"></div>
 							</div>
-							<div>
-								<button id="commence-battle">battle</button>
+							<div class="flex full-width center">
+								<button class="btn primary-bg" id="commence-battle">battle</button>
 							</div>
 						</div>
 					</div>
@@ -201,17 +214,19 @@
 					<h2>select move set</h2>
 					<div id="arena-moveset-list"></div>
 				</div>
-				<div id="engine" class="flex full scrollable-y"></div>
+				<div id="engine" class="flex full scrollable-y">
+					<div id="game-ui" class="flex full-width"></div>
+				</div>
 			</div>
 
-			<div id="shop" class="tab flex full outline center">
+			<div id="shop" class="tab flex full outline center img-bg">
 				<div class="flex full column">
-					<div class="flex row" id="shop-tab-buttons">
-						<button>item shop</button>
-						<button>card shop</button>
-						<button>food market </button>
-						<button>gacha roulette</button>
-						<button onclick="switch_tab('map')">back to map</button>
+					<div class="flex row outline" id="shop-tab-buttons">
+						<button class="btn primary-bg">item shop</button>
+						<button class="btn primary-bg">card shop</button>
+						<button class="btn primary-bg">food market </button>
+						<button class="btn primary-bg">gacha roulette</button>
+						<button class="btn primary-bg" onclick="switch_tab('map')">back to map</button>
 					</div>
 					<div id="item-shop" class="flex full row scrollable-y">
 						<div class="flex one column">
@@ -219,7 +234,7 @@
 							<div id="buyable-items"></div>
 						</div>
 						<div class="flex one column">
-							<h2>sell items</h2>
+							<h2>sell items/foods</h2>
 							<div id="sellable-items"></div>
 						</div>
 						<div class="flex one column">
@@ -228,11 +243,11 @@
 					</div>
 					<div id="card-shop" class="flex full row scrollable-y">
 						<div class="flex one column">
-							<h2>buy items</h2>
+							<h2>buy cards</h2>
 							<div id="buyable-cards"></div>
 						</div>
 						<div class="flex one column">
-							<h2>sell items</h2>
+							<h2>sell cards</h2>
 							<div id="sellable-cards"></div>
 						</div>
 						<div class="flex one column">
@@ -241,7 +256,7 @@
 					</div>
 					<div id="food-market" class="flex full row scrollable-y">
 						<div class="flex one column">
-							<h2>buy items</h2>
+							<h2>buy foods</h2>
 							<div id="buyable-foods"></div>
 						</div>
 						<div class="flex one column">
@@ -252,20 +267,20 @@
 				</div>
 			</div>
 
-			<div id="park" class="tab flex full outline center">
+			<div id="park" class="tab flex full outline center img-bg">
 				<div class="flex full column">
-					<div class="flex row" id="park-tab-buttons">
-						<button>tennis game</button>
-						<button>obstacle race</button>
-						<button onclick="switch_tab('map')">back to map</button>
+					<div class="flex row outline" id="park-tab-buttons">
+						<button class="btn primary-bg">tennis game</button>
+						<button class="btn primary-bg">obstacle race</button>
+						<button class="btn primary-bg" onclick="switch_tab('map')">back to map</button>
 					</div>
 					<div id="tennis-game" class="flex full column center">
 						<div class="flex one row">
 							<div class="flex one column center">
-								<button onclick="ponggame.handle_input('q')">dash up</button>
+								<button class="btn primary-bg" onclick="ponggame.handle_input('q')">dash up</button>
 								<div style="height:100px;width: 100px;border:solid;" id="up">move up</div>
 								<div style="height:100px;width: 100px;border:solid;" id="down">move down</div>
-								<button onclick="ponggame.handle_input('e')">dash down</button>
+								<button class="btn primary-bg" onclick="ponggame.handle_input('e')">dash down</button>
 							</div>
 							<div class="flex two column center">
 								<canvas id="game-canvas" class="full-width"></canvas>
@@ -275,15 +290,15 @@
 		                            <div id="move-data">lorem ipsum</div>
 		                        </div>
 		                        <div class="flex row wrappable">
-		                        	<button onclick="ponggame.start();">start</button>
-		                            <button onclick="ponggame.state='running'">restart</button>
-			                        <button onclick="ponggame.handle_input('p')">pause</button>
+		                        	<button class="btn primary-bg" onclick="ponggame.start();">start</button>
+		                            <button class="btn primary-bg" onclick="ponggame.state='running'">restart</button>
+			                        <button class="btn primary-bg" onclick="ponggame.handle_input('p')">pause</button>
 		                        </div>
 								 <div class="flex row wrappable">
-		                        	<button onclick="ponggame.handle_input('j')" id="special1">special 1</button>
-                            		<button onclick="ponggame.handle_input('k')" id="special2">special 2</button>
-                            		<button onclick="ponggame.handle_input('l')" id="special3">special 3</button>
-                            		<button onclick="ponggame.handle_input('u')" id="special4">special 4</button>
+		                        	<button class="btn primary-bg" onclick="ponggame.handle_input('j')" id="special1">special 1</button>
+                            		<button class="btn primary-bg" onclick="ponggame.handle_input('k')" id="special2">special 2</button>
+                            		<button class="btn primary-bg" onclick="ponggame.handle_input('l')" id="special3">special 3</button>
+                            		<button class="btn primary-bg" onclick="ponggame.handle_input('u')" id="special4">special 4</button>
 		                        </div>
 							</div>
 						</div>
@@ -297,13 +312,13 @@
 							</div>
 							<div class="flex four column center relative">
 								<div id="obstacle-game-ui" class="flex center absolute full">
-									<button onclick="document.getElementById('obstacle-game-ui').style.display='none';
+									<button class="btn primary-bg" onclick="document.getElementById('obstacle-game-ui').style.display='none';
 										obstacle_game.init({players:[1]})">obstacle game</button>
 								</div>
 								<canvas id="obstacle-game-canvas" class="full-width"></canvas>
 							</div>
 							<div class="flex one column center">
-								<button onclick="obstacle_game.pause()">pause</button>
+								<button class="btn primary-bg" onclick="obstacle_game.pause()">pause</button>
 								<div>
 									<span id="obstacle-game-coin-count"></span>
 									<span id="obstacle-game-score"></span>
@@ -346,7 +361,7 @@
 			level:1,
 			money:100,
 			movesets:[
-				['Strike','Heal','Blast Cannon','Power Up'],
+				['Strike','Heal','Blast Cannon','Repair','fusion xyz'],
 			],
 			available_moves:[
 			    'Strike',
@@ -409,15 +424,18 @@
 				})
 			}
 		}
-		function switch_tab(tab){
-			let tabs = document.querySelectorAll('.tab')
-			for(let i=0;i<tabs.length;i++){
-				tabs[i].style.display='none'
-				if(tabs[i].id==tab){
-					tabs[i].style.display='flex'
-				}
-			}
-			event_handler.broadcast({message:'tab switch',tab:tab})
+		function switch_tab(tab) {
+		    let tabs = document.querySelectorAll('.tab')
+
+		    tabs.forEach(el => {
+		        if (el.id === tab) {
+		            el.classList.add('active')
+		        } else {
+		            el.classList.remove('active')
+		        }
+		    })
+
+		    event_handler.broadcast({ message: 'tab switch', tab: tab })
 		}
 		let event_handler = new event_brocker()
 		let map = new Map(document.getElementById('map'))
