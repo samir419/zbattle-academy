@@ -75,7 +75,7 @@ class Arena{
 				mv.textContent=moveset[i]
 				div.appendChild(mv)
 			}
-			let play = document.createElement('button');play.textContent='play'
+			let play = document.createElement('button');play.textContent='play';play.className="btn primary-bg"
 			play.onclick=()=>{
 				this.selected_set = moveset
 				this.single_1v1(this.game)
@@ -91,8 +91,8 @@ class Arena{
 			let div = document.createElement('div');div.className='flex column outline'
 			let img = document.createElement('img');img.style.width='100px';img.style.height='100px'
 			let name = document.createElement('p');name.textContent=this.opponents[i].name
-			let btn = document.createElement('button')
-			let requit = document.createElement('button')
+			let btn = document.createElement('button');btn.className="btn primary-bg"
+			let requit = document.createElement('button');requit.className="btn primary-bg"
 			img.src = this.opponents[i].img
 			if(data.level+5>this.opponents[i].level){
 				btn.textContent='challenge '
@@ -166,21 +166,6 @@ class Arena{
 
     	game.apply_data(match_data)
     	this.update_ui(game)
-        let quit = document.createElement('button');
-        quit.textContent='quit'
-        quit.onclick=()=>{
-            game.log_data.innerHTML = ''
-            game.current_turn = 0
-            game.players = []
-            game.player_queue = []
-            game.set_format() 
-            this.selected_opponents=[]
-            this.opponent_select_screen.style.display = 'flex'
-		    this.move_select_screen.style.display = 'none'
-		    this.engine_elem.style.display = 'none'
-		    this.reset()
-        }
-        //document.getElementById('game-ui').append(quit)
 	    this.opponent_select_screen.style.display = 'none'
 	    this.move_select_screen.style.display = 'none'
 	    this.engine_elem.style.display = 'flex'
@@ -192,7 +177,7 @@ class Arena{
 		for(let i = 0;i<this.selected_opponents.length;i++){
 			let div = document.createElement('div');div.className='flex column outline'
 			let img = document.createElement('img');img.style.width='100px';img.style.height='100px'
-			let remove = document.createElement('button')
+			let remove = document.createElement('button');remove.className="btn primary-bg"
 			img.src = this.selected_opponents[i].img
 			remove.textContent='remove'
 			remove.onclick=()=>{
@@ -209,7 +194,7 @@ class Arena{
 		for(let i = 0;i<this.selected_allies.length;i++){
 			let div = document.createElement('div');div.className='flex column outline'
 			let img = document.createElement('img');img.style.width='100px';img.style.height='100px'
-			let remove = document.createElement('button')
+			let remove = document.createElement('button');remove.className="btn primary-bg"
 			img.src = this.selected_allies[i].img
 			remove.textContent='remove'
 			remove.onclick=()=>{
@@ -302,7 +287,7 @@ class Arena{
                     btn.onclick = () => {
                         move_prompt.innerHTML = `${m.name}`
                         data.players.forEach(p => {
-                            let btn = document.createElement('button');btn.className='secondary'
+                            let btn = document.createElement('button');btn.className='secondary btn primary-bg'
                             if (p.team == player.team && p.team != 'none') {
                                 btn.style.backgroundColor = 'blue'
                             }
@@ -326,7 +311,7 @@ class Arena{
                             		let selected_values = []
                             		let amount = 0
                             		for(let i=0;i<player.moves.length;i++){
-                            			let prompt_btn = document.createElement('button');btn.className='secondary'
+                            			let prompt_btn = document.createElement('button');btn.className='secondary btn primary-bg'
 			                            prompt_btn.textContent = player.moves[i].name
 			                            prompt_btn.onclick=()=>{
 			                            	prompt_btn.enabled=false;prompt_btn.disabled=true
@@ -335,7 +320,7 @@ class Arena{
 			                            	if(amount==m.prompt_data.amount){
 			                            		game.handle_request({type:'play',user:player.name,target:p.name,move:m.name,prompt_info:{selected_values:selected_values}})
 				                            	prompt.innerHTML=``;
-			                    				setTimeout(() => {this.update_ui(game)}, 1000);
+			                    				setTimeout(() => {this.update_ui(game)}, 500);
 			                            	}
 			                            }
 			                            move_prompt.appendChild(prompt_btn)
@@ -344,7 +329,7 @@ class Arena{
                             	}else{
                             		game.handle_request({type:'play',user:player.name,target:p.name,move:m.name,prompt_info:{prompt:'none'}})
                             		prompt.innerHTML=``;
-                            		setTimeout(() => {this.update_ui(game)}, 1000);
+                            		setTimeout(() => {this.update_ui(game)}, 500);
                             	}
                             }
                             move_prompt.appendChild(btn)
@@ -355,7 +340,7 @@ class Arena{
                     if (i > 1) {
                         moves.appendChild(btn)
                     } else {
-                        btn.className = 'normal-btn'
+                        btn.className = 'normal-btn btn primary-bg'
                         btn.removeChild(btn.children[0])
                         btn.appendChild(txt)
                         normal_moves.appendChild(btn)
@@ -391,7 +376,7 @@ class Arena{
             let normals = document.createElement('div'); normals.className = 'normal-moves'
             if (play.type == 'player'||play.team=='boss') {
                 for (let i = 0; i < play.moves.length; i++) {
-                    let btn = document.createElement('button'); btn.className = 'move-btn'
+                    let btn = document.createElement('button'); btn.className = 'move-btn btn'
                     let m = play.moves[i]
                     let image = document.createElement('img');image.className='move-img'
                     image.src = `battle engine/assets/moves/${m.img}`
@@ -402,7 +387,7 @@ class Arena{
                     btn.onclick = () => {
                         move_prompt.innerHTML = `${m.name}`
                         data.players.forEach(p => {
-                            let btn = document.createElement('button');btn.className='secondary'
+                            let btn = document.createElement('button');btn.className='secondary btn'
                             if (p.team == play.team && p.team != 'none') {
                                 btn.style.backgroundColor = 'blue'
                             }
@@ -411,7 +396,7 @@ class Arena{
                             	console.log(game.handle_request({type:'play',user:play.name,target:p.name,move:m.name}));
                             	prompt.innerHTML=``;
                             	this.update_ui(game);
-                            	setTimeout(() => {this.update_ui(game)}, 1000);
+                            	setTimeout(() => {this.update_ui(game)}, 500);
                             }
                             move_prompt.appendChild(btn)
                         })
@@ -422,7 +407,7 @@ class Arena{
                     if (i > 1) {
                         moves.appendChild(btn)
                     } else {
-                        btn.className = 'normal-btn'
+                        btn.className = 'normal-btn btn'
                         btn.removeChild(btn.children[0])
                         btn.appendChild(txt)
                         normals.appendChild(btn)
@@ -443,6 +428,21 @@ class Arena{
             document.getElementById('game-log').appendChild(msg);
             document.getElementById('game-log').scrollTop = document.getElementById('game-log').scrollHeight;
         })
+        let quit = document.createElement('button');quit.className="btn primary-bg"
+        quit.textContent='quit'
+        quit.onclick=()=>{
+            game.log_data.innerHTML = ''
+            game.current_turn = 0
+            game.players = []
+            game.player_queue = []
+            game.set_format() 
+            this.selected_opponents=[]
+            this.opponent_select_screen.style.display = 'flex'
+		    this.move_select_screen.style.display = 'none'
+		    this.engine_elem.style.display = 'none'
+		    this.reset()
+        }
+        main_div.append(quit)
     }
 
 	handle_event(data){
@@ -470,5 +470,6 @@ class Arena{
 	        this.reset()
 	        this.event_handler.broadcast({message:'time foward',hour:200})
         }
+        this.render_movesets()
 	}
 }

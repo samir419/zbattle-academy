@@ -30,7 +30,6 @@ class Dorm{
 			 for(let i=0;i<data.items.length;i++){
 		 		foods.push(data.items[i])
 			 }
-			 console.log(foods)
 			init_cooking_game(foods)
 		}
 		this.switch_tab('dorm-save')
@@ -130,7 +129,7 @@ class Dorm{
 		document.getElementById('dorm-items').innerHTML='<h2>items:</h2>'
 		let data = JSON.parse(localStorage.getItem('zbattle academy data'))
 		for(let i=0;i<data.items.length;i++){
-			document.getElementById('dorm-items').innerHTML+=data.items[i].name+','
+			document.getElementById('dorm-items').innerHTML+=data.items[i].name+', '
 		}
 		
 	}
@@ -182,7 +181,7 @@ class Dorm{
 			}
 		}
 		for(let i=0;i<data.available_moves.length;i++){
-			let div = document.createElement('div');div.className='flex center column outline'
+			let div = document.createElement('div');div.className='flex center column'
 			let move_name = document.createElement('div');move_name.textContent=data.available_moves[i]
 			let add_btn = document.createElement('button');add_btn.textContent='add'
 			add_btn.onclick=()=>{
