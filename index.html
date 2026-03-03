@@ -5,6 +5,7 @@
 	<title>Document</title>
 	<link rel="stylesheet" href="samir.css">
 	<link rel="stylesheet" href="zbattle.css">
+	<link rel="stylesheet" href="cookinggame.css">
 	<style>
 		html,body{
 			margin: 0;
@@ -31,25 +32,7 @@
 			font-size: 16px;
 			border:none;
 		}
-		#boiling-bar-container {
-		    position: relative;
-		    width: 300px;
-		    height: 20px;
-		    background: #222;
-		}
-
-		#boiling-bar {
-		    height: 100%;
-		    width: 0%;
-		    background: white;
-		}
-
-		#boiling-target {
-		    position: absolute;
-		    top: 0;
-		    height: 100%;
-		    background: rgba(0,255,0,0.4);
-		}
+		
 		.tab {
 		    opacity: 0;
 		    transition: opacity 1s ease;
@@ -61,6 +44,10 @@
 		    opacity: 1;
 		}
 
+		.no-touch {
+		  pointer-events: none;
+		}
+
 	</style>
 </head>
 <body>
@@ -68,8 +55,9 @@
 		<div id="main" class="flex column outline relative">
 
 			<div id="notifs" class="flex full column absolute priority-1 scrollable-y" style="display:none;background-color:rgba(0,0,0,0.5)">
-				<button onclick="document.getElementById('notifs').style.display='none'">close</button>
+				<button class="btn primary" onclick="document.getElementById('notifs').style.display='none'">close</button>
 			</div>
+			<div id="message_log" class="flex full column absolute priority-1 center" style="display:none;"></div>
 			<div class="flex absolute priority-2" style="top: 0;right: 0;">
 				<div id="date-time"></div>
 				<button class="btn primary-bg" onclick="event_handler.broadcast({message:'open notifs'})" id="notif-button">notifs</button>
@@ -78,6 +66,7 @@
 				<div class="flex full row">
 					<div class="flex one column scrollable-y outline center" id="locations">
 						<button class="btn primary-bg" onclick="switch_tab('dorm')">dorm</button>
+						<button class="btn primary-bg" onclick="switch_tab('class-room')">class room</button>
 						<button class="btn primary-bg " onclick="switch_tab('arena')">arena</button>
 						<button class="btn primary-bg" onclick="switch_tab('shop')">shop</button>
 						<button class="btn primary-bg" onclick="switch_tab('park')">park</button>
@@ -98,6 +87,7 @@
 						<button class="btn primary-bg">movesets</button>
 						<button class="btn primary-bg">calendar</button>
 						<button class="btn primary-bg">kitchen</button>
+						<button class="btn primary-bg">achievements</button>
 						<button class="btn primary-bg" onclick="switch_tab('map')">back to map</button>
 					</div>
 					<div id="dorm-save" class="flex full column">
@@ -107,7 +97,7 @@
 							<button class="btn primary-bg" id="dorm-save-btn">save</button>
 							<input type="file" name="" id="save-file-input">
 							<button class="btn primary-bg" id="dorm-load-btn">load</button>
-							<button class="btn primary-bg" onclick="">clear local storage</button>
+							<button class="btn primary-bg" id="delete-player-data">delete player data</button>
 						</div>
 						<div>
 							<button class="btn primary-bg" id="sleep-btn">sleep</button>
@@ -122,6 +112,7 @@
 					</div>
 					<div id="dorm-calendar" class="flex full column center">
 						<h2>calendar</h2>
+						<div id="dorm-event-list" class="flex full column wrappable"></div>
 					</div>
 					<div id="create-moveset-form" class="flex full column">
 						<h2>create moveset</h2>
@@ -182,6 +173,20 @@
 						</div>
 						
 					</div>
+					<div id="player-achievements" class="flex full column">
+						<h2>achievements</h2>
+						<div class="flex row full">
+							<div class="flex one column">
+								<h2>missions</h2>
+								<div id="player-missions"></div>
+							</div>
+							<div class="flex one column">
+								<h2>stats</h2>
+								<div id="dorm-player-stats"></div>
+							</div>
+						</div>
+						
+					</div>
 				</div>
 			</div>
 
@@ -219,6 +224,30 @@
 				</div>
 			</div>
 
+			<div id="class-room" class="tab flex full outline center img-bg">
+				<div class="flex full column">
+					<div class="flex row outline" id="class-tab-buttons">
+						<button class="btn primary-bg">hangout</button>
+						<button class="btn primary-bg">tutorial</button>
+						<button class="btn primary-bg">libary </button>
+						<button class="btn primary-bg">class</button>
+						<button class="btn primary-bg" onclick="switch_tab('map')">back to map</button>
+					</div>
+					<div class="flex full column center" id="classroom-hangout">
+						<div class="outline">
+							<img src="" alt="" id="class-char-img" height="150px">
+						</div>
+						<div id="class-char-dialogue" class="outline"></div>
+						<div id="class-controls" class="outline"></div>
+					</div>
+					<div class="flex full column center" id="classroom">
+						<h1>class</h1>
+					</div>
+				</div>
+			</div>
+
+			<div></div>
+
 			<div id="shop" class="tab flex full outline center img-bg">
 				<div class="flex full column">
 					<div class="flex row outline" id="shop-tab-buttons">
@@ -228,6 +257,7 @@
 						<button class="btn primary-bg">gacha roulette</button>
 						<button class="btn primary-bg" onclick="switch_tab('map')">back to map</button>
 					</div>
+					<div id="player-money"></div>
 					<div id="item-shop" class="flex full row scrollable-y">
 						<div class="flex one column">
 							<h2>buy items</h2>
@@ -238,6 +268,7 @@
 							<div id="sellable-items"></div>
 						</div>
 						<div class="flex one column">
+							<img src="assets/locations/shop/shopgirl.png" style="height:240px;width:150px;">
 							<div id="shop girl"></div>
 						</div>
 					</div>
@@ -251,6 +282,7 @@
 							<div id="sellable-cards"></div>
 						</div>
 						<div class="flex one column">
+							<img src="assets/locations/shop/card boy.jpg" style="height:240px;width:150px;">
 							<div id="shop boy"></div>
 						</div>
 					</div>
@@ -260,6 +292,7 @@
 							<div id="buyable-foods"></div>
 						</div>
 						<div class="flex one column">
+							<img src="assets/locations/shop/market woman.png" style="height:240px;width:150px;">
 							<div id="shop woman"></div>
 						</div>
 					</div>
@@ -272,6 +305,7 @@
 					<div class="flex row outline" id="park-tab-buttons">
 						<button class="btn primary-bg">tennis game</button>
 						<button class="btn primary-bg">obstacle race</button>
+						<button class="btn primary-bg">bench</button>
 						<button class="btn primary-bg" onclick="switch_tab('map')">back to map</button>
 					</div>
 					<div id="tennis-game" class="flex full column center">
@@ -329,10 +363,15 @@
 							</div>
 						</div>
 					</div>
+					<div class="flex full column center" id="bench">
+						<div class="outline">
+							<img src="" alt="" id="park-char-img" height="150px">
+						</div>
+						<div id="park-char-dialogue" class="outline"></div>
+						<div id="park-controls" class="outline"></div>
+					</div>
 				</div>
 			</div>
-			
-
 		</div>
 	</div>
 	<script src="map.js"></script>
@@ -342,6 +381,7 @@
 	<script src="arena.js"></script>
 	<script src="shop.js"></script>
 	<script src="park.js"></script>
+	<script src="classroom.js"></script>
 	<script src="battle engine/moves.js"></script>
 	<script src="battle engine/zbattle.js"></script>
 	<script src="battle engine/eventHandler.js"></script>
@@ -351,53 +391,60 @@
     <script src="z pong/controls.js"></script>
     <script src="obstacle race/game.js"></script>
     <script src="cookinggame/cookinggame.js"></script>
-	<script>
-		let username = 'player'
-		if(!localStorage.getItem('zbattle academy data')){
-		    username = prompt('enter your name')
-		}
-		game_data = {
-			name:username,
-			level:1,
-			money:100,
-			movesets:[
-				['Strike','Heal','Blast Cannon','Power Up'],
-			],
-			available_moves:[
-			    'Strike',
-			    'Blast Cannon',
-			    'Heal',
-			    'Power Up',
-			    'Repair',
-			    'Attack Up',
-			],
-			items:[],
-			time:{day:0,hour:0}
+    <script src="char_engine.js"></script>
 
-		}
-		localStorage.setItem('zbattle academy data', JSON.stringify(game_data))
-		if(localStorage.getItem('zbattle academy data')){
-			game_data = JSON.parse(localStorage.getItem('zbattle academy data'))
-		}else{
-			localStorage.setItem('zbattle academy data', JSON.stringify(game_data))
-		}
-		localStorage.setItem('zbattle academy data', JSON.stringify(game_data))
+    <script src="chars/rico/rico.js"></script>
+	<script>
+
 		class event_brocker{
 			constructor(){
 				this.subscribers=[]
+				this.apis={}
 			}
 			add_subscriber(obj){
 				obj.event_handler = this
 				this.subscribers.push(obj)
 				//obj.elem.innerHTML+='added event handler'
 			}
+			add_api(data){
+				this.apis[data.name]=data.self
+			}
+			fetch_api(data){
+				return this.apis[data.name].handle_fetch(data)
+			}
+			set_message(data){
+				document.getElementById('message_log').style.display='flex'
+				document.getElementById('message_log').innerHTML=''
+				let div = document.createElement('div');div.className="flex center outline img-bg column"
+				div.style.minHeight='120px'
+				div.style.minWidth = '200px'
+				let text = document.createElement('p')
+				text.textContent=data.text
+				let buttons = document.createElement('div')
+				for(let i=0;i<data.options.length;i++){
+					let btn = document.createElement('button');btn.className='btn primary'
+					btn.textContent=data.options[i].text
+					btn.onclick=data.options[i].func
+					buttons.appendChild(btn)
+				}
+				if(data.canClose==true){
+					let btn = document.createElement('button');btn.className='btn primary'
+					btn.textContent='close'
+					btn.onclick=()=>{this.close()}
+					buttons.appendChild(btn)
+				}
+				div.append(text,buttons)
+				document.getElementById('message_log').append(div)
+			}
+			close(){
+				document.getElementById('message_log').style.display='none';
+				document.getElementById('message_log').innerHTML=''
+			}
 			broadcast(data){
 				if(data.message=='switch'){
 					switch_tab(data.tab)
 				}
-				if(data.message=='player victory'){
-                    alert(data.name)
-                }
+				
                 if(data.message=='restart'){
                     let quit = document.createElement('button');quit.className='primary'
                     quit.textContent='quit'
@@ -438,21 +485,92 @@
 		    event_handler.broadcast({ message: 'tab switch', tab: tab })
 		}
 		let event_handler = new event_brocker()
+		
+		let notif = new Notif()
+		event_handler.add_subscriber(notif)
+		let username = 'player'
+		if(!localStorage.getItem('zbattle academy data')){
+		    username = prompt('enter your name')
+		    event_handler.set_message({
+				text:`welcome to zbattle academy ${username}. your goal is to defeat all battlers and become the ultimate champion`,
+				canClose:true,
+				options:[]
+			})
+		    //event_handler.broadcast({message:'set notif',elem:"<p class='center'>welcome to game</P>"})
+		    //event_handler.broadcast({message:'open notifs'})
+		}
+		game_data = {
+			name: username,
+			level: 1,
+			money: 100,
+			thumbnail:'battle engine/assets/ZBATTLELOGO.png',
+			movesets: [
+				['Strike','Heal','Blast Cannon','Power Up'],
+			],
+			available_moves: [
+			    'Strike',
+			    'Blast Cannon',
+			    'Heal',
+			    'Power Up',
+			    'Repair',
+			    'Attack Up',
+			],
+			items: [],
+			stats: {
+				defeated_opponents: [],
+				wins: 0,
+				losses: 0
+			},
+			missions: [
+				{ id:'buy_1', goal:'buy 1 item', completed:false },
+				{ id:'defeat_1', goal:'Defeat 1 opponent1', completed:false },
+				{ id:'defeat_3', goal:'Defeat 3 opponents', completed:false },
+				{ id:'defeat_10', goal:'Defeat 10 opponents', completed:false },
+				{ id:'reach_lvl_10', goal:'Reach level 10', completed:false },
+				{ id:'own_10_moves', goal:'Own 10 available moves', completed:false },
+				{ id:'own_2_sets', goal:'Own 2 move sets', completed:false },
+				{ id:'earn_500', goal:'Earn 500 coins', completed:false },
+				{ id:'own_10_items', goal:'Own 10 items', completed:false },
+				{ id:'defeat_zabel', goal:'Defeat Zabel the school director', completed:false }
+			],
+			contacts:[],
+			time:{day:0,hour:0}
+		}
+		//localStorage.setItem('zbattle academy data', JSON.stringify(game_data))
+		if(localStorage.getItem('zbattle academy data')){
+			game_data = JSON.parse(localStorage.getItem('zbattle academy data'))
+		}else{
+			localStorage.setItem('zbattle academy data', JSON.stringify(game_data))
+		}
+		console.log(game_data)
+		//localStorage.setItem('zbattle academy data', JSON.stringify(game_data))
+
 		let map = new Map(document.getElementById('map'))
 		let dorm = new Dorm(document.getElementById('dorm'))
 		let arena = new Arena(document.getElementById('arena'))
 		let shop = new Shop(document.getElementById('shop'))
-		let notif = new Notif()
+		let classroom = new Classroom(document.getElementById('class-room'))
+		
 		let calendar = new Calendar()
 		let park = new Park(document.getElementById('park'))
 		event_handler.add_subscriber(map)
 		event_handler.add_subscriber(dorm)
 		event_handler.add_subscriber(arena)
 		event_handler.add_subscriber(shop)
-		event_handler.add_subscriber(notif)
+		
 		event_handler.add_subscriber(calendar)
 		event_handler.add_subscriber(park)
+		event_handler.add_subscriber(classroom)
 		event_handler.add_subscriber(ponggame)
+
+		let char_data = {'rico':rico,'rico2':rico2}
+		let char_engine = new Character_Engine()
+		event_handler.add_subscriber(char_engine)
+		event_handler.add_api({name:'character engine',self:char_engine})
+		char_engine.char_data=char_data
+		classroom.resident='rico'
+		park.resident='rico2'
+
 		switch_tab('map')
 		let game = new Game()
 		event_handler.add_subscriber(game)

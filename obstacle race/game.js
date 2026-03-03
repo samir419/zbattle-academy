@@ -158,8 +158,8 @@ class Obstacle_race{
 		   this.players[0].x = this.canvas.width - this.players[0].width;
 
   		// Spawn obstacles
-		  this.spawnTimer++;
-		  if (this.spawnTimer > this.spawnInterval) {
+		  this.spawnTimer+=1*dt;
+		  if (this.spawnTimer > this.spawnInterval*dt) {
 		  	this.spawnObstacle();
 		    this.spawnTimer = 0;
 		    if (this.spawnInterval > 30) this.spawnInterval -= 1; // difficulty increase
@@ -218,7 +218,7 @@ class Obstacle_race{
 			this.state='pause'
 		}else if(this.state=='pause'){
 			this.state='running'
-			this.update()
+			requestAnimationFrame(this.update);
 		}
 
 	}

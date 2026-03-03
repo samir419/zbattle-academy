@@ -1,29 +1,22 @@
-class Park{
+class Classroom{
 	constructor(elem){
 		this.elem = elem
 		this.event_handler
 		this.resident
-		this.tabButtons = document.getElementById('park-tab-buttons').children
-		
+		this.tabButtons = document.getElementById('class-tab-buttons').children
 		this.sections = [
-			document.getElementById('tennis-game'),
-			document.getElementById('obstacle-race'),
-			document.getElementById('bench')
+			document.getElementById("classroom-hangout"),
+			document.getElementById("classroom"),
 		]
-
 		this.tabButtons[0].onclick =()=>{
-			this.switch_tab('tennis-game')
+			this.switch_tab("classroom-hangout")
+			this.set_character('rico')
 		}
 		this.tabButtons[1].onclick =()=>{
-			this.switch_tab('obstacle-race')
+			this.switch_tab("classroom")
 		}
-		this.tabButtons[2].onclick =()=>{
-			this.switch_tab('bench')
-			this.set_character(this.resident)
-		}
-		this.switch_tab('tennis-game')
+		this.switch_tab("classroom-hangout")
 	}
-	
 	switch_tab(tab){
 		this.sections.forEach(section=>{
 			section.style.display='none'
@@ -33,40 +26,16 @@ class Park{
 		})
 	}
 	handleOnSwitch(){
+		this.set_character(this.resident)
 	}
 	
 	handle_event(data){
 		if(data.message=='tab switch'&&data.tab==this.elem.id){
 			this.handleOnSwitch()
 		}
-		if(data.message=='player win tennis'){
-			let player_data = JSON.parse(localStorage.getItem('zbattle academy data'))
-			player_data.money+=100
-        	this.event_handler.broadcast({message:'save data',data:player_data})
-        	this.event_handler.set_message({
-        		text:'you won',canClose:true,options:[]
-        	})
-	        this.event_handler.broadcast({message:'time foward',hour:200})
-		}
-		if(data.message=='player loose tennis'){
-			this.event_handler.set_message({text:'you lost',canClose:true,options:[]})
-			let player_data = JSON.parse(localStorage.getItem('zbattle academy data'))
-			player_data.money-=50
-        	this.event_handler.broadcast({message:'save data',data:player_data})
-	        this.event_handler.broadcast({message:'time foward',hour:200})
-		}
-		if(data.message=='player loose obstacle race'){
-			let player_data = JSON.parse(localStorage.getItem('zbattle academy data'))
-			player_data.money+=data.coins
-        	this.event_handler.broadcast({message:'save data',data:player_data})
-	        this.event_handler.broadcast({message:'time foward',hour:200})
-		}
-		if(data.tab=='park'){
-        	if(data.event_data){}
-        }
 	}
 	set_character(char_name){
-		document.getElementById("park-controls").innerHTML=''
+		document.getElementById("class-controls").innerHTML=''
 		let influence_stats = {friendly:0,emotion:0}
 		let dt = JSON.parse(localStorage.getItem('zbattle academy data'))
 		for(let i=0;i<dt.contacts.length;i++){
@@ -78,7 +47,7 @@ class Park{
 		let talk = document.createElement('button')
 		talk.textContent='talk';talk.className='btn primary-bg'
 		talk.onclick=()=>{
-			document.getElementById("park-char-dialogue").innerHTML=''
+			document.getElementById("class-char-dialogue").innerHTML=''
 			let data = this.event_handler.fetch_api({name:'character engine',char:char_name,f:influence_stats.friendly,e:influence_stats.emotion})
 			let dialogue = document.createElement('p')
 			let buttons_div = document.createElement('div')
@@ -119,8 +88,8 @@ class Park{
 				}
 				buttons_div.append(btn)
 			}
-			document.getElementById("park-char-dialogue").append(dialogue,buttons_div)
-			document.getElementById("park-char-img").src = data.image
+			document.getElementById("class-char-dialogue").append(dialogue,buttons_div)
+			document.getElementById("class-char-img").src = data.image
 			
 		}
 		let item = document.createElement('button')
@@ -135,7 +104,7 @@ class Park{
 		    		func:function(){
 		    			let data = self.event_handler.fetch_api({name:'character engine',type:'give item',item:player_data.items[i].name})
 		    			player_data.items.splice(i,1)
-		    			document.getElementById("park-char-dialogue").innerHTML=data.text
+		    			document.getElementById("class-char-dialogue").innerHTML=data.text
 		    			if(influence_stats.friendly<2){
 		    				influence_stats.friendly+=data.influence[0]
 		    			}
@@ -157,12 +126,11 @@ class Park{
 			let data = this.event_handler.fetch_api({name:'character engine',char:char_name,type:'battle request'})
 			this.event_handler.broadcast({message:'switch',tab:'arena',event_data:{type:'battle request',opponent:data.battle_info}})
 		}
-		document.getElementById("park-controls").append(talk)
-		document.getElementById("park-controls").append(item)
-		document.getElementById("park-controls").append(battle)
+		document.getElementById("class-controls").append(talk)
+		document.getElementById("class-controls").append(item)
+		document.getElementById("class-controls").append(battle)
 		let data = this.event_handler.fetch_api({name:'character engine',char:char_name,f:influence_stats.friendly,e:influence_stats.emotion})
-		document.getElementById("park-char-dialogue").innerHTML=data.intro
-		document.getElementById("park-char-img").src = data.image
+		document.getElementById("class-char-dialogue").innerHTML=data.intro
+		document.getElementById("class-char-img").src = data.image
 	}
 }
-

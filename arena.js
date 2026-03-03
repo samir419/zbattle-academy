@@ -46,12 +46,13 @@ class Arena{
 
 	    this.opponents =[
 	    	{name:'cpu',moves:[],level:5,type:'cpu', img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'peapsqueak',moves:['Repair','Strike','Attack Up'],level:1,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'peapsqueak',health:500,moves:['Repair','Strike','Attack Up'],level:1,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'nero',health:1000,level:2,moves:['Strike','Blast Cannon','Heal','Power Up'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'aisha',health:1000,moves:['Strike','Repair','Heal','Replenish' ],type:'cpu',level:3, img:'battle engine/assets/profiles/aisha.jpg'},
 	    	{name:'blake',health:1300,moves:['Strike','Repair','Shield Strike','Force Field' ],type:'cpu',level:4, img:'battle engine/assets/profiles/blake.jpg'},
-	    	{name:'pumkin',moves:['Replenish','Demon Charge','Baneful Binding', 'Repair','Attack Up','Malevonent Armor',],type:'cpu',level:10, img:'battle engine/assets/profiles/pumkin.jpg'},
-	    	{name:'quetzie',health:1500,moves:['Strike','Blast Cannon','Baneful Binding','Power Up','Covenant of Carnage','fusion xyz', ],type:'cpu',level:1, img:'battle engine/assets/profiles/quetzie.jpg'},
-	    	{name:'red',health:1500,moves:['Strike','Repair','Beast Mode','Power Up','Attack Up', 'Demon Charge',],type:'cpu',level:1, img:'battle engine/assets/profiles/red.jpg'},
+	    	{name:'pumkin',moves:['Replenish','Demon Charge','Baneful Binding', 'Repair','Attack Up','Malevonent Armor',],type:'cpu',level:6, img:'battle engine/assets/profiles/pumkin.jpg'},
+	    	{name:'quetzie',health:1500,moves:['Strike','Blast Cannon','Mirror Match','Power Up','Covenant of Carnage','fusion xyz', ],type:'cpu',level:8, img:'battle engine/assets/profiles/quetzie.jpg'},
+	    	{name:'red',health:1500,moves:['Strike','Repair','Beast Mode','Power Up','Attack Up', 'Demon Charge',],type:'cpu',level:10, img:'battle engine/assets/profiles/red.jpg'},
 	    ]
 
 	    this.selected_opponents=[]
@@ -120,6 +121,10 @@ class Arena{
 			document.getElementById('opponent-list').append(div)
 		}
 		document.getElementById("commence-battle").onclick=()=>{
+			if(this.selected_opponents.length<=0){
+				this.event_handler.set_message({text:'select an opponent',canClose:true,options:[]})
+				return
+			}
 			this.opponent_select_screen.style.display = 'none'
 		    this.move_select_screen.style.display = 'flex'
 		    this.engine_elem.style.display = 'none'
@@ -134,7 +139,7 @@ class Arena{
 		let match_data = {players:[]}
 	    match_data.format='teams'
 	    let data = JSON.parse(localStorage.getItem('zbattle academy data'))
-	    match_data.players.push({name:data.name,moves:this.selected_set,type:'player',team:'player', img:img_list[Math.floor(Math.random() * img_list.length)]})
+	    match_data.players.push({name:data.name,moves:this.selected_set,type:'player',team:'player', img:data.thumbnail})
 
 	    for(let i=0;i<this.selected_allies.length;i++){
 	    	this.selected_allies[i].team='player'
@@ -249,6 +254,7 @@ class Arena{
         		let info_div=document.createElement('div');info_div.className='flex column'
         		let image = document.createElement('img'); image.className = 'player-image'; image.src = player.img
         		let name = document.createElement('h3');name.textContent=player.name
+        		name.title=`${player.health},${player.status_effects},${player.lastmoveused},${player.lastDamageReceived}`
 	            let health = document.createElement('div'); health.className = 'player-health'
 	            for (let i = 0; i < player.health; i += 100) {
 	                let healthbar = document.createElement('div')
@@ -266,6 +272,7 @@ class Arena{
         		let info_div=document.createElement('div');info_div.className='flex column'
         		let image = document.createElement('img'); image.className = 'player-image'; image.src = player.img
         		let name = document.createElement('h3');name.textContent=player.name
+        		name.title=`${player.health},${player.status_effects},${player.lastmoveused},${player.lastDamageReceived}`
 	            let health = document.createElement('div'); health.className = 'player-health'
 	            for (let i = 0; i < player.health; i += 100) {
 	                let healthbar = document.createElement('div')
@@ -284,6 +291,7 @@ class Arena{
                     let txt = document.createElement('span')
                     txt.textContent=m.name
                     if(m.durability<=0){btn.enabled=false;btn.disabled=true}
+                    if(m.isenabled==false){btn.style.backgroundColor='gray'}
                     btn.onclick = () => {
                         move_prompt.innerHTML = `${m.name}`
                         data.players.forEach(p => {
@@ -293,6 +301,8 @@ class Arena{
                             }
                             btn.textContent = p.name
                             btn.onclick = () => {
+                            	btn.enabled=false;btn.disabled=true
+                            	btn.textContent='loading...'
                             	if(m.prompt_data.type=='player move select'){
                             		move_prompt.innerHTML = `${m.prompt_data.message}`
                             		for(let i=0;i<player.moves.length;i++){
@@ -444,32 +454,212 @@ class Arena{
         }
         main_div.append(quit)
     }
-
+    handle_post_game(data){
+    	let dt = JSON.parse(localStorage.getItem('zbattle academy data'))
+        if(data.name==dt.name||data.name == 'player'){
+        	for(let i=0;i<this.selected_opponents.length;i++){
+        		dt.level+=Math.ceil(this.selected_opponents[i].level / 5)
+        		dt.money+=this.selected_opponents[i].level*25
+        		if(!dt.stats.defeated_opponents.includes(this.selected_opponents[i].name)){
+        			dt.stats.defeated_opponents.push(this.selected_opponents[i].name)
+        			dt.stats.wins+=1
+        		}
+        	}
+        	this.event_handler.broadcast({message:'set notif',elem:`<p>you reached level ${dt.level}</p>`})
+        	this.event_handler.broadcast({message:'set notif',elem:`<p>you now have ${dt.money} z</p>`})
+        	this.event_handler.broadcast({message:'save data',data:dt})
+        	let self = this
+        	this.event_handler.set_message({text:'you won',canClose:false,options:[
+        		{
+        			text:'ok',
+        			func:function(){
+        				game.log_data.innerHTML = ''
+			            game.current_turn = 0
+			            game.players = []
+			            game.player_queue = []
+			            game.set_format() 
+			            self.selected_opponents=[]
+			            self.opponent_select_screen.style.display = 'flex'
+					    self.move_select_screen.style.display = 'none'
+					    self.engine_elem.style.display = 'none'
+					    self.reset()
+					    document.getElementById('message_log').style.display='none';
+						document.getElementById('message_log').innerHTML=''
+        			}
+        		}
+        	]})
+        	
+        }else{
+        	dt.level+=Math.ceil(this.selected_opponents[i].level / 5)+1
+			dt.money-=dt.money*5/100
+			dt.stats.losses+=1
+			this.event_handler.broadcast({message:'set notif',elem:`<p>you reached level ${dt.level}</p>`})
+        	this.event_handler.broadcast({message:'set notif',elem:`<p>you now have ${dt.money} z</p>`})
+        	this.event_handler.broadcast({message:'save data',data:dt})
+        	let self = this
+        	this.event_handler.set_message({text:'you lost',canClose:false,options:[
+        		{
+        			text:'ok',
+        			func:function(){
+        				game.log_data.innerHTML = ''
+			            game.current_turn = 0
+			            game.players = []
+			            game.player_queue = []
+			            game.set_format() 
+			            self.selected_opponents=[]
+			            self.opponent_select_screen.style.display = 'flex'
+					    self.move_select_screen.style.display = 'none'
+					    self.engine_elem.style.display = 'none'
+					    self.reset()
+					    document.getElementById('message_log').style.display='none';
+						document.getElementById('message_log').innerHTML=''
+        			}
+        		}
+        	]})
+        }
+       
+        this.event_handler.broadcast({message:'time foward',hour:200})
+    }
 	handle_event(data){
 		if(data.message=='player victory'||data.message=='team victory'){
-            let dt = JSON.parse(localStorage.getItem('zbattle academy data'))
-            if(data.name==dt.name||data.name == 'player'){
-            	for(let i=0;i<this.selected_opponents.length;i++){
-            		dt.level+=Math.ceil(this.selected_opponents[i].level / 5)
-            		dt.money+=this.selected_opponents[i].level*25
-            	}
-            	this.event_handler.broadcast({message:'save data',data:dt})
-            	alert('you won')
-            	game.log_data.innerHTML = ''
-	            game.current_turn = 0
-	            game.players = []
-	            game.player_queue = []
-	            game.set_format() 
-	            this.selected_opponents=[]
-	            this.opponent_select_screen.style.display = 'flex'
-			    this.move_select_screen.style.display = 'none'
-			    this.engine_elem.style.display = 'none'
-            }else{
-	        	alert('you lost')
-	        }
-	        this.reset()
-	        this.event_handler.broadcast({message:'time foward',hour:200})
+            this.handle_post_game(data)
         }
+        if(data.tab=='arena'){
+        	if(!data.event_data)return
+        	if(data.event_data.type=='tournament'){
+        		console.log(data)
+        		let pre_game_message=document.createElement('p')
+        		document.getElementById('moveset-select').appendChild(pre_game_message)
+        		let opponent_count=data.event_data.opponents.length
+        		let current_opp = 0
+        		let temp_func = this.handle_post_game
+        		let opponents = data.event_data.opponents
+        		let reward = data.event_data.reward
+        		let item_rewards = data.event_data.item_rewards
+        		this.handle_post_game=(data)=>{
+        			let dt = JSON.parse(localStorage.getItem('zbattle academy data'))
+        			if(data.name==dt.name||data.name == 'player'){
+						this.event_handler.set_message({text:'you won',canClose:true,options:[]})
+						current_opp++
+	        			opponent_count--
+	        			if(opponent_count==0){
+	        				console.log('finished tournament')
+	        				this.handle_post_game=temp_func
+	        				
+
+	        				dt.money += reward
+	        				dt.level+=opponents.length
+	        				for(let i=0;i<item_rewards.length;i++){
+	        					dt.items.push(item_rewards[i])
+	        				}
+	        				
+	        				this.event_handler.broadcast({message:'set notif',elem:`<p>you reached level ${dt.level}</p>`})
+	        				this.event_handler.broadcast({message:'set notif',elem:`<p>you now have ${dt.money} z</p>`})
+	        				this.event_handler.broadcast({message:'save data',data:dt})
+	        				game.log_data.innerHTML = ''
+				            game.current_turn = 0
+				            game.players = []
+				            game.player_queue = []
+				            game.set_format() 
+				            this.selected_opponents=[]
+		        			this.reset()
+		        			 this.opponent_select_screen.style.display = 'flex'
+						    this.move_select_screen.style.display = 'none'
+						    this.engine_elem.style.display = 'none'
+						    this.event_handler.set_message({
+						    	text:'you won the tournament',
+						    	canClose:true,
+						    	options:[
+						    		/*{
+							    		text:'yipee',
+							    		func:function(){
+							    			console.log('yipee')
+							    			document.getElementById('message_log').style.display='none';
+											document.getElementById('message_log').innerHTML=''
+							    		}
+						    		},
+						    		{
+							    		text:'no',
+							    		func:function(){
+							    			console.log('no')
+							    		}
+						    		}*/
+						    	]
+						    })
+	        				return
+	        			}
+	        			
+	    				if(!dt.stats.defeated_opponents.includes(this.selected_opponents[0].name)){
+		        			dt.stats.defeated_opponents.push(this.selected_opponents[0].name)
+		        			dt.stats.wins+=1
+		        		}
+		        		this.event_handler.broadcast({message:'save data',data:dt})
+	        			game.log_data.innerHTML = ''
+			            game.current_turn = 0
+			            game.players = []
+			            game.player_queue = []
+			            game.set_format() 
+			            this.selected_opponents=[]
+	        			this.reset()
+	        			let next_opponent=opponents[current_opp]
+	        			if(next_opponent.name=='random'){
+	        				next_opponent=this.opponents[Math.floor(Math.random() * this.opponents.length)]
+	        			}
+	        			this.selected_opponents.push(next_opponent)
+		        		this.opponent_select_screen.style.display = 'none'
+					    this.move_select_screen.style.display = 'flex'
+					    this.engine_elem.style.display = 'none'
+		        		this.render_movesets()
+		        		pre_game_message.textContent=`next match of the tournament against ${this.selected_opponents[0].name}`
+					}else{
+						this.event_handler.set_message({text:'you lost',canClose:false,options:[]})
+						console.log('finished tournament')
+        				this.handle_post_game=temp_func
+        				
+        				
+
+        				dt.money -= 100
+        				dt.level+=opponents.length
+        				dt.stats.losses+=1
+        				
+        				this.event_handler.broadcast({message:'set notif',elem:`<p>you reached level ${dt.level}</p>`})
+        				this.event_handler.broadcast({message:'set notif',elem:`<p>you lost ${100} z</p>`})
+        				this.event_handler.broadcast({message:'save data',data:dt})
+        				game.log_data.innerHTML = ''
+			            game.current_turn = 0
+			            game.players = []
+			            game.player_queue = []
+			            game.set_format() 
+			            this.selected_opponents=[]
+	        			this.reset()
+	        			 this.opponent_select_screen.style.display = 'flex'
+					    this.move_select_screen.style.display = 'none'
+					    this.engine_elem.style.display = 'none'
+					}
+        			
+        		}
+        		let next_opponent=opponents[current_opp]
+    			if(next_opponent.name=='random'){
+    				next_opponent=this.opponents[Math.floor(Math.random() * this.opponents.length)]
+    			}
+    			this.selected_opponents.push(next_opponent)
+        		this.opponent_select_screen.style.display = 'none'
+			    this.move_select_screen.style.display = 'flex'
+			    this.engine_elem.style.display = 'none'
+        		this.render_movesets()
+        		pre_game_message.textContent=`first match of the tournament against ${this.selected_opponents[0].name}`
+        		
+        	}
+        	if(data.event_data.type=='battle request'){
+	        	console.log(data)
+	        	this.selected_opponents.push(data.event_data.opponent)
+        		this.opponent_select_screen.style.display = 'none'
+			    this.move_select_screen.style.display = 'flex'
+			    this.engine_elem.style.display = 'none'
+        		this.render_movesets()
+	        }
+        }
+       
         this.render_movesets()
 	}
 }

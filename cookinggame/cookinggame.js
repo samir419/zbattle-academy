@@ -496,7 +496,7 @@ function init_cooking_game(data){
 	};
 	
 	document.getElementById("serve-food").onclick = () => {
-
+		if(plate.items.length<=0)return
 		let total = {
 			sweet: 0,
 			salty: 0,
@@ -543,7 +543,6 @@ function init_cooking_game(data){
 
 		let basePrice = 5 * plate.items.length;
 		let price = basePrice + (quality * 2);
-
 		let dish = {name:'dish',price:price,portions:portions,quality:quality,quantity:1}
 		document.getElementById("food-stats").innerHTML = '';
 		let data = JSON.parse(localStorage.getItem('zbattle academy data'))

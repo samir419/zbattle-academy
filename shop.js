@@ -30,14 +30,9 @@ let food_list=[
 		
 	},
 	{
-	name:'cheese',
-	price:8,
-}
-
-
-
-
-
+		name:'cheese',
+		price:8,
+	}
 ]
 
 class Shop{
@@ -98,6 +93,7 @@ class Shop{
 	}
 	init(){
 		let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+		let player_money = document.getElementById('player-money')
 		let buyable_items = document.getElementById("buyable-items");buyable_items.innerHTML=''
 		let sellable_items = document.getElementById("sellable-items");sellable_items.innerHTML=''
 		let shopgirl_div = document.getElementById("shop girl");shopgirl_div.innerHTML=''
@@ -111,20 +107,15 @@ class Shop{
 
 	    this.set_shop_data(this.item_list,buyable_items,'buy')
 	    this.set_shop_data(data.items,sellable_items,'sell')
-	    let div = document.createElement('div')
-	    div.textContent = 'money:'+data.money+'z'
-	    shopgirl_div.appendChild(div)
+	    player_money.innerHTML = 'money:'+data.money+'z'
+	    shopgirl_div.innerHTML='welcome to the item shop'
 
 	    this.set_card_data(this.card_list,buyable_cards,'buy')
 	    this.set_card_data(data.available_moves,sellable_cards,'sell')
-	    let div2 = document.createElement('div')
-	    div2.textContent = 'money:'+data.money+'z'
-	    shopboy_div.appendChild(div2)
+	    shopboy_div.innerHTML="welcome to the card shop"
 
 	    this.set_shop_data(food_list,buyable_foods,'buy')
-	    let div3 = document.createElement('div')
-	    div3.textContent = 'money:'+data.money+'z'
-	    shopwoman_div.appendChild(div3)
+	    shopwoman_div.innerHTML="welcome to the food market"
 
 	    this.setup_gacha()
 	}
@@ -281,7 +272,7 @@ class Shop{
 	            const data = JSON.parse(localStorage.getItem('zbattle academy data'));
 	            if(mode=='buy'){
 	            	data.money -= 100;
-		            data.availablemoves.push(item);
+		            data.available_moves.push(item);
 
 		            this.event_handler.broadcast({
 		                message: 'save data',
@@ -352,6 +343,9 @@ class Shop{
 	            });
 
 	            result.textContent = 'Received: ' + rewards.join(', ');
+	            let ok = document.createElement('button');ok.textContent='ok'
+	            ok.onclick=()=>{this.init()}
+	            result.append(ok)
 	        };
 
 	        pack.append(name, price, btn);

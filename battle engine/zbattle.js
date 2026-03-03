@@ -281,8 +281,10 @@ class Game {
 
         // --- Execute move ---
         if (this.current_player.health > 0) {
+            let has_been_executed=false
             user.moves.forEach(m => {
-                if (move_instance.name === m.name) {
+                if (move_instance.name === m.name&&has_been_executed==false) {
+                    has_been_executed=true
                     let obj={}
                     obj.user = user
                     obj.target = target
