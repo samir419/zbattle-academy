@@ -181,7 +181,22 @@ class Character_Engine{
 	}
 	handle_fetch(data){
 		if(data.type=='give item'){
-			return {text:'thank you',influence:[1,1]}
+			this.char=this.char_data[data.char]
+			for(let i=0;i<this.char.desired_items.length;i++){
+				if(data.item==this.char.desired_items[i].name){
+					if(i==0){
+						return {text:this.char.desired_items[i].response,influence:[1,0]}
+					}
+					if(i==1){
+						return {text:this.char.desired_items[i].response,influence:[0,1]}
+					}
+					if(i==2){
+						return {text:this.char.desired_items[i].response,influence:[1,1]}
+					}
+				}
+			}
+			return {text:'thank you',influence:[0,0]}
+			
 		}
 		if(data.type=='battle request'){
 			this.char=this.char_data[data.char]

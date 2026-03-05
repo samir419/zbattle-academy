@@ -88,6 +88,19 @@ class Shop{
 			    'Beast Mode',
 			    'Malevonent Armor',
 			    'Angel Guard',
+			    'Speed Bullet',
+			    'Gallant Bastion',
+			    'Guard Breaker',
+			    'Devils Imprecation',
+			    'Soul Drain',
+			    'Dragon Force',
+			    'Shadow Ball',
+			    'Crimson Overdrive',
+			    'Chaos Fist',
+			    'Dark Blade',
+			    'Phantom Domain',
+			    'Eternal Echo',
+			    'Faustian Bargain'
 			]
 		this.switch_tab('item-shop')
 	}

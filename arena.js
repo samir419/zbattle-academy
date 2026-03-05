@@ -18,6 +18,19 @@ zbattle_moves = [
     'Beast Mode',
     'Malevonent Armor',
     'Angel Guard',
+    'Speed Bullet',
+    'Gallant Bastion',
+    'Guard Breaker',
+    'Devils Imprecation',
+    'Soul Drain',
+    'Dragon Force',
+    'Shadow Ball',
+    'Crimson Overdrive',
+    'Chaos Fist',
+    'Dark Blade',
+    'Phantom Domain',
+    'Eternal Echo',
+    'Faustian Bargain'
 ]
 let img_list = [
     'battle engine/assets/profiles/aisha.jpg',
@@ -45,11 +58,14 @@ class Arena{
 	    this.selected_set = []
 
 	    this.opponents =[
-	    	{name:'cpu',moves:[],level:5,type:'cpu', img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'battle bot',moves:[],level:5,type:'cpu', img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'peapsqueak',health:500,moves:['Repair','Strike','Attack Up'],level:1,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'nero',health:1000,level:2,moves:['Strike','Blast Cannon','Heal','Power Up'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'aisha',health:1000,moves:['Strike','Repair','Heal','Replenish' ],type:'cpu',level:3, img:'battle engine/assets/profiles/aisha.jpg'},
-	    	{name:'blake',health:1300,moves:['Strike','Repair','Shield Strike','Force Field' ],type:'cpu',level:4, img:'battle engine/assets/profiles/blake.jpg'},
+	    	{name:'monkey man',health:700,moves:['Eternal Echo','Speed Bullet','Power Up','Guard Breaker'],level:2,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'nero',health:8000,level:2,moves:['Strike','Blast Cannon','Heal','Power Up'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'zawa rudo',health:1200,moves:['Repair','Strike','Speed Bullet','Blast Cannon'],level:3,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'aisha',health:1000,moves:['Holy Blade','Repair','Heal','Replenish' ],type:'cpu',level:3, img:'battle engine/assets/profiles/aisha.jpg'},
+	    	{name:'blake',health:1300,moves:['Gallant Bastion',,'Repair','Shield Strike','Force Field' ],type:'cpu',level:4, img:'battle engine/assets/profiles/blake.jpg'},
+	    	{name:'chazz princeton',health:1400,level:5,moves:['Shadow Ball','Repair','Crimson Overdrive','Eternal Echo','Angel Guard'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'pumkin',moves:['Replenish','Demon Charge','Baneful Binding', 'Repair','Attack Up','Malevonent Armor',],type:'cpu',level:6, img:'battle engine/assets/profiles/pumkin.jpg'},
 	    	{name:'quetzie',health:1500,moves:['Strike','Blast Cannon','Mirror Match','Power Up','Covenant of Carnage','fusion xyz', ],type:'cpu',level:8, img:'battle engine/assets/profiles/quetzie.jpg'},
 	    	{name:'red',health:1500,moves:['Strike','Repair','Beast Mode','Power Up','Attack Up', 'Demon Charge',],type:'cpu',level:10, img:'battle engine/assets/profiles/red.jpg'},
@@ -527,7 +543,6 @@ class Arena{
         if(data.tab=='arena'){
         	if(!data.event_data)return
         	if(data.event_data.type=='tournament'){
-        		console.log(data)
         		let pre_game_message=document.createElement('p')
         		document.getElementById('moveset-select').appendChild(pre_game_message)
         		let opponent_count=data.event_data.opponents.length
@@ -651,7 +666,6 @@ class Arena{
         		
         	}
         	if(data.event_data.type=='battle request'){
-	        	console.log(data)
 	        	this.selected_opponents.push(data.event_data.opponent)
         		this.opponent_select_screen.style.display = 'none'
 			    this.move_select_screen.style.display = 'flex'

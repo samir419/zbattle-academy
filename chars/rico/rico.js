@@ -7,6 +7,11 @@ const rico = {
                 'chars/rico/assistant3.png'
             ],
             battle_info:{name:'rico',health:1000,level:2,moves:['Strike','Repair','Heal','Force Field'],type:'cpu',img:'chars/rico/thumbnail.png'},
+            desired_items:[
+                {name:'char item',response:'thank you'},
+                {name:'char item2',response:'thank you so much'},
+                {name:'char item3',response:'i really needed this'},
+            ],
             talks:[
                 //friendly 1
                 [
@@ -37,7 +42,7 @@ const rico = {
                                 {
                                     text:'option 1',
                                     response:'you picked option 1',
-                                    rewards:[],
+                                    rewards:[{name:'char item2',quantity:1,price:50}],
                                     influence:[1,1]
                                 },
                                 {
@@ -119,7 +124,7 @@ const rico = {
                                 {
                                     text:'option 1',
                                     response:'you picked option 1',
-                                    rewards:[],
+                                    rewards:[{name:'char item3',quantity:1,price:50}],
                                     influence:[-1,1]
                                 },
                                 {
@@ -184,7 +189,12 @@ const rico2 = {
                 'chars/rico/assistant2.png',
                 'chars/rico/assistant3.png'
             ],
-            battle_info:{name:'rico',health:1000,level:2,moves:['Strike','Repair','Heal','Force Field'],type:'cpu',img:'chars/rico/assistant1.png'},
+            battle_info:{name:'rico2',health:1000,level:2,moves:['Strike','Repair','Heal','Force Field'],type:'cpu',img:'chars/rico/assistant1.png'},
+             desired_items:[
+                {name:'char item',response:'thank you'},
+                {name:'char item2',response:'thank you so much'},
+                {name:'char item3',response:'i really needed this'},
+            ],
             talks:[
                 //friendly 1
                 [
