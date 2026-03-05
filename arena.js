@@ -61,12 +61,12 @@ class Arena{
 	    	{name:'battle bot',moves:[],level:5,type:'cpu', img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'peapsqueak',health:500,moves:['Repair','Strike','Attack Up'],level:1,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'monkey man',health:700,moves:['Eternal Echo','Speed Bullet','Power Up','Guard Breaker'],level:2,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'nero',health:8000,level:2,moves:['Strike','Blast Cannon','Heal','Power Up'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'nero',health:800,level:2,moves:['Strike','Blast Cannon','Heal','Power Up'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'zawa rudo',health:1200,moves:['Repair','Strike','Speed Bullet','Blast Cannon'],level:3,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'aisha',health:1000,moves:['Holy Blade','Repair','Heal','Replenish' ],type:'cpu',level:3, img:'battle engine/assets/profiles/aisha.jpg'},
 	    	{name:'blake',health:1300,moves:['Gallant Bastion',,'Repair','Shield Strike','Force Field' ],type:'cpu',level:4, img:'battle engine/assets/profiles/blake.jpg'},
 	    	{name:'chazz princeton',health:1400,level:5,moves:['Shadow Ball','Repair','Crimson Overdrive','Eternal Echo','Angel Guard'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'pumkin',moves:['Replenish','Demon Charge','Baneful Binding', 'Repair','Attack Up','Malevonent Armor',],type:'cpu',level:6, img:'battle engine/assets/profiles/pumkin.jpg'},
+	    	{name:'pumkin',moves:['Replenish','Devils Imprecation','Baneful Binding', 'Repair','Phantom Domain','Malevonent Armor',],type:'cpu',level:6, img:'battle engine/assets/profiles/pumkin.jpg'},
 	    	{name:'quetzie',health:1500,moves:['Strike','Blast Cannon','Mirror Match','Power Up','Covenant of Carnage','fusion xyz', ],type:'cpu',level:8, img:'battle engine/assets/profiles/quetzie.jpg'},
 	    	{name:'red',health:1500,moves:['Strike','Repair','Beast Mode','Power Up','Attack Up', 'Demon Charge',],type:'cpu',level:10, img:'battle engine/assets/profiles/red.jpg'},
 	    ]
@@ -264,13 +264,27 @@ class Arena{
         let opp_div = document.createElement('div');opp_div.className='flex center row full-width'
         let player_div = document.createElement('div');player_div.className='flex center row full-width'
         data.players.forEach(player=>{
+        	let emojiString = "";
+			player.status_effects.forEach(effect => {
+			    if (effect == "guard") {
+			        emojiString += "🛡️ ";
+			    }
+			    else if (effect == "thorns") {
+			        emojiString += "🌵 ";
+			    }
+			    else if (effect.startsWith("attack_buff")) {
+				    let value = effect.split("-")[1];
+				    emojiString += `⚔️+${value} `;
+				}
+			});
         	if(player.type=='cpu'&&player.team!='player'){
         		let p_div = document.createElement('div');p_div.className='flex row center outline scrollable-y';
         		p_div.style.maxHeight = '200px'
         		let info_div=document.createElement('div');info_div.className='flex column'
         		let image = document.createElement('img'); image.className = 'player-image'; image.src = player.img
-        		let name = document.createElement('h3');name.textContent=player.name
-        		name.title=`${player.health},${player.status_effects},${player.lastmoveused},${player.lastDamageReceived}`
+        		let name = document.createElement('h3');
+				name.textContent = `${player.name} ${emojiString}`;
+				name.title = `${player.health},${player.status_effects},${player.lastmoveused},${player.lastDamageReceived}`;
 	            let health = document.createElement('div'); health.className = 'player-health'
 	            for (let i = 0; i < player.health; i += 100) {
 	                let healthbar = document.createElement('div')
@@ -287,7 +301,8 @@ class Arena{
         		p_div.style.alignItems = 'flex-start'
         		let info_div=document.createElement('div');info_div.className='flex column'
         		let image = document.createElement('img'); image.className = 'player-image'; image.src = player.img
-        		let name = document.createElement('h3');name.textContent=player.name
+        		let name = document.createElement('h3');
+        		name.textContent = `${player.name} ${emojiString}`;
         		name.title=`${player.health},${player.status_effects},${player.lastmoveused},${player.lastDamageReceived}`
 	            let health = document.createElement('div'); health.className = 'player-health'
 	            for (let i = 0; i < player.health; i += 100) {
@@ -560,14 +575,11 @@ class Arena{
 	        			if(opponent_count==0){
 	        				console.log('finished tournament')
 	        				this.handle_post_game=temp_func
-	        				
-
 	        				dt.money += reward
 	        				dt.level+=opponents.length
 	        				for(let i=0;i<item_rewards.length;i++){
 	        					dt.items.push(item_rewards[i])
 	        				}
-	        				
 	        				this.event_handler.broadcast({message:'set notif',elem:`<p>you reached level ${dt.level}</p>`})
 	        				this.event_handler.broadcast({message:'set notif',elem:`<p>you now have ${dt.money} z</p>`})
 	        				this.event_handler.broadcast({message:'save data',data:dt})
@@ -609,6 +621,7 @@ class Arena{
 		        			dt.stats.wins+=1
 		        		}
 		        		this.event_handler.broadcast({message:'save data',data:dt})
+		        		this.event_handler.broadcast({message:'time foward',hour:100})
 	        			game.log_data.innerHTML = ''
 			            game.current_turn = 0
 			            game.players = []
@@ -630,13 +643,9 @@ class Arena{
 						this.event_handler.set_message({text:'you lost',canClose:false,options:[]})
 						console.log('finished tournament')
         				this.handle_post_game=temp_func
-        				
-        				
-
         				dt.money -= 100
         				dt.level+=opponents.length
         				dt.stats.losses+=1
-        				
         				this.event_handler.broadcast({message:'set notif',elem:`<p>you reached level ${dt.level}</p>`})
         				this.event_handler.broadcast({message:'set notif',elem:`<p>you lost ${100} z</p>`})
         				this.event_handler.broadcast({message:'save data',data:dt})
@@ -663,7 +672,6 @@ class Arena{
 			    this.engine_elem.style.display = 'none'
         		this.render_movesets()
         		pre_game_message.textContent=`first match of the tournament against ${this.selected_opponents[0].name}`
-        		
         	}
         	if(data.event_data.type=='battle request'){
 	        	this.selected_opponents.push(data.event_data.opponent)
@@ -673,7 +681,6 @@ class Arena{
         		this.render_movesets()
 	        }
         }
-       
         this.render_movesets()
 	}
 }

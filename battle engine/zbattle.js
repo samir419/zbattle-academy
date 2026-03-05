@@ -548,7 +548,7 @@ let attack = new move(
     function (data) {   // onhit
         return;
     },
-    function (self, user, target, moves) {  // update
+    function (data) {  // update
         return;
     }
 )
@@ -567,12 +567,11 @@ let defend = new move(
     function (data) {   // onhit
         data.user.status_effects.push('guard');
     },
-    function (self, user, target, moves) {  // update
-        if (self.turn_count == 0) {
-            let index = user.status_effects.indexOf('guard');
+    function (data) {  // update
+        if (data.self.turn_count == 0) {
+            let index = data.user.status_effects.indexOf('guard');
             if (index > -1) {
-                user.status_effects.splice(index, 1);
-                log(`${user.name} is no longer guarded`);
+                data.user.status_effects.splice(index, 1);
             }
         }
     }

@@ -1039,7 +1039,7 @@ const moves = [
                 });
 
                 if (attack_power > 0) {
-                    user.status_effects.push(`attack buff-${attack_power}`);
+                    user.status_effects.push(`attack_buff-${attack_power}`);
                     game_instance.log(`${user.name} gained ${attack_power} atk`);
                 }
             }
