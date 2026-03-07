@@ -74,6 +74,223 @@ class Arena{
 	    	{name:'el gizmo',health:1700,level:12,moves:['Strike','Replenish','Demon Charge','Covenant of Carnage','Power Up','Malevonent Armor','Angel Guard',],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'Zane',health:1700,level:13,moves:['Shadow Ball','Strike','Mirror Match','Gallant Bastion','Soul Drain','Chaos Fist','Angel Guard'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'Dynatrol',health:2000,moves:[ 'Blast Cannon','Force Field','Shield Strike','Mirror Match','fusion xyz','Beast Mode','Guard Breaker','Dragon Force',],level:20,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	// additional opponents
+			{
+			    name:'scrap drone',
+			    health:450,
+			    moves:['Strike','Repair','Speed Bullet'],
+			    level:1,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+
+			{
+			    name:'gear monk',
+			    health:900,
+			    moves:['Strike','Power Up','Guard Breaker','Shield Strike'],
+			    level:5,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+
+			{
+			    name:'grave warden',
+			    health:1100,
+			    moves:['Shadow Ball','Baneful Binding','Soul Drain','Malevonent Armor'],
+			    level:6,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+
+			{
+			    name:'iron duelist',
+			    health:1200,
+			    moves:['Strike','Shield Strike','Gallant Bastion','Guard Breaker'],
+			    level:7,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+			{
+			    name:'specter knight',
+			    health:1250,
+			    moves:['Phantom Domain','Shadow Ball','Soul Drain','Strike'],
+			    level:7,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+
+			{
+			    name:'void striker',
+			    health:1450,
+			    moves:['Chaos Fist','Shadow Ball','Power Up','Strike'],
+			    level:8,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+
+			{
+			    name:'storm lancer',
+			    health:1500,
+			    moves:['Speed Bullet','Dragon Force','Strike','Guard Breaker'],
+			    level:9,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+			{
+			    name:'abyss mage',
+			    health:1500,
+			    moves:['Shadow Ball','Baneful Binding','Phantom Domain','Soul Drain'],
+			    level:9,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+
+			{
+			    name:'alpha beast',
+			    health:1550,
+			    moves:['Beast Mode','Strike','Demon Charge','Power Up'],
+			    level:10,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+
+			{
+			    name:'oracle sentinel',
+			    health:1650,
+			    moves:['Angel Guard','Force Field','Heal','Mirror Match'],
+			    level:11,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+
+			{
+			    name:'warlock prime',
+			    health:1750,
+			    moves:['Devils Imprecation','Shadow Ball','Baneful Binding','Soul Drain'],
+			    level:12,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+
+			{
+			    name:'paladin rex',
+			    health:1800,
+			    moves:['Holy Blade','Gallant Bastion','Angel Guard','Shield Strike'],
+			    level:13,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+
+			{
+			    name:'fusion beast',
+			    health:1850,
+			    moves:['fusion xyz','Beast Mode','Strike','Dragon Force'],
+			    level:14,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+			{
+			    name:'night tyrant',
+			    health:1850,
+			    moves:['Chaos Fist','Shadow Ball','Phantom Domain','Demon Charge'],
+			    level:14,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+
+			{
+			    name:'crimson lord',
+			    health:1900,
+			    moves:['Crimson Overdrive','Strike','Power Up','Guard Breaker'],
+			    level:15,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+			{
+			    name:'void prophet',
+			    health:1900,
+			    moves:['Phantom Domain','Soul Drain','Eternal Echo','Shadow Ball'],
+			    level:15,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+
+			{
+			    name:'dragon templar',
+			    health:1950,
+			    moves:['Dragon Force','Holy Blade','Shield Strike','Angel Guard'],
+			    level:16,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+			{
+			    name:'dread berserker',
+			    health:1950,
+			    moves:['Beast Mode','Demon Charge','Chaos Fist','Strike'],
+			    level:16,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+
+			{
+			    name:'mirror master',
+			    health:2000,
+			    moves:['Mirror Match','Eternal Echo','Force Field','Power Up'],
+			    level:17,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+			{
+			    name:'hell binder',
+			    health:2000,
+			    moves:['Devils Imprecation','Baneful Binding','Soul Drain','Shadow Ball'],
+			    level:17,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+
+			{
+			    name:'titan engine',
+			    health:2050,
+			    moves:['Blast Cannon','Force Field','Guard Breaker','Repair'],
+			    level:18,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+			{
+			    name:'astral knight',
+			    health:2050,
+			    moves:['Holy Blade','Phantom Domain','Angel Guard','Strike'],
+			    level:18,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+
+			{
+			    name:'chaos sovereign',
+			    health:2100,
+			    moves:['Chaos Fist','Crimson Overdrive','Dragon Force','Power Up'],
+			    level:19,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+			{
+			    name:'eternal judge',
+			    health:2100,
+			    moves:['Angel Guard','Eternal Echo','Soul Drain','Mirror Match'],
+			    level:19,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			},
+
+			{
+			    name:'omega sentinel',
+			    health:2200,
+			    moves:['Dragon Force','Crimson Overdrive','Force Field','Guard Breaker','Mirror Match'],
+			    level:20,
+			    type:'cpu',
+			    img:'battle engine/assets/ZBATTLELOGO.png'
+			}
 	    ]
 
 	    this.selected_opponents=[]
