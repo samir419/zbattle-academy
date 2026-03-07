@@ -96,3 +96,4 @@ function set_character(char_name,event_handler,control_elem,dialogue_elem,image_
 	dialogue_elem.innerHTML=data.intro
 	image_elem.src = data.image
 }
+let max_health=1500

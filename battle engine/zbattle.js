@@ -24,6 +24,10 @@ class Game {
         this.game_data = []
         this.event_handler
         this.set_format()
+        window.onerror = function(message, source, lineno, colno, error) {
+          this.log(`error:${message} at ${source},${lineno},${colno},${error}`);
+          return false;
+        };
     }
     log(message) {
         this.log_data.push(message)

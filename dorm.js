@@ -29,7 +29,7 @@ class Dorm{
 			let data = JSON.parse(localStorage.getItem('zbattle academy data'));
 			for(let i=0;i<list.length;i++){
 				let div = document.createElement('div');div.className='flex row'
-				div.innerHTML=`${list[i].name} start- day:${list[i].start_day} time:${list[i].start_time} end- day:${list[i].end_day} time:${list[i].end_time}`
+				div.innerHTML=`${list[i].name} start-day:${list[i].start_day} end-day:${list[i].end_day} start-time:${list[i].start_time} end-time:${list[i].end_time}`
 				if(data.time.day>=list[i].start_day&&data.time.day<=list[i].end_day&&data.time.hour>=list[i].start_time&&data.time.hour<=list[i].end_time){
 					div.style.color = 'red'
 					div.onclick=()=>{

@@ -329,8 +329,8 @@ const moves = [
         function(data) {  // update
             if(data.self.turn_count<=0){
                 data.self.damage = 400;
-                data.user.health -= self.calc_damage(data.user,data.user);
-                data.target.health -= self.calc_damage(data.user,data.target);
+                data.user.health -= data.self.calc_damage(data.user,data.user);
+                data.target.health -= data.self.calc_damage(data.user,data.target);
                 log(`${data.user.name} took ${self.calc_damage(data.user,data.user)} damage from ${data.self.name}`);
                 log(`${data.target.name} took ${data.self.calc_damage(data.user,data.target)} damage from ${data.self.name}`);
                 data.self.damage = 0;
@@ -443,13 +443,10 @@ const moves = [
             if(data.self.turn_count==0){
                 data.target.moves.forEach(m => {
                     m.isenabled = true;
-                    if(m&&m.elem){
-                        m.elem.style.backgroundColor=null
-                    }
                     
                 });
                 data.target.status_effects = data.target.status_effects.filter(se => se !== 'move_disabled');
-                data.game.log(`${target.name}'s moves are now enabled`);
+                data.game.log(`${data.target.name}'s moves are now enabled`);
             }
         }
     ),
@@ -927,8 +924,8 @@ const moves = [
          'move.png',    //image
           {},            //prompt data
         function(data) {   // onhit
-            data.target.moves.forEach(move=>{
-                if(move.name!='attack'||move.name!='defend'){
+            data.target.moves.forEach((move,index)=>{
+                if(index>1){
                     move.isenabled=false
                 }
                

@@ -59,16 +59,21 @@ class Arena{
 
 	    this.opponents =[
 	    	{name:'battle bot',moves:[],level:5,type:'cpu', img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'peapsqueak',health:500,moves:['Repair','Strike','Attack Up'],level:1,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'peapsqueak',health:500,moves:['Repair','Speed Bullet','Power Up'],level:1,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'monkey man',health:700,moves:['Eternal Echo','Speed Bullet','Power Up','Guard Breaker'],level:2,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'nero',health:800,level:2,moves:['Strike','Blast Cannon','Heal','Power Up'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'zawa rudo',health:1200,moves:['Repair','Strike','Speed Bullet','Blast Cannon'],level:3,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'aisha',health:1000,moves:['Holy Blade','Repair','Heal','Replenish' ],type:'cpu',level:3, img:'battle engine/assets/profiles/aisha.jpg'},
-	    	{name:'blake',health:1300,moves:['Gallant Bastion',,'Repair','Shield Strike','Force Field' ],type:'cpu',level:4, img:'battle engine/assets/profiles/blake.jpg'},
+	    	{name:'blake',health:1300,moves:['Gallant Bastion','Eternal Echo','Shield Strike','Force Field' ],type:'cpu',level:4, img:'battle engine/assets/profiles/blake.jpg'},
+	    	{name:'sky light',health:1350,moves:['Strike','Heal','Force Field','Holy Blade','Mirror Match',],level:4,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'chazz princeton',health:1400,level:5,moves:['Shadow Ball','Repair','Crimson Overdrive','Eternal Echo','Angel Guard'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'pumkin',moves:['Replenish','Devils Imprecation','Baneful Binding', 'Repair','Phantom Domain','Malevonent Armor',],type:'cpu',level:6, img:'battle engine/assets/profiles/pumkin.jpg'},
+	    	{name:'pumkin',moves:['Replenish','Devils Imprecation','Baneful Binding', 'Eternal Echo','Phantom Domain','Malevonent Armor',],type:'cpu',level:6, img:'battle engine/assets/profiles/pumkin.jpg'},
 	    	{name:'quetzie',health:1500,moves:['Strike','Blast Cannon','Mirror Match','Power Up','Covenant of Carnage','fusion xyz', ],type:'cpu',level:8, img:'battle engine/assets/profiles/quetzie.jpg'},
 	    	{name:'red',health:1500,moves:['Strike','Repair','Beast Mode','Power Up','Attack Up', 'Demon Charge',],type:'cpu',level:10, img:'battle engine/assets/profiles/red.jpg'},
+	    	{name:'kareem',health:1600,level:11,moves:['Shadow Ball','Strike','Mirror Match','Gallant Bastion','Soul Drain','Chaos Fist','Angel Guard'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'el gizmo',health:1700,level:12,moves:['Strike','Replenish','Demon Charge','Covenant of Carnage','Power Up','Malevonent Armor','Angel Guard',],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'Zane',health:1700,level:13,moves:['Shadow Ball','Strike','Mirror Match','Gallant Bastion','Soul Drain','Chaos Fist','Angel Guard'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'Dynatrol',health:2000,moves:[ 'Blast Cannon','Force Field','Shield Strike','Mirror Match','fusion xyz','Beast Mode','Guard Breaker','Dragon Force',],level:20,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    ]
 
 	    this.selected_opponents=[]
@@ -155,7 +160,7 @@ class Arena{
 		let match_data = {players:[]}
 	    match_data.format='teams'
 	    let data = JSON.parse(localStorage.getItem('zbattle academy data'))
-	    match_data.players.push({name:data.name,moves:this.selected_set,type:'player',team:'player', img:data.thumbnail})
+	    match_data.players.push({name:data.name,health:data.health_cap,moves:this.selected_set,type:'player',team:'player', img:data.thumbnail})
 
 	    for(let i=0;i<this.selected_allies.length;i++){
 	    	this.selected_allies[i].team='player'
@@ -489,8 +494,11 @@ class Arena{
     	let dt = JSON.parse(localStorage.getItem('zbattle academy data'))
         if(data.name==dt.name||data.name == 'player'){
         	for(let i=0;i<this.selected_opponents.length;i++){
-        		dt.level+=Math.ceil(this.selected_opponents[i].level / 5)
+        		dt.level+=Math.ceil(this.selected_opponents[i].level / 5)/2
         		dt.money+=this.selected_opponents[i].level*25
+        		if(dt.health_cap<max_health){
+        			dt.health_cap+=50
+        		}
         		if(!dt.stats.defeated_opponents.includes(this.selected_opponents[i].name)){
         			dt.stats.defeated_opponents.push(this.selected_opponents[i].name)
         			dt.stats.wins+=1
@@ -498,6 +506,7 @@ class Arena{
         	}
         	this.event_handler.broadcast({message:'set notif',elem:`<p>you reached level ${dt.level}</p>`})
         	this.event_handler.broadcast({message:'set notif',elem:`<p>you now have ${dt.money} z</p>`})
+        	this.event_handler.broadcast({message:'set notif',elem:`<p>health cap increased to ${dt.health_cap}</p>`})
         	this.event_handler.broadcast({message:'save data',data:dt})
         	let self = this
         	this.event_handler.set_message({text:'you won',canClose:false,options:[
@@ -521,7 +530,7 @@ class Arena{
         	]})
         	
         }else{
-        	dt.level+=Math.ceil(this.selected_opponents[i].level / 5)+1
+        	//dt.level+=Math.ceil(this.selected_opponents[0].level / 5)/2
 			dt.money-=dt.money*5/100
 			dt.stats.losses+=1
 			this.event_handler.broadcast({message:'set notif',elem:`<p>you reached level ${dt.level}</p>`})
@@ -577,11 +586,16 @@ class Arena{
 	        				this.handle_post_game=temp_func
 	        				dt.money += reward
 	        				dt.level+=opponents.length
+	        				if(dt.health_cap<max_health){
+			        			dt.health_cap+=50*opponents.length
+			        			if(dt.health_cap>max_health){dt.health_cap=max_health}
+			        		}
 	        				for(let i=0;i<item_rewards.length;i++){
 	        					dt.items.push(item_rewards[i])
 	        				}
 	        				this.event_handler.broadcast({message:'set notif',elem:`<p>you reached level ${dt.level}</p>`})
 	        				this.event_handler.broadcast({message:'set notif',elem:`<p>you now have ${dt.money} z</p>`})
+	        				this.event_handler.broadcast({message:'set notif',elem:`<p>health cap increased to ${dt.health_cap}</p>`})
 	        				this.event_handler.broadcast({message:'save data',data:dt})
 	        				game.log_data.innerHTML = ''
 				            game.current_turn = 0
