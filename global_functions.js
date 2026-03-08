@@ -1,5 +1,5 @@
 function set_character(char_name,event_handler,control_elem,dialogue_elem,image_elem){
-	document.getElementById("park-controls").innerHTML=''
+	control_elem.innerHTML=''
 	let influence_stats = {friendly:0,emotion:0}
 	let dt = JSON.parse(localStorage.getItem('zbattle academy data'))
 	for(let i=0;i<dt.contacts.length;i++){
@@ -86,8 +86,14 @@ function set_character(char_name,event_handler,control_elem,dialogue_elem,image_
 	let battle = document.createElement('button')
 	battle.textContent='battle';battle.className='btn primary-bg'
 	battle.onclick=()=>{
-		let data = event_handler.fetch_api({name:'character engine',char:char_name,type:'battle request'})
-		event_handler.broadcast({message:'switch',tab:'arena',event_data:{type:'battle request',opponent:data.battle_info}})
+		dialogue_elem.innerHTML=''
+		let text = document.createElement('p');text.textContent='sure im down for a match. are you ready'
+		let btn = document.createElement('button');btn.textContent='battle';btn.className='btn primary-bg'
+		btn.onclick=()=>{
+			let data = event_handler.fetch_api({name:'character engine',char:char_name,type:'battle request'})
+			event_handler.broadcast({message:'switch',tab:'arena',event_data:{type:'battle request',opponent:data.battle_info}})
+		}
+		dialogue_elem.append(text,btn)
 	}
 	control_elem.append(talk)
 	control_elem.append(item)

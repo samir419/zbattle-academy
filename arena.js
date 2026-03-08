@@ -519,7 +519,7 @@ class Arena{
         	}
         	if(player.type=='player'||player.team=='player'){
         		let p_div = document.createElement('div');p_div.className='flex row center outline scrollable-y';
-        		p_div.style.maxHeight = '200px'
+        		p_div.style.maxHeight = '300px'
         		p_div.style.alignItems = 'flex-start'
         		let info_div=document.createElement('div');info_div.className='flex column'
         		let image = document.createElement('img'); image.className = 'player-image'; image.src = player.img
@@ -748,7 +748,7 @@ class Arena{
         	
         }else{
         	//dt.level+=Math.ceil(this.selected_opponents[0].level / 5)/2
-			dt.money-=dt.money*5/100
+			dt.money = Math.round((dt.money - dt.money * 0.05) * 10) / 10;
 			dt.stats.losses+=1
 			this.event_handler.broadcast({message:'set notif',elem:`<p>you reached level ${dt.level}</p>`})
         	this.event_handler.broadcast({message:'set notif',elem:`<p>you now have ${dt.money} z</p>`})
@@ -802,7 +802,7 @@ class Arena{
 	        				console.log('finished tournament')
 	        				this.handle_post_game=temp_func
 	        				dt.money += reward
-	        				dt.level+=opponents.length
+	        				dt.level+=opponents.length/2
 	        				if(dt.health_cap<max_health){
 			        			dt.health_cap+=50*opponents.length
 			        			if(dt.health_cap>max_health){dt.health_cap=max_health}
@@ -874,8 +874,8 @@ class Arena{
 						this.event_handler.set_message({text:'you lost',canClose:false,options:[]})
 						console.log('finished tournament')
         				this.handle_post_game=temp_func
-        				dt.money -= 100
-        				dt.level+=opponents.length
+        				dt.money = Math.round((dt.money - dt.money * 0.05) * 10) / 10;
+        				dt.level+=opponents.length/2
         				dt.stats.losses+=1
         				this.event_handler.broadcast({message:'set notif',elem:`<p>you reached level ${dt.level}</p>`})
         				this.event_handler.broadcast({message:'set notif',elem:`<p>you lost ${100} z</p>`})

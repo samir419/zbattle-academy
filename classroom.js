@@ -10,7 +10,6 @@ class Classroom{
 		]
 		this.tabButtons[0].onclick =()=>{
 			this.switch_tab("classroom-hangout")
-			this.set_character('rico')
 		}
 		this.tabButtons[1].onclick =()=>{
 			this.switch_tab("classroom")

@@ -75,7 +75,20 @@
 						<div class="flex row">
 							<button class="btn primary-bg" onclick="document.getElementById('main').requestFullscreen()">fullscreen</button>
 						</div>
-						<img src="game assets/map.jpg" alt="" class="full">
+						<div class="flex full relative">
+							<div class="flex absolute priority-1 full" style="display:grid;grid-template-columns:repeat(4, 1fr);grid-template-rows:repeat(2, 1fr);">
+								<div class=" flex center" id="dorm-location" onclick="switch_tab('dorm')""></div>
+								<div class=" flex center" id="class-location" onclick="switch_tab('class-room')"></div>
+								<div class=" flex center" id="arena-location" onclick="switch_tab('arena')"></div>
+								<div class=" flex center" id="shop-location" onclick="switch_tab('shop')"></div>
+								<div class=" flex center" id="park-location" onclick="switch_tab('park')"></div>
+								<div class=""></div>
+								<div class=""></div>
+								<div class=""></div>
+							</div>
+							<img src="game assets/map.jpg" alt="" class="full">
+						</div>
+						
 					</div>
 				</div>
 			</div>
@@ -395,6 +408,7 @@
     <script src="char_engine.js"></script>
 
     <script src="chars/rico/rico.js"></script>
+    <script src="chars/erza/erza.js"></script>
 	<script>
 
 		class event_brocker{
@@ -482,8 +496,23 @@
 		            el.classList.remove('active')
 		        }
 		    })
+		    if(tab=='map'){
+		    	let arr = [...char_list]
+			    let rand = Math.floor(Math.random() * arr.length);
+			    classroom.resident=arr[rand];
+			    document.getElementById('class-location').innerHTML=`<h3 style="background-color:gray;color:white;">class</h3>
+																		<img src="${char_data[arr[rand]].thumbnail}" width="50px" height="50px">`
+			    arr.splice(rand,1);
+			    rand = Math.floor(Math.random() * arr.length);
+			    park.resident=arr[rand];
+			     document.getElementById('park-location').innerHTML=`<h3 style="background-color:gray;color:white;">park</h3>
+																		<img src="${char_data[arr[rand]].thumbnail}" width="50px" height="50px">`
+			    arr.splice(rand,1);
+		    }
+		   
 
 		    event_handler.broadcast({ message: 'tab switch', tab: tab })
+		    
 		}
 		let event_handler = new event_brocker()
 		
@@ -566,13 +595,17 @@
 		event_handler.add_subscriber(classroom)
 		event_handler.add_subscriber(ponggame)
 
-		let char_data = {'rico':rico,'rico2':rico2}
+		let char_data = {'rico':rico,'rico2':rico2,'erza':erza}
+		const char_list = [
+			'rico',
+			'rico2',
+			'erza'
+		]
 		let char_engine = new Character_Engine()
 		event_handler.add_subscriber(char_engine)
 		event_handler.add_api({name:'character engine',self:char_engine})
 		char_engine.char_data=char_data
-		classroom.resident='rico2'
-		park.resident='rico'
+		
 
 		switch_tab('map')
 		let game = new Game()
