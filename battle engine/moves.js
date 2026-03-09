@@ -385,7 +385,7 @@ const moves = [
             return;
         }
     ),
-     new move(
+    new move(
         'Power Up',        // move_name
         'spell',      // type
         0,             // damage
@@ -595,7 +595,15 @@ const moves = [
                 num2 = Math.floor(Math.random() * 6)
             }
             let p_data ={
-                user:user,target:target,game:game_instance,
+                user:user,target:target,game:game_instance,self:user.moves[num],
+                prompt_info:{
+                    selected_value:Math.floor(Math.random() * user.moves.length),
+                    selected_values:[Math.floor(Math.random() * user.moves.length),Math.floor(Math.random() * user.moves.length)]
+                },
+
+            }
+            let p_data2 ={
+                user:user,target:target,game:game_instance,self:user.moves[num2],
                 prompt_info:{
                     selected_value:Math.floor(Math.random() * user.moves.length),
                     selected_values:[Math.floor(Math.random() * user.moves.length),Math.floor(Math.random() * user.moves.length)]
@@ -604,7 +612,11 @@ const moves = [
             }
             user.moves[num].use(p_data)
             if(num2!=num){
-                user.moves[num2].use(p_data)
+                if(user.moves[num].type=='attack'&&user.moves[num2].type=='attack'){
+                    game_instance.log('cannot use 2 attacks')
+                }else{
+                    user.moves[num2].use(p_data2)
+                }
             }
             game_instance.state='running'
                 
@@ -619,12 +631,12 @@ const moves = [
         'spell',      // type
         0,             // damage
         0,               // healing
-        3,                // turns
+        2,                // turns
         2,              // durability
         2,               // weight
         [],              // effects
          'move.png',    //image
-          {},            //prompt data
+         {},            //prompt data
         function(data) {  // onhit
             data.user.status_effects.push('attack_buff-200');
         },

@@ -183,6 +183,9 @@ class Obstacle_race{
 		      this.obstacles.splice(i, 1);
 		      this.score++;
   			  this.scoreDisplay.textContent = "Score: " + this.score;
+  			  if(this.score%100==0){
+  			  	 this.event_handler.broadcast({message:'time foward',hour:100})
+  			  }
 		    }
 		  }
 	  	for(let i=0;i<this.powerups.length;i++){

@@ -354,7 +354,7 @@ class Shop{
 	                message: 'save data',
 	                data
 	            });
-
+	            this.event_handler.broadcast({message:'time foward',hour:50})
 	            result.textContent = 'Received: ' + rewards.join(', ');
 	            let ok = document.createElement('button');ok.textContent='ok'
 	            ok.onclick=()=>{this.init()}

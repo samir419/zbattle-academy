@@ -212,7 +212,6 @@ class Character_Engine{
 		}
 		res.intro = this.char.intro
 		res.char = this.char.name
-		console.log(res)
 		return res
 	}
 	get_data(){

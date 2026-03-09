@@ -8,7 +8,8 @@ class Park{
 		this.sections = [
 			document.getElementById('tennis-game'),
 			document.getElementById('obstacle-race'),
-			document.getElementById('bench')
+			document.getElementById('bench'),
+			document.getElementById('music-game')
 		]
 
 		this.tabButtons[0].onclick =()=>{
@@ -24,6 +25,9 @@ class Park{
 				document.getElementById("park-char-dialogue"),
 				document.getElementById("park-char-img")
 			)
+		}
+		this.tabButtons[3].onclick =()=>{
+			this.switch_tab('music-game')
 		}
 		this.switch_tab('tennis-game')
 	}
@@ -65,6 +69,12 @@ class Park{
         	this.event_handler.broadcast({message:'save data',data:player_data})
 	        this.event_handler.broadcast({message:'time foward',hour:200})
 		}
+		if(data.message=='player loose music game'){
+			let player_data = JSON.parse(localStorage.getItem('zbattle academy data'))
+			player_data.money+=data.coins
+        	this.event_handler.broadcast({message:'save data',data:player_data})
+		}
+		
 		if(data.tab=='park'){
         	if(data.event_data){}
         }

@@ -76,8 +76,8 @@
 							<button class="btn primary-bg" onclick="document.getElementById('main').requestFullscreen()">fullscreen</button>
 						</div>
 						<div class="flex full relative">
-							<div class="flex absolute priority-1 full" style="display:grid;grid-template-columns:repeat(4, 1fr);grid-template-rows:repeat(2, 1fr);">
-								<div class=" flex center" id="dorm-location" onclick="switch_tab('dorm')""></div>
+							<div class="flex absolute priority-2 full" style="display:grid;grid-template-columns:repeat(4, 1fr);grid-template-rows:repeat(2, 1fr);">
+								<div class=" flex center" id="dorm-location" onclick="switch_tab('dorm')"></div>
 								<div class=" flex center" id="class-location" onclick="switch_tab('class-room')"></div>
 								<div class=" flex center" id="arena-location" onclick="switch_tab('arena')"></div>
 								<div class=" flex center" id="shop-location" onclick="switch_tab('shop')"></div>
@@ -319,6 +319,7 @@
 						<button class="btn primary-bg">tennis game</button>
 						<button class="btn primary-bg">obstacle race</button>
 						<button class="btn primary-bg">bench</button>
+						<button class="btn primary-bg">music game</button>
 						<button class="btn primary-bg" onclick="switch_tab('map')">back to map</button>
 					</div>
 					<div id="tennis-game" class="flex full column center">
@@ -376,6 +377,30 @@
 							</div>
 						</div>
 					</div>
+					<div id="music-game" class="flex full column center">
+						<div class="flex row center one">
+							<div class="flex column center relative full" style="max-width: 200px; max-height:300px;">
+								<div id="music-game-ui" class="flex center absolute full">
+									<button class="btn primary-bg" onclick="document.getElementById('music-game-ui').style.display='none';
+									music_game.init();">	music game
+									</button>
+								</div>
+								<div class="flex absolute" style="top: 0;right: 0;">
+									<span id="music-game-score"></span>
+									<button class="btn primary-bg" onclick="music_game.pause()">pause</button>
+									<button class="btn primary-bg" onclick="music_game.restart();">restart</button>
+									<span id="music-game-health"></span>
+								</div>
+								<canvas id="music-game-canvas" class="full"></canvas>
+							</div>
+						</div>
+						<div class="flex one center row">
+							<button style="width:75px;height: 75px;" id="music-game-h">h</button>
+							<button style="width:75px;height: 75px;" id="music-game-j">j</button>
+							<button style="width:75px;height: 75px;" id="music-game-k">k</button>
+							<button style="width:75px;height: 75px;" id="music-game-l">l</button>
+						</div>
+					</div>
 					<div class="flex full column center" id="bench">
 						<div class="outline">
 							<img src="" alt="" id="park-char-img" height="150px">
@@ -405,6 +430,7 @@
     <script src="z pong/controls.js"></script>
     <script src="obstacle race/game.js"></script>
     <script src="cookinggame/cookinggame.js"></script>
+    <script src="music game/music_game.js"></script>
     <script src="char_engine.js"></script>
 
     <script src="chars/rico/rico.js"></script>
@@ -505,9 +531,13 @@
 			    arr.splice(rand,1);
 			    rand = Math.floor(Math.random() * arr.length);
 			    park.resident=arr[rand];
-			     document.getElementById('park-location').innerHTML=`<h3 style="background-color:gray;color:white;">park</h3>
+			    document.getElementById('park-location').innerHTML=`<h3 style="background-color:gray;color:white;">park</h3>
 																		<img src="${char_data[arr[rand]].thumbnail}" width="50px" height="50px">`
 			    arr.splice(rand,1);
+
+			    document.getElementById('dorm-location').innerHTML=`<h3 style="background-color:gray;color:white;">dorm</h3>`
+			    document.getElementById('arena-location').innerHTML=`<h3 style="background-color:gray;color:white;">arena</h3>`
+			    document.getElementById('shop-location').innerHTML=`<h3 style="background-color:gray;color:white;">shop</h3>`
 		    }
 		   
 
@@ -609,8 +639,10 @@
 
 		switch_tab('map')
 		let game = new Game()
+		let music_game = new Music_game()
 		event_handler.add_subscriber(game)
 		event_handler.add_subscriber(obstacle_game)
+		event_handler.add_subscriber(music_game)
 		arena.init(game)
 	</script>
 </body>
