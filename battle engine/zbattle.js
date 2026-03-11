@@ -394,39 +394,58 @@ class Game {
             // Choose a random enabled move
             const enabled_moves = this.current_player.moves.filter(m => m.isenabled);
             if (enabled_moves.length === 0) return;
+
             const move = enabled_moves[Math.floor(Math.random() * enabled_moves.length)];
 
-            let target
-            let validTargets;
+            let helper_moves = [
+                'Heal','Force Field','Power Up'
+            ]
 
-            if (this.format === 'teams') {
-                // Target players on a different team
-                validTargets = this.players.filter(p =>
-                    p !== this.current_player &&
-                    p.team !== this.current_player.team &&
-                    p.health > 0
-                );
+            let target
+            let validTargets
+
+            if (helper_moves.includes(move.name)) {
+
+                // Helper moves target self or teammates
+                if (this.format === 'teams') {
+                    validTargets = this.players.filter(p =>
+                        p.team === this.current_player.team &&
+                        p.health > 0
+                    )
+                } else {
+                    // In free-for-all helper moves just target self
+                    validTargets = [this.current_player]
+                }
+
             } else {
-                // Target any player except self
-                validTargets = this.players.filter(p =>
-                    p !== this.current_player &&
-                    p.health > 0
-                );
+
+                // Offensive targeting
+                if (this.format === 'teams') {
+                    validTargets = this.players.filter(p =>
+                        p !== this.current_player &&
+                        p.team !== this.current_player.team &&
+                        p.health > 0
+                    )
+                } else {
+                    validTargets = this.players.filter(p =>
+                        p !== this.current_player &&
+                        p.health > 0
+                    )
+                }
+
             }
+
+            // pick random target
+            target = validTargets[Math.floor(Math.random() * validTargets.length)]
 
             // If no valid targets remain, stop
             if (validTargets.length === 0) {
                 cpu_state = 'inactive';
                 return;
             }
-
-            // Pick a random valid target
-            target = validTargets[Math.floor(Math.random() * validTargets.length)];
-
-
-
+            
             // Execute the move
-            this.play(this.current_player, target, move);
+            this.play(this.current_player, target, move,{});
 
             cpu_state = 'inactive';
         }
@@ -437,7 +456,7 @@ class Game {
         }
         
     }
-    handle_finished_game() {
+    handle_finished_game(){
         let restart = document.createElement('button'); restart.textContent = 'restart'
         restart.onclick = () => {
             this.event_handler.broadcast({message:'restart'})
@@ -462,7 +481,7 @@ class Game {
         }
         //this.log_data.append(restart, new_game)
     }
-    apply_data(data) {
+    apply_data(data){
         this.format = data.format
         data.players.forEach(p => {
             let player = this.set_player(p)
@@ -538,48 +557,7 @@ class Game {
     }
 }
 
-let attack = new move(
-    'Attack',        // move_name
-    'attack',       // type
-    100,              // damage
-    0,              // healing
-    0,              // turns
-    100,             // durability
-    0,                // weight
-    [],             // effects
-    'move.png',    //image
-    {},
-    function (data) {   // onhit
-        return;
-    },
-    function (data) {  // update
-        return;
-    }
-)
 
-let defend = new move(
-    'Defend',        // move_name
-    'spell',       // type
-    0,              // damage
-    0,              // healing
-    1,              // turns
-    100,             // durability
-    0,                // weight
-    [],             // effects
-    'move.png',    //image
-    {},
-    function (data) {   // onhit
-        data.user.status_effects.push('guard');
-    },
-    function (data) {  // update
-        if (data.self.turn_count == 0) {
-            let index = data.user.status_effects.indexOf('guard');
-            if (index > -1) {
-                data.user.status_effects.splice(index, 1);
-            }
-        }
-    }
-)
 
 class Player {
     constructor(data) {
@@ -600,9 +578,9 @@ class Player {
         this.add_move(defend)
         if (data.moves.length != 0) {
             data.moves.forEach(move => {
-                for (let i = 0; i < moves.length; i++) {
-                    if (move == moves[i].name) {
-                        this.add_move(moves[i])
+                for (let i = 0; i < moveObjects.length; i++) {
+                    if (move == moveObjects[i].name) {
+                        this.add_move(moveObjects[i])
                     }
                 }
             })
@@ -610,11 +588,10 @@ class Player {
 
     }
     add_move(move_data) {
-        this.moves.push(new move(move_data.name, move_data.type, move_data.damage, move_data.healing, move_data.turns, move_data.durability,
-            move_data.weight, move_data.effects, move_data.img, move_data.prompt_data, move_data.onhit, move_data.onupdate));
+        this.moves.push(new move(move_data));
     }
     set_random_moves(){
-        let availableMoves = [...moves];
+        let availableMoves = [...moveObjects];
         for (let i = 0; i < 6 && availableMoves.length > 0; i++) {
             const index = Math.floor(Math.random() * availableMoves.length);
             const new_move = availableMoves.splice(index, 1)[0]; // remove it

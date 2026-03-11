@@ -78,7 +78,7 @@ const malevonentgoalpost = {
     }
 }
 
-const strike = {
+const ddstrike = {
     x:0,y:0,w:50,h:50,dx:0,dy:0,state:'inactive',lifespan:0,id:0,color:'red',dp:5,name:'Strike',
     onstart:function(user,target,game){
         if(user.num==1){

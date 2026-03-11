@@ -556,26 +556,21 @@ class Arena{
                             btn.onclick = () => {
                             	btn.enabled=false;btn.disabled=true
                             	btn.textContent='loading...'
-                            	if(m.prompt_data.type=='player move select'){
-                            		move_prompt.innerHTML = `${m.prompt_data.message}`
-                            		for(let i=0;i<player.moves.length;i++){
-                            			let prompt_btn = document.createElement('button');btn.className='secondary'
-			                         
-			                            prompt_btn.textContent = player.moves[i].name
-			                            prompt_btn.onclick=()=>{
-			                            	game.handle_request({type:'play',user:player.name,target:p.name,move:m.name,prompt_info:{selected_value:i}})
-			                            	prompt.innerHTML=``;
-                            				setTimeout(() => {this.update_ui(game)}, 1000);
-			                            }
-			                            move_prompt.appendChild(prompt_btn)
+                            	if(m.prompt_data.type=='select target move'||m.prompt_data.type=='select move'){
+                            		let target
+                            		if(m.prompt_data.type=='select target move'){
+                            			target=p
                             		}
-                            	}if(m.prompt_data.type=='player move select multiple'){
+                            		if(m.prompt_data.type=='select move'){
+                            			target=player
+                            		}
                             		move_prompt.innerHTML = `${m.prompt_data.message}`
                             		let selected_values = []
                             		let amount = 0
-                            		for(let i=0;i<player.moves.length;i++){
-                            			let prompt_btn = document.createElement('button');btn.className='secondary btn primary-bg'
-			                            prompt_btn.textContent = player.moves[i].name
+                            		for(let i=0;i<target.moves.length;i++){
+                            			let prompt_btn = document.createElement('button');btn.className='secondary'
+			                         
+			                            prompt_btn.textContent = target.moves[i].name
 			                            prompt_btn.onclick=()=>{
 			                            	prompt_btn.enabled=false;prompt_btn.disabled=true
 			                            	amount+=1
@@ -588,7 +583,6 @@ class Arena{
 			                            }
 			                            move_prompt.appendChild(prompt_btn)
                             		}
-                            		
                             	}else{
                             		game.handle_request({type:'play',user:player.name,target:p.name,move:m.name,prompt_info:{prompt:'none'}})
                             		prompt.innerHTML=``;
