@@ -74,6 +74,12 @@ function set_character(char_name,event_handler,control_elem,dialogue_elem,image_
 	    			if(influence_stats.emotion<2){
 	    				influence_stats.emotion+=data.influence[1]
 	    			}
+	    			for(let i=0;i<player_data.contacts.length;i++){
+						if(player_data.contacts[i].name==char_name){
+							player_data.contacts[i].friendly=influence_stats.friendly
+							player_data.contacts[i].emotion=influence_stats.emotion
+						}
+					}
 	    			document.getElementById('message_log').style.display='none';
 					document.getElementById('message_log').innerHTML=''
 					event_handler.broadcast({message:'save data',data:player_data})

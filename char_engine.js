@@ -203,7 +203,14 @@ class Character_Engine{
 			return {battle_info:this.char.battle_info}
 		}
 		this.char=this.char_data[data.char]
-		let talk = this.char.talks[data.f][data.e]
+		let talk
+		if(data.f>this.char.talks.length-1){
+			talk = [{text:'null message',img:0,options:[{text:'ok',response:'you picked option 1',rewards:[],influence:[-1,0]}]}]
+		}if(data.e>this.char.talks[data.f].length-1){
+			talk = [{text:'null message',img:0,options:[{text:'ok',response:'you picked option 1',rewards:[],influence:[0,-1]}]}]
+		}else{
+			talk = this.char.talks[data.f][data.e]
+		}
 		let res = talk[Math.floor(Math.random() * talk.length)]
 		if(res.img=='random'){
 			res.image = this.char.images[Math.floor(Math.random() * this.char.images.length)]

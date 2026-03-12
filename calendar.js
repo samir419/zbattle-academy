@@ -82,7 +82,7 @@ class Calendar{
 		}
 		data.time=this.time
 		this.event_handler.broadcast({message:'save data', data:data})
-		document.getElementById('date-time').textContent=`day: ${this.time.day} time: ${this.time.hour}`
+		document.getElementById('date-time').innerHTML=`day: ${this.time.day} \n time: ${this.time.hour}`
 	}
 	handle_event(data){
 		if(data.message=='tab switch'){

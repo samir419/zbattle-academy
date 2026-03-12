@@ -58,9 +58,9 @@
 				<button class="btn primary" onclick="document.getElementById('notifs').style.display='none'">close</button>
 			</div>
 			<div id="message_log" class="flex full column absolute priority-1 center" style="display:none;"></div>
-			<div class="flex absolute priority-2" style="top: 0;right: 0;">
-				<div id="date-time"></div>
-				<button class="btn primary-bg" onclick="event_handler.broadcast({message:'open notifs'})" id="notif-button">notifs</button>
+			<div class="flex absolute priority-2" style="top: 0;right: 0;width: 15%;background-color:rgba(0,0,0,0.2)">
+				<div id="date-time" class="no-touch"></div>
+				<button class="btn primary-bg" onclick="event_handler.broadcast({message:'open notifs'})" id="notif-button">🔔</button>
 			</div>
 			<div id="map" class="tab flex full outline center img-bg">
 				<div class="flex full row">
@@ -70,6 +70,7 @@
 						<button class="btn primary-bg " onclick="switch_tab('arena')">arena</button>
 						<button class="btn primary-bg" onclick="switch_tab('shop')">shop</button>
 						<button class="btn primary-bg" onclick="switch_tab('park')">park</button>
+						<button class="btn primary-bg" onclick="switch_tab('custom')">custom</button>
 					</div>
 					<div class="flex three img-bg column">
 						<div class="flex row">
@@ -95,13 +96,13 @@
 
 			<div id="dorm" class="tab flex full outline center img-bg">
 				<div class="flex full column">
-					<div class="flex row outline" id="dorm-tab-buttons">
+					<div class="flex row outline scrollable-x" style="width: 80%;" id="dorm-tab-buttons">
 						<button class="btn primary-bg">save</button>
 						<button class="btn primary-bg">movesets</button>
 						<button class="btn primary-bg">calendar</button>
 						<button class="btn primary-bg">kitchen</button>
 						<button class="btn primary-bg">achievements</button>
-						<button class="btn primary-bg" onclick="switch_tab('map')">back to map</button>
+						<button class="btn primary-bg" onclick="switch_tab('map')">back</button>
 					</div>
 					<div id="dorm-save" class="flex full column">
 						<div id="dorm-player-data"></div>
@@ -206,7 +207,7 @@
 			<div id="arena" class="tab flex full outline center scrollable-y img-bg">
 				<div id="opponent-select" class="flex full column">
 					<div class="flex row outline">
-						<button class="btn primary-bg" onclick="switch_tab('map')">back to map</button>
+						<button class="btn primary-bg" onclick="switch_tab('map')">back</button>
 					</div>
 					<div class="flex full">
 						<div class="flex two column outline">
@@ -233,13 +234,13 @@
 					<div id="arena-moveset-list"></div>
 				</div>
 				<div id="engine" class="flex full scrollable-y">
-					<div id="game-ui" class="flex full-width"></div>
+					<div id="game-ui" class="flex full"></div>
 				</div>
 			</div>
 
 			<div id="class-room" class="tab flex full outline center img-bg">
 				<div class="flex full column">
-					<div class="flex row outline" id="class-tab-buttons">
+					<div class="flex row outline scrollable-x" style="width: 80%;" id="class-tab-buttons">
 						<button class="btn primary-bg">hangout</button>
 						<button class="btn primary-bg">tutorial</button>
 						<button class="btn primary-bg">libary </button>
@@ -263,7 +264,7 @@
 
 			<div id="shop" class="tab flex full outline center img-bg">
 				<div class="flex full column">
-					<div class="flex row outline" id="shop-tab-buttons">
+					<div class="flex row outline scrollable-x" style="width: 80%;" id="shop-tab-buttons">
 						<button class="btn primary-bg">item shop</button>
 						<button class="btn primary-bg">card shop</button>
 						<button class="btn primary-bg">food market </button>
@@ -315,7 +316,7 @@
 
 			<div id="park" class="tab flex full outline center img-bg">
 				<div class="flex full column">
-					<div class="flex row outline" id="park-tab-buttons">
+					<div class="flex row outline scrollable-x" style="width: 80%;" id="park-tab-buttons">
 						<button class="btn primary-bg">tennis game</button>
 						<button class="btn primary-bg">obstacle race</button>
 						<button class="btn primary-bg">bench</button>
@@ -408,6 +409,20 @@
 						<div id="park-char-dialogue" class="outline"></div>
 						<div id="park-controls" class="outline"></div>
 					</div>
+				</div>
+			</div>
+
+			<div id="custom" class="tab flex full outline center img-bg">
+				<div class="flex full column">
+					<div class="flex row outline scrollable-x" style="width: 80%;">
+						<button class="btn primary-bg">tennis game</button>
+						<button class="btn primary-bg">obstacle race</button>
+						<button class="btn primary-bg">bench</button>
+						<button class="btn primary-bg">music game</button>
+						<button class="btn primary-bg" onclick="switch_tab('map')">back to map</button>
+					</div>
+					<div class="flex outline" style="height:20%;width: 50%;"></div>
+					<div class="flex outline" style="height:50%;"></div>
 				</div>
 			</div>
 		</div>

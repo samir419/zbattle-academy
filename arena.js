@@ -66,12 +66,12 @@ class Arena{
 	    	{name:'aisha',health:1000,moves:['Holy Blade','Repair','Heal','Replenish' ],type:'cpu',level:3, img:'battle engine/assets/profiles/aisha.jpg'},
 	    	{name:'blake',health:1300,moves:['Gallant Bastion','Eternal Echo','Shield Strike','Force Field' ],type:'cpu',level:4, img:'battle engine/assets/profiles/blake.jpg'},
 	    	{name:'sky light',health:1350,moves:['Strike','Heal','Force Field','Holy Blade','Mirror Match',],level:4,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'chazz princeton',health:1400,level:5,moves:['Shadow Ball','Repair','Crimson Overdrive','Eternal Echo','Angel Guard'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'chazz princeton',health:1400,level:5,moves:['Shadow Ball','Necromantic Invocation','Crimson Overdrive','Eternal Echo','Angel Guard'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'pumkin',moves:['Replenish','Devils Imprecation','Baneful Binding', 'Eternal Echo','Phantom Domain','Malevonent Armor',],type:'cpu',level:6, img:'battle engine/assets/profiles/pumkin.jpg'},
 	    	{name:'quetzie',health:1500,moves:['Strike','Blast Cannon','Mirror Match','Power Up','Covenant of Carnage','fusion xyz', ],type:'cpu',level:8, img:'battle engine/assets/profiles/quetzie.jpg'},
 	    	{name:'red',health:1500,moves:['Strike','Repair','Beast Mode','Power Up','Attack Up', 'Demon Charge',],type:'cpu',level:10, img:'battle engine/assets/profiles/red.jpg'},
 	    	{name:'kareem',health:1600,level:11,moves:['Shadow Ball','Strike','Mirror Match','Gallant Bastion','Soul Drain','Chaos Fist','Angel Guard'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'el gizmo',health:1700,level:12,moves:['Strike','Replenish','Demon Charge','Covenant of Carnage','Power Up','Malevonent Armor','Angel Guard',],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'el gizmo',health:1700,level:12,moves:['Strike','Replenish','Demon Charge','Covenant of Carnage','Power Up','Necromantic Invocation','Angel Guard',],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'Zane',health:1700,level:13,moves:['Shadow Ball','Strike','Mirror Match','Gallant Bastion','Soul Drain','Chaos Fist','Angel Guard'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'Dynatrol',health:2000,moves:[ 'Blast Cannon','Force Field','Shield Strike','Mirror Match','fusion xyz','Beast Mode','Guard Breaker','Dragon Force',],level:20,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	// additional opponents
@@ -468,8 +468,7 @@ class Arena{
         document.getElementById('game-ui').innerHTML=''
         let main_div=document.createElement('div');main_div.className='flex full column outline'
         let log_info = document.createElement('div');log_info.className='flex column scrollable-y neutral-bg outline';
-        log_info.style.minHeight = '100px'
-        log_info.style.maxHeight = '100px'
+        log_info.style.height = '25%'
         log_info.style.marginLeft = '10%'
         log_info.style.marginRight = '10%'
         log_info.style.width = '80%'
@@ -483,8 +482,11 @@ class Arena{
 		    }, 1000 * (i - start));
 		}
         this.temp_storage.list_length = data.log_data.length
-        let opp_div = document.createElement('div');opp_div.className='flex center row full-width'
-        let player_div = document.createElement('div');player_div.className='flex center row full-width'
+        let opp_div = document.createElement('div');opp_div.className='flex center row full-width scrollable-y scrollable-x'
+        opp_div.style.height = '25%'
+        let player_div = document.createElement('div');player_div.className='flex row full-width scrollable-y scrollable-x'
+        player_div.style.height = '50%'
+        player_div.style.justifyContent='center'
         data.players.forEach(player=>{
         	let emojiString = "";
 			player.status_effects.forEach(effect => {
@@ -501,7 +503,7 @@ class Arena{
 			});
         	if(player.type=='cpu'&&player.team!='player'){
         		let p_div = document.createElement('div');p_div.className='flex row center outline scrollable-y';
-        		p_div.style.maxHeight = '200px'
+        		//p_div.style.maxHeight = '200px'
         		let info_div=document.createElement('div');info_div.className='flex column'
         		let image = document.createElement('img'); image.className = 'player-image'; image.src = player.img
         		let name = document.createElement('h3');
@@ -518,8 +520,8 @@ class Arena{
 	            opp_div.append(p_div)
         	}
         	if(player.type=='player'||player.team=='player'){
-        		let p_div = document.createElement('div');p_div.className='flex row center outline scrollable-y';
-        		p_div.style.maxHeight = '300px'
+        		let p_div = document.createElement('div');p_div.className='flex row center outline';
+        		//p_div.style.maxHeight = '300px'
         		p_div.style.alignItems = 'flex-start'
         		let info_div=document.createElement('div');info_div.className='flex column'
         		let image = document.createElement('img'); image.className = 'player-image'; image.src = player.img

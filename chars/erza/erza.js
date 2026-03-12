@@ -37,7 +37,7 @@ const erza = {
                         {
                             text:'I just wanted to get to know you better.',
                             response:'is that so. you can have my number.',
-                            rewards:[],
+                            rewards:[{name:'number'}],
                             influence:[0,1]
                         },
                         {
@@ -55,7 +55,7 @@ const erza = {
                         {
                             text:'Ive seen you in several cooking competitions.',
                             response:'wow, people rarely notice that.',
-                            rewards:[],
+                            rewards:[{name:'number'}],
                             influence:[1,1]
                         },
                         {

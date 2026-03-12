@@ -13,9 +13,9 @@ class Notif{
 			}
 		}
 		if(num>0){
-			this.btn.textContent=`notifs (${num})`
+			this.btn.textContent=`🔔 (${num})`
 		}else{
-			this.btn.textContent=`notifs`
+			this.btn.textContent=`🔔`
 		}
 	}
 	
