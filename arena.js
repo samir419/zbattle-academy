@@ -30,7 +30,8 @@ zbattle_moves = [
     'Dark Blade',
     'Phantom Domain',
     'Eternal Echo',
-    'Faustian Bargain'
+    'Faustian Bargain',
+    'Blaze'
 ]
 let img_list = [
     'battle engine/assets/profiles/aisha.jpg',
@@ -56,241 +57,19 @@ class Arena{
 	    this.engine_elem.style.display = 'none'
 
 	    this.selected_set = []
-
+	    let data = JSON.parse(localStorage.getItem('zbattle academy data'))
 	    this.opponents =[
-	    	{name:'battle bot',moves:[],level:5,type:'cpu', img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'peapsqueak',health:500,moves:['Repair','Speed Bullet','Power Up'],level:1,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'monkey man',health:700,moves:['Eternal Echo','Speed Bullet','Power Up','Guard Breaker'],level:2,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'nero',health:800,level:2,moves:['Strike','Blast Cannon','Heal','Power Up'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'zawa rudo',health:1200,moves:['Repair','Strike','Speed Bullet','Blast Cannon'],level:3,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'aisha',health:1000,moves:['Holy Blade','Repair','Heal','Replenish' ],type:'cpu',level:3, img:'battle engine/assets/profiles/aisha.jpg'},
-	    	{name:'blake',health:1300,moves:['Gallant Bastion','Eternal Echo','Shield Strike','Force Field' ],type:'cpu',level:4, img:'battle engine/assets/profiles/blake.jpg'},
-	    	{name:'sky light',health:1350,moves:['Strike','Heal','Force Field','Holy Blade','Mirror Match',],level:4,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'chazz princeton',health:1400,level:5,moves:['Shadow Ball','Necromantic Invocation','Crimson Overdrive','Eternal Echo','Angel Guard'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'pumkin',moves:['Replenish','Devils Imprecation','Baneful Binding', 'Eternal Echo','Phantom Domain','Malevonent Armor',],type:'cpu',level:6, img:'battle engine/assets/profiles/pumkin.jpg'},
-	    	{name:'quetzie',health:1500,moves:['Strike','Blast Cannon','Mirror Match','Power Up','Covenant of Carnage','fusion xyz', ],type:'cpu',level:8, img:'battle engine/assets/profiles/quetzie.jpg'},
-	    	{name:'red',health:1500,moves:['Strike','Repair','Beast Mode','Power Up','Attack Up', 'Demon Charge',],type:'cpu',level:10, img:'battle engine/assets/profiles/red.jpg'},
-	    	{name:'kareem',health:1600,level:11,moves:['Shadow Ball','Strike','Mirror Match','Gallant Bastion','Soul Drain','Chaos Fist','Angel Guard'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'el gizmo',health:1700,level:12,moves:['Strike','Replenish','Demon Charge','Covenant of Carnage','Power Up','Necromantic Invocation','Angel Guard',],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'Zane',health:1700,level:13,moves:['Shadow Ball','Strike','Mirror Match','Gallant Bastion','Soul Drain','Chaos Fist','Angel Guard'],type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	{name:'Dynatrol',health:2000,moves:[ 'Blast Cannon','Force Field','Shield Strike','Mirror Match','fusion xyz','Beast Mode','Guard Breaker','Dragon Force',],level:20,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
-	    	// additional opponents
-			{
-			    name:'scrap drone',
-			    health:450,
-			    moves:['Strike','Repair','Speed Bullet'],
-			    level:1,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-
-			{
-			    name:'gear monk',
-			    health:900,
-			    moves:['Strike','Power Up','Guard Breaker','Shield Strike'],
-			    level:5,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-
-			{
-			    name:'grave warden',
-			    health:1100,
-			    moves:['Shadow Ball','Baneful Binding','Soul Drain','Malevonent Armor'],
-			    level:6,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-
-			{
-			    name:'iron duelist',
-			    health:1200,
-			    moves:['Strike','Shield Strike','Gallant Bastion','Guard Breaker'],
-			    level:7,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-			{
-			    name:'specter knight',
-			    health:1250,
-			    moves:['Phantom Domain','Shadow Ball','Soul Drain','Strike'],
-			    level:7,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-
-			{
-			    name:'void striker',
-			    health:1450,
-			    moves:['Chaos Fist','Shadow Ball','Power Up','Strike'],
-			    level:8,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-
-			{
-			    name:'storm lancer',
-			    health:1500,
-			    moves:['Speed Bullet','Dragon Force','Strike','Guard Breaker'],
-			    level:9,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-			{
-			    name:'abyss mage',
-			    health:1500,
-			    moves:['Shadow Ball','Baneful Binding','Phantom Domain','Soul Drain'],
-			    level:9,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-
-			{
-			    name:'alpha beast',
-			    health:1550,
-			    moves:['Beast Mode','Strike','Demon Charge','Power Up'],
-			    level:10,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-
-			{
-			    name:'oracle sentinel',
-			    health:1650,
-			    moves:['Angel Guard','Force Field','Heal','Mirror Match'],
-			    level:11,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-
-			{
-			    name:'warlock prime',
-			    health:1750,
-			    moves:['Devils Imprecation','Shadow Ball','Baneful Binding','Soul Drain'],
-			    level:12,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-
-			{
-			    name:'paladin rex',
-			    health:1800,
-			    moves:['Holy Blade','Gallant Bastion','Angel Guard','Shield Strike'],
-			    level:13,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-
-			{
-			    name:'fusion beast',
-			    health:1850,
-			    moves:['fusion xyz','Beast Mode','Strike','Dragon Force'],
-			    level:14,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-			{
-			    name:'night tyrant',
-			    health:1850,
-			    moves:['Chaos Fist','Shadow Ball','Phantom Domain','Demon Charge'],
-			    level:14,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-
-			{
-			    name:'crimson lord',
-			    health:1900,
-			    moves:['Crimson Overdrive','Strike','Power Up','Guard Breaker'],
-			    level:15,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-			{
-			    name:'void prophet',
-			    health:1900,
-			    moves:['Phantom Domain','Soul Drain','Eternal Echo','Shadow Ball'],
-			    level:15,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-
-			{
-			    name:'dragon templar',
-			    health:1950,
-			    moves:['Dragon Force','Holy Blade','Shield Strike','Angel Guard'],
-			    level:16,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-			{
-			    name:'dread berserker',
-			    health:1950,
-			    moves:['Beast Mode','Demon Charge','Chaos Fist','Strike'],
-			    level:16,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-
-			{
-			    name:'mirror master',
-			    health:2000,
-			    moves:['Mirror Match','Eternal Echo','Force Field','Power Up'],
-			    level:17,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-			{
-			    name:'hell binder',
-			    health:2000,
-			    moves:['Devils Imprecation','Baneful Binding','Soul Drain','Shadow Ball'],
-			    level:17,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-
-			{
-			    name:'titan engine',
-			    health:2050,
-			    moves:['Blast Cannon','Force Field','Guard Breaker','Repair'],
-			    level:18,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-			{
-			    name:'astral knight',
-			    health:2050,
-			    moves:['Holy Blade','Phantom Domain','Angel Guard','Strike'],
-			    level:18,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-
-			{
-			    name:'chaos sovereign',
-			    health:2100,
-			    moves:['Chaos Fist','Crimson Overdrive','Dragon Force','Power Up'],
-			    level:19,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-			{
-			    name:'eternal judge',
-			    health:2100,
-			    moves:['Angel Guard','Eternal Echo','Soul Drain','Mirror Match'],
-			    level:19,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			},
-
-			{
-			    name:'omega sentinel',
-			    health:2200,
-			    moves:['Dragon Force','Crimson Overdrive','Force Field','Guard Breaker','Mirror Match'],
-			    level:20,
-			    type:'cpu',
-			    img:'battle engine/assets/ZBATTLELOGO.png'
-			}
+	    	{name:'battle bot',health:data.health_cap,move_cap:data.move_cap,moves:[],level:data.level,type:'cpu', img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'level 1',health:500,moves:['Force Field','Repair',],level:1,type:'cpu',img:'battle engine/assets/profiles/aisha.jpg'},
+	    	{name:'level 2',health:600,moves:['Force Field','Attack Up'],level:2,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'level 3',health:700,moves:['Repair','Attack Up',],level:3,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'level 4',health:800,moves:['Force Field','Repair','Speed Bullet',],level:4,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'level 5',health:900,moves:['Mirror Match','Speed Bullet','Blaze'],level:5,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'level 6',health:1000,moves:['Heal','Force Field','Attack Up','Speed Bullet',],level:6,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'level 7',health:1100,moves:['Heal','Power Up','Repair','Speed Bullet',],level:7,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'level 8',health:1200,moves:['Strike','Force Field','Repair','Gallant Bastion',],level:8,type:'cpu',img:'battle engine/assets/profiles/blake.jpg'},
+	    	{name:'level 9',health:1300,moves:['Strike','Heal','Force Field','Power Up','Repair',],level:9,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
+	    	{name:'level 10',health:1400,moves:['Strike','Attack Up','Angel Guard','Gallant Bastion','Blaze'],level:10,type:'cpu',img:'battle engine/assets/ZBATTLELOGO.png'},
 	    ]
 
 	    this.selected_opponents=[]
@@ -377,7 +156,11 @@ class Arena{
 		let match_data = {players:[]}
 	    match_data.format='teams'
 	    let data = JSON.parse(localStorage.getItem('zbattle academy data'))
-	    match_data.players.push({name:data.name,health:data.health_cap,moves:this.selected_set,type:'player',team:'player', img:data.thumbnail})
+	    let move_lst = []
+	    for(let i=0;i<data.move_cap;i++){
+	    	move_lst.push(this.selected_set[i])
+	    }
+	    match_data.players.push({name:data.name,health:data.health_cap,moves:move_lst,type:'player',team:'player', img:data.thumbnail,move_cap:data.move_cap})
 
 	    for(let i=0;i<this.selected_allies.length;i++){
 	    	this.selected_allies[i].team='player'
@@ -712,6 +495,9 @@ class Arena{
         		if(dt.health_cap<max_health){
         			dt.health_cap+=50
         		}
+        		if(dt.move_cap<=6){
+        			dt.move_cap+=0.25
+        		}
         		if(!dt.stats.defeated_opponents.includes(this.selected_opponents[i].name)){
         			dt.stats.defeated_opponents.push(this.selected_opponents[i].name)
         			dt.stats.wins+=1
@@ -720,6 +506,7 @@ class Arena{
         	this.event_handler.broadcast({message:'set notif',elem:`<p>you reached level ${dt.level}</p>`})
         	this.event_handler.broadcast({message:'set notif',elem:`<p>you now have ${dt.money} z</p>`})
         	this.event_handler.broadcast({message:'set notif',elem:`<p>health cap increased to ${dt.health_cap}</p>`})
+        	this.event_handler.broadcast({message:'set notif',elem:`<p>move cap increased to ${dt.move_cap}</p>`})
         	this.event_handler.broadcast({message:'save data',data:dt})
         	let self = this
         	this.event_handler.set_message({text:'you won',canClose:false,options:[
@@ -802,6 +589,8 @@ class Arena{
 	        				if(dt.health_cap<max_health){
 			        			dt.health_cap+=50*opponents.length
 			        			if(dt.health_cap>max_health){dt.health_cap=max_health}
+		        				dt.move_cap+=0.25*opponents.length
+			        			if(dt.move_cap>6){dt.health_cap=6}
 			        		}
 	        				for(let i=0;i<item_rewards.length;i++){
 	        					dt.items.push(item_rewards[i])
@@ -809,6 +598,7 @@ class Arena{
 	        				this.event_handler.broadcast({message:'set notif',elem:`<p>you reached level ${dt.level}</p>`})
 	        				this.event_handler.broadcast({message:'set notif',elem:`<p>you now have ${dt.money} z</p>`})
 	        				this.event_handler.broadcast({message:'set notif',elem:`<p>health cap increased to ${dt.health_cap}</p>`})
+	        				this.event_handler.broadcast({message:'set notif',elem:`<p>move cap increased to ${dt.move_cap}</p>`})
 	        				this.event_handler.broadcast({message:'save data',data:dt})
 	        				game.log_data.innerHTML = ''
 				            game.current_turn = 0

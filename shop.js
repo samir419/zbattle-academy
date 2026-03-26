@@ -66,42 +66,15 @@ class Shop{
 			{name:'flour', price:5, quantity:1, tags:['basic','cooking']},
 		    {name:'premium chocolate', price:30, quantity:1, tags:['sweet','luxury','gift','cooking']},
 		    {name:'energy drink', price:25, quantity:1, tags:['boost','athletic','combat']},
+		    {name:'kitchen knife',price:90,quantity:1,tags:['gift']},
 		    {name:'mystic truffle', price:80, quantity:1, tags:['rare','luxury','gift','cooking']},
+		    {name:'z fighter',price:200,quantity:1,tags:['gift']},
 		    {name:'ancient textbook', price:50, quantity:1, tags:['intellectual','gift']},
+		    {name:'level up',price:1000,quantity:1},
+		    {name:'health up',price:1000,quantity:1},
+		    {name:'increase move cap',price:1000,quantity:1}
 		]
-		this.card_list = [
-			    'Strike',
-			    'Replenish',
-			    'Blast Cannon',
-			    'Heal',
-			    'Force Field',
-			    'Holy Blade',
-			    'Shield Strike',
-			    'Demon Charge',
-			    'Covenant of Carnage',
-			    'Mirror Match',
-			    'Power Up',
-			    'Baneful Binding', 
-			    'Repair',
-			    'Attack Up',
-			    'fusion xyz',
-			    'Beast Mode',
-			    'Malevonent Armor',
-			    'Angel Guard',
-			    'Speed Bullet',
-			    'Gallant Bastion',
-			    'Guard Breaker',
-			    'Devils Imprecation',
-			    'Soul Drain',
-			    'Dragon Force',
-			    'Shadow Ball',
-			    'Crimson Overdrive',
-			    'Chaos Fist',
-			    'Dark Blade',
-			    'Phantom Domain',
-			    'Eternal Echo',
-			    'Faustian Bargain'
-			]
+		this.card_list = moveObjects
 		this.switch_tab('item-shop')
 	}
 	init(){
@@ -119,12 +92,21 @@ class Shop{
 		let shopwoman_div = document.getElementById('shop woman');shopwoman_div.innerHTML=''
 
 	    this.set_shop_data(this.item_list,buyable_items,'buy')
+
 	    this.set_shop_data(data.items,sellable_items,'sell')
 	    player_money.innerHTML = 'money:'+data.money+'z'
 	    shopgirl_div.innerHTML='welcome to the item shop'
 
 	    this.set_card_data(this.card_list,buyable_cards,'buy')
-	    this.set_card_data(data.available_moves,sellable_cards,'sell')
+	    let selling_cards = []
+	    data.available_moves.forEach(move=>{
+	    	this.card_list.forEach(card=>{
+	    		if(card.name==move){
+	    			selling_cards.push(card)
+	    		}
+	    	})
+	    })
+	    this.set_card_data(selling_cards,sellable_cards,'sell')
 	    shopboy_div.innerHTML="welcome to the card shop"
 
 	    this.set_shop_data(food_list,buyable_foods,'buy')
@@ -192,6 +174,18 @@ class Shop{
 	            const data = JSON.parse(localStorage.getItem('zbattle academy data'));
 	            if(mode=='buy'){
 	            	data.money -= item.price;
+	            	const actions = {
+					    'level up': () => data.level += 1,
+					    'health up': () => data.health_cap += 100,
+					    'increase move cap': () => data.move_cap += 1
+					};
+
+					if (actions[item.name]) {
+					    actions[item.name]();
+					    this.event_handler.broadcast({ message: 'save data', data });
+					    this.init();
+					    return
+					}
 		            data.items.push(item);
 
 		            this.event_handler.broadcast({
@@ -234,10 +228,10 @@ class Shop{
 	        div.className = 'flex row padding gap align-center';
 
 	        const name = document.createElement('div');
-	        name.textContent = item;
-
+	        name.textContent = item.name;
+	        let itemprice = item.weight*100+item.durability*25
 	        const price = document.createElement('div');
-	        price.textContent = 100 + 'z';
+	        price.textContent = itemprice + 'z';
 
 	        // action container (this is where everything happens)
 	        const action = document.createElement('div');
@@ -268,7 +262,7 @@ class Shop{
 	            const data = JSON.parse(localStorage.getItem('zbattle academy data'));
 
 	            // Not enough money
-	            if (data.money < 100 && mode == 'buy') {
+	            if (data.money < itemprice && mode == 'buy') {
 	                message.textContent = "Not enough money";
 	                message.classList.remove('hidden');
 	                setTimeout(() => message.classList.add('hidden'), 1500);
@@ -284,7 +278,7 @@ class Shop{
 	        yesBtn.onclick = () => {
 	            const data = JSON.parse(localStorage.getItem('zbattle academy data'));
 	            if(mode=='buy'){
-	            	data.money -= 100;
+	            	data.money -= itemprice;
 		            data.available_moves.push(item);
 
 		            this.event_handler.broadcast({
@@ -292,7 +286,7 @@ class Shop{
 		                data: data
 		            });
 	            }else{
-	            	data.money += 100;
+	            	data.money += itemprice;
 	            	data.available_moves.splice(i,1)
 	            	 this.event_handler.broadcast({
 		                message: 'save data',
@@ -426,7 +420,7 @@ class Shop{
 	}
 
 	randomFrom(arr) {
-	    return arr[Math.floor(Math.random() * arr.length)];
+	    return arr[Math.floor(Math.random() * (arr.length-3))];
 	}
 
 	addCoins(data, amount) {
@@ -441,8 +435,8 @@ class Shop{
 
 	giveRandomCard(data) {
 	    const card = this.randomFrom(this.card_list);
-	    data.available_moves.push(card);
-	    return card;
+	    data.available_moves.push(card.name);
+	    return card.name;
 	}
 
 	switch_tab(tab){

@@ -1,16 +1,16 @@
-document.addEventListener("keydown", event => {
+/*document.addEventListener("keydown", event => {
     if (ponggame.players[0].state == 'idle') {
         if (event.key === "w") { ponggame.players[0].direction = -1; ponggame.players[0].dy = -5; }
         if (event.key === "s") { ponggame.players[0].direction = 1; ponggame.players[0].dy = 5; }
     }
-    ponggame.handle_input(event.key)
+    //ponggame.handle_input(event.key)
 });
 document.addEventListener("keyup", event => {
     if (ponggame.players[0].state == 'idle') {
         if (event.key === "w") ponggame.players[0].dy = 0;
         if (event.key === "s") ponggame.players[0].dy = 0;
     }
-});
+});*/
 
 canvas.addEventListener("touchstart", function (e) {
     e.preventDefault();

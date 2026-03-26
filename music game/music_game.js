@@ -147,10 +147,10 @@ class Music_game{
     	this.lastTime = timeStamp;
 
 		if(this.state=='running'){
-			if (this.keys["h"]) this.check_collision;
-	  		if (this.keys["j"]) this.check_collision;
-	  		if (this.keys["k"]) this.check_collision;
-	  		if (this.keys["l"]) this.check_collision;
+			if (this.keys["h"]) {this.check_collision(this.lines[0]);this.keys["h"]=false}
+	  		if (this.keys["j"]) {this.check_collision(this.lines[1]);this.keys["j"]=false}
+	  		if (this.keys["k"]) {this.check_collision(this.lines[2]);this.keys["k"]=false}
+	  		if (this.keys["l"]) {this.check_collision(this.lines[3]);this.keys["l"]=false}
 			for(let i=0; i<this.objects.length;i++){
 	    		this.objects[i].y+=100*dt
 	    		if(this.objects[i].y>=444){

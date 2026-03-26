@@ -35,14 +35,14 @@ const erza = {
                     img:'random',
                     options:[
                         {
-                            text:'I just wanted to get to know you better.',
-                            response:'is that so. you can have my number.',
+                            text:'what item do you like.',
+                            response:'i really want a kitchen knife.',
                             rewards:[{name:'number'}],
                             influence:[0,1]
                         },
                         {
-                            text:'I want a match.',
-                            response:'you sweats are always challenging anyone.',
+                            text:'what item do you want.',
+                            response:'i wanna get a z fighter for my brother.',
                             rewards:[],
                             influence:[1,0]
                         }
@@ -71,18 +71,18 @@ const erza = {
             // emotion 1
             [
                 {
-                    text:'are you a dog person or a cat person?',
+                    text:'hello there, nice to meet you. what brings you here?',
                     img:'random',
                     options:[
                         {
-                            text:'cat',
-                            response:'cats are cool i guess.',
-                            rewards:[],
+                            text:'what item do you like.',
+                            response:'i really want a kitchen knife.',
+                            rewards:[{name:'number'}],
                             influence:[1,0]
                         },
                         {
-                            text:'dog',
-                            response:'me too hehe.',
+                            text:'what item do you love.',
+                            response:'one of the things i wish for is a tournament medal.',
                             rewards:[],
                             influence:[0,1]
                         }
@@ -187,8 +187,8 @@ const erza = {
                             text:'show me',
                             response:'check it out.',
                             rewards:[
-                                {name:'Angel Guard'},
-                                {name:'fusion xyz'}
+                                //{name:'Angel Guard'},
+                                //{name:'fusion xyz'}
                             ],
                             influence:[1,0]
                         },

@@ -197,45 +197,49 @@ function get_prompt_info(player,target,game,move){
 }
 let moveTemplate = {
     name:'Null',
+    description: 'does nothing',
     type:'spell',
     damage:0,
     turns:0,
     durability:1,
     weight:0,
     effects:[],
-    image:'move.png',
+    image:'spell_card.png',
     prompt_data:{},
     onhit:function(data){},
     update:function(data){}
 }
 let attack = {
     name:'Attack',
+    description: 'deals 100 damage to a target',
     type:'attack',
     damage:100,
     turns:0,
     durability:100,
     weight:0,
     effects:[],
-    image:'move.png',
+    image:'attack_card.png',
     prompt_data:{},
     onhit:function(data){},
     update:function(data){}
 }
 let defend = {
     name:'Defend',
+    description: 'damage dealt to the user is halved for 1 turn',
     type:'spell',
     damage:0,
     turns:1,
     durability:100,
     weight:0,
     effects:['guardSelf'],
-    image:'move.png',
+    image:'spell_card.png',
     prompt_data:{},
     onhit:function(data){},
     update:function(data){}
 }
 let strike = {
     name:'Strike',
+    description: 'deals 300 damage to a target',
     type:'attack',
     damage:300,
     turns:0,
@@ -249,91 +253,98 @@ let strike = {
 }
 let replenish = {
     name:'Replenish',
+    description: 'restores 500 hp to a target',
     type:'spell',
     damage:0,
     turns:0,
     durability:1,
     weight:5,
     effects:['heal-500'],
-    image:'heal.png',
+    image:'replenish.png',
     prompt_data:{},
     onhit:function(data){},
     update:function(data){}
 }
 let blastCannon = {
     name:'Blast Cannon',
+    description: 'deals 500 damage to a target',
     type:'attack',
     damage:500,
     turns:0,
     durability:1,
     weight:5,
     effects:[],
-    image:'move.png',
+    image:'blast_cannon.png',
     prompt_data:{},
     onhit:function(data){},
     update:function(data){}
 }
 let heal = {
     name:'Heal',
+    description: 'restores 350 hp to a target',
     type:'spell',
     damage:0,
     turns:0,
     durability:2,
     weight:3,
     effects:['heal-350'],
-    image:'strike.png',
+    image:'spell_card.png',
     prompt_data:{},
     onhit:function(data){},
     update:function(data){}
 }
 let forceField = {
     name:'Force Field',
+    description: 'damage dealt to the target is halved for 2 turns',
     type:'spell',
     damage:0,
     turns:2,
     durability:1,
     weight:4,
     effects:['guard'],
-    image:'strike.png',
+    image:'force_field.png',
     prompt_data:{},
     onhit:function(data){},
     update:function(data){}
 }
 let holyBlade = {
     name:'Holy Blade',
+    description: 'deals 300 damage to a target. restors 300 hp to the user',
     type:'attack',
     damage:300,
     turns:0,
     durability:1,
     weight:3,
     effects:['healSelf-300'],
-    image:'move.png',
+    image:'holy_blade.png',
     prompt_data:{},
     onhit:function(data){},
     update:function(data){}
 }
 let shieldStrike = {
     name:'Shield Strike',
+    description: 'deals 300 damage to a target. damage dealt to the user will be halved for 1 turn',
     type:'attack',
     damage:300,
     turns:1,
     durability:1,
     weight:3,
     effects:['guardSelf'],
-    image:'move.png',
+    image:'attack_card.png',
     prompt_data:{},
     onhit:function(data){},
     update:function(data){}
 }
 let demonCharge = {
     name:'Demon Charge',
+    description: 'deals 400 damage to a target, 200 knockback damage to the user',
     type:'attack',
     damage:400,
     turns:0,
     durability:2,
     weight:3,
     effects:[],
-    image:'move.png',
+    image:'demon_charge.png',
     prompt_data:{},
     onhit:function(data){
         let dmg = get_damage(200,data.user,data.user)
@@ -344,13 +355,14 @@ let demonCharge = {
 }
 let covenantOfCarnage = {
     name:'Covenant of Carnage',
+    description: 'after 3 turns, 400 damage will be dealt to the user and the target',
     type:'spell',
     damage:0,
     turns:3,
     durability:2,
     weight:4,
     effects:[],
-    image:'move.png',
+    image:'spell_card.png',
     prompt_data:{},
     onhit:function(data){},
     update:function(data){
@@ -369,13 +381,14 @@ let covenantOfCarnage = {
 }
 let mirrorMatch = {
     name:'Mirror Match',
+    description: 'user copies and uses the last move used by the target',
     type:'spell',
     damage:0,
     turns:0,
     durability:1,
     weight:1,
     effects:[],
-    image:'move.png',
+    image:'spell_card.png',
     prompt_data:{},
     onhit:function(data){
         let user = data.user 
@@ -394,7 +407,7 @@ let mirrorMatch = {
                             }else if(move.prompt_data.type=='select moves'){
                                 arr = user.moves.map((_, i) => i)
                             }
-                            for(let i=0;i<user.moves[num].prompt_data.amount;i++){
+                            for(let i=0;i<move.prompt_data.amount;i++){
                                 let m = Math.floor(Math.random() * arr.length)
                                 selected_values.push(m)
                                 arr.splice(m,1)
@@ -421,39 +434,42 @@ let mirrorMatch = {
 }
 let powerUp = {
     name:'Power Up',
+    description: 'targets attack power increased by 100',
     type:'spell',
     damage:0,
     turns:5,
     durability:3,
     weight:2,
     effects:['attack_buff-100'],
-    image:'move.png',
+    image:'spell_card.png',
     prompt_data:{},
     onhit:function(data){},
     update:function(data){}
 }
 let beastMode = {
     name:'Beast Mode',
+    description: 'targets attack power increases by 200 for 2 turns',
     type:'spell',
     damage:0,
     turns:3,
     durability:3,
     weight:2,
     effects:['attack_buff-200'],
-    image:'strike.png',
+    image:'spell_card.png',
     prompt_data:{},
     onhit:function(data){},
     update:function(data){}
 }
 let banefulBinding = {
     name:'Baneful Binding',
+    description: 'select a move from the targets movelist and disables that move for 2 turns',
     type:'spell',
     damage:0,
     turns:2,
     durability:2,
     weight:2,
     effects:[],
-    image:'move.png',
+    image:'spell_card.png',
     prompt_data:{message:'select one card',type:'select target move',amount:1},
     onhit:function(data){
         if(data.user.type=='cpu'){
@@ -486,14 +502,15 @@ let banefulBinding = {
 }
 let repair = {
     name:'Repair',
+    description: 'select a move from the targets movelist, restores the moves durability',
     type:'spell',
     damage:0,
     turns:0,
     durability:3,
     weight:1,
     effects:[],
-    image:'move.png',
-    prompt_data:{message:'select one card',type:'select move',amount:1},
+    image:'spell_card.png',
+    prompt_data:{message:'select one card',type:'select target move',amount:1},
     onhit:function(data){
         let user = data.user 
         let target = data.target
@@ -502,23 +519,24 @@ let repair = {
         if(user.type=='player'){
             num = data.prompt_info.selected_values[0]
         }else{
-            num = Math.floor(Math.random() * (user.moves.length - 2)) + 2
+            num = Math.floor(Math.random() * (target.moves.length - 2)) + 2
         }
-        user.moves[num].durability =  user.moves[num].durability_ref
-        user.moves[num].isenabled = true
-        game_instance.log(`${user.name}'s move ${user.moves[num].name} is restored`);
+        target.moves[num].durability =  target.moves[num].durability_ref
+        target.moves[num].isenabled = true
+        game_instance.log(`${target.name}'s move ${target.moves[num].name} is restored`);
     },
     update:function(data){}
 }
 let attackUp = {
     name:'Attack Up',
+    description: 'select one move from the users movelist, increases the moves attack power by 200',
     type:'spell',
     damage:0,
     turns:0,
     durability:3,
     weight:1,
     effects:[],
-    image:'move.png',
+    image:'spell_card.png',
     prompt_data:{message:'select one card',type:'select move',amount:1},
     onhit:function(data){
         let user = data.user 
@@ -528,7 +546,7 @@ let attackUp = {
         if(user.type=='player'){
             num = data.prompt_info.selected_values[0]
         }else{
-            num = Math.floor(Math.random() * options.length)
+            num = Math.floor(Math.random() * user.moves.length)
         }
         user.moves[num].damage+=200
         game_instance.log(`${user.name}'s move ${user.moves[num].name} damage increased`);
@@ -537,13 +555,14 @@ let attackUp = {
 }
 let speedBullet = {
     name:'Speed Bullet',
+    description: 'deals 200 damage to a target',
     type:'attack',
     damage:200,
     turns:0,
     durability:10,
     weight:2,
     effects:[],
-    image:'move.png',
+    image:'attack_card.png',
     prompt_data:{},
     onhit:function(data){},
     update:function(data){}
@@ -551,13 +570,14 @@ let speedBullet = {
 
 let fusionXyz = {
     name: 'fusion xyz',
+    description: 'user selects 2 moves from his movelist and uses them on the same turn',
     type:'spell',
     damage:0,
     turns:0,
     durability:1,
     weight:2,
     effects:[],
-    image:'move.png',
+    image:'spell_card.png',
     prompt_data:{message:'select two moves',type:'select move',amount:2},
     onhit:function(data){
         let user = data.user 
@@ -620,13 +640,14 @@ let fusionXyz = {
 
 let malevonentArmor = {
     name: 'Malevonent Armor',
+    description: 'any damage dealt to the user is also dealt to the attacker for 2 turns',
     type:'spell',
     damage:0,
     turns:2,
     durability:2,
     weight:2,
     effects:['thorns'],
-    image:'move.png',
+    image:'spell_card.png',
     prompt_data:{},
     onhit:function(data){},
     update:function(data){}
@@ -635,15 +656,18 @@ let malevonentArmor = {
 let angelGuard = {
     ...moveTemplate,
     name: 'Angel Guard',
+    description: 'restores 300 hp to the target. damage dealt to the target is halved for 1 turn',
     type:'spell',
     turns:1,
     durability:1,
     weight:3,
     effects:['heal-300','guard'],
+    image:'angel_guard.png',
 }
 
 let gallantBastion = {
     name: 'Gallant Bastion',
+    description: 'deals 200 damage to a target. damage dealt to the user is halved for 1 turn',
     type:'attack',
     damage:200,
     turns:1,
@@ -658,6 +682,7 @@ let gallantBastion = {
 
 let guardBreaker = {
     name: 'Guard Breaker',
+    description: 'deals 200 damage to a target. removes the guard effect from the target',
     type:'attack',
     damage:200,
     turns:0,
@@ -679,13 +704,14 @@ let guardBreaker = {
 let devilsImprecation = {
     ...moveTemplate,
     name: 'Devils Imprecation',
+    description: 'deals 500 damage to a target. 300 knockback damage to the user',
     type:'attack',
     damage:500,
     turns:0,
     durability:2,
     weight:3,
     effects:[],
-    image:'move.png',
+    image:'devils_imprecation.png',
     prompt_data:{},
     onhit:function(data){
         data.user.health-=300
@@ -696,13 +722,14 @@ let devilsImprecation = {
 
 let soulDrain = {
     name: 'Soul Drain',
+    description: 'reduces the targets health by 300',
     type:'spell',
     damage:0,
     turns:0,
     durability:3,
     weight:3,
     effects:[],
-    image:'move.png',
+    image:'spell_card.png',
     prompt_data:{},
     onhit:function(data){
         data.target.health-=300
@@ -713,6 +740,7 @@ let soulDrain = {
 
 let dragonForce = {
     name: 'Dragon Force',
+    description: 'deals 300 damage to a target. deals 100 extra damage if the targets last move was a spell',
     type:'attack',
     damage:300,
     turns:0,
@@ -736,6 +764,7 @@ let dragonForce = {
 let shadowBall = {
     ...moveTemplate,
     name: 'Shadow Ball',
+    description: 'deals 300 damage to a target. the targets last move is disabled for 1 turn',
     type:'attack',
     damage:300,
     turns:1,
@@ -761,13 +790,14 @@ let shadowBall = {
 let crimsonOverdrive = {
     ...moveTemplate,
     name: 'Crimson Overdrive',
+    description: 'selects one move from the users movelist and increases its attack power by 400. the moves durability is set to 1',
     type:'spell',
     damage:0,
     turns:0,
     durability:1,
     weight:0,
     effects:[],
-    image:'move.png',
+    image:'spell_card.png',
     prompt_data:{message:'select one card',type:'select move',amount:1},
     onhit:function(data){
         let user = data.user 
@@ -790,6 +820,7 @@ let crimsonOverdrive = {
 
 let chaosFist = {
     name: 'Chaos Fist',
+    description: 'deals 100 damage to a target. each time this move is used, its attack power increases by 100',
     type:'attack',
     damage:100,
     turns:0,
@@ -807,6 +838,7 @@ let chaosFist = {
 
 let darkBlade = {
     name: 'Dark Blade',
+    description: 'deals 300 damage to a target. the target cant use any spells for 1 turn',
     type:'attack',
     damage:300,
     turns:1,
@@ -837,13 +869,14 @@ let darkBlade = {
 
 let phantomDomain = {
     name: 'Phantom Domain',
+    description: 'all the targets non-default moves are disabled for 1 turn',
     type:'spell',
     damage:0,
     turns:1,
     durability:2,
     weight:2,
     effects:[],
-    image:'move.png',
+    image:'spell_card.png',
     prompt_data:{},
     onhit:function(data){
         data.target.moves.forEach((move,index)=>{
@@ -865,13 +898,14 @@ let phantomDomain = {
 
 let eternalEcho = {
     name: 'Eternal Echo',
+    description: 'selects one move from the users movelist. the moves effect duration increases by 1 turn',
     type:'spell',
     damage:0,
     turns:0,
     durability:3,
     weight:1,
     effects:[],
-    image:'move.png',
+    image:'spell_card.png',
     prompt_data:{message:'select one card',type:'select move',amount:1},
     onhit:function(data){
         let user = data.user 
@@ -891,13 +925,14 @@ let eternalEcho = {
 
 let faustianBargain = {
     name: 'Faustian Bargain',
+    description: 'selects 4 moves from the users movelist and discards them. for every spell card discarded, the user gains 200 hp, for every attack card discarded, the user gains 200 attack power ',
     type:'spell',
     damage:0,
     turns:0,
     durability:1,
     weight:2,
     effects:[],
-    image:'move.png',
+    image:'spell_card.png',
     prompt_data:{message:'select 4 moves',type:'select move',amount:4},
     onhit:function(data){
         let user = data.user 
@@ -956,13 +991,14 @@ let faustianBargain = {
 
 let necromanticInvokation = {
     name:'Necromantic Invocation',
+    description: 'selects a random move from the opponents movelist that has 0 durability and uses the move',
     type:'spell',
     damage:0,
     turns:0,
     durability:2,
     weight:1,
     effects:[],
-    image:'move.png',
+    image:'spell_card.png',
     prompt_data:{},
     onhit:function(data){
         let user = data.user 
@@ -982,8 +1018,23 @@ let necromanticInvokation = {
         exhausted_moves[num].durability +=  1
         exhausted_moves[num].isenabled = true
         let pdata = get_prompt_info(user,target,game_instance,exhausted_moves[num])
-        exhausted_moves[num].use(user,target,game_instance,pdata)
+        exhausted_moves[num].use(pdata)
     },
+    update:function(data){}
+}
+
+let blaze = {
+    name:'Blaze',
+    description: 'restores 100 hp to a target, targets attack power increased by 100 for 1 turn',
+    type:'spell',
+    damage:0,
+    turns:1,
+    durability:2,
+    weight:3,
+    effects:['heal-100','attack_buff-100'],
+    image:'spell_card.png',
+    prompt_data:{},
+    onhit:function(data){},
     update:function(data){}
 }
 
@@ -1019,42 +1070,8 @@ let moveObjects = [
     phantomDomain,
     eternalEcho,
     faustianBargain,
-    necromanticInvokation
-]
-
-zbattle_moves = [
-    'Strike',
-    'Replenish',
-    'Blast Cannon',
-    'Heal',
-    'Force Field',
-    'Holy Blade',
-    'Shield Strike',
-    'Demon Charge',
-    'Covenant of Carnage',
-    'Mirror Match',
-    'Power Up',
-    'Baneful Binding', 
-    'Repair',
-    'Attack Up',
-    'fusion xyz',
-    'Beast Mode',
-    'Malevonent Armor',
-    'Angel Guard',
-    'Speed Bullet',
-    'Gallant Bastion',
-    'Guard Breaker',
-    'Devils Imprecation',
-    'Soul Drain',
-    'Dragon Force',
-    'Shadow Ball',
-    'Crimson Overdrive',
-    'Chaos Fist',
-    'Dark Blade',
-    'Phantom Domain',
-    'Eternal Echo',
-    'Faustian Bargain',
-    'Necromantic Invocation'
+    necromanticInvokation,
+    blaze
 ]
 
 function test_game(){

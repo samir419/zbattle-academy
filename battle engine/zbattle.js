@@ -398,7 +398,7 @@ class Game {
             const move = enabled_moves[Math.floor(Math.random() * enabled_moves.length)];
 
             let helper_moves = [
-                'Heal','Force Field','Power Up'
+                 'Heal','Force Field','Power Up','Angel Guard','Beast Mode','Replenish'
             ]
 
             let target
@@ -574,12 +574,13 @@ class Player {
         this.elem = null;
         this.img = data.img
         this.event_handler
+        this.move_cap=data.move_cap?data.move_cap:6
         this.add_move(attack)
         this.add_move(defend)
         if (data.moves.length != 0) {
             data.moves.forEach(move => {
                 for (let i = 0; i < moveObjects.length; i++) {
-                    if (move == moveObjects[i].name) {
+                    if (move == moveObjects[i].name ) {
                         this.add_move(moveObjects[i])
                     }
                 }
@@ -592,7 +593,7 @@ class Player {
     }
     set_random_moves(){
         let availableMoves = [...moveObjects];
-        for (let i = 0; i < 6 && availableMoves.length > 0; i++) {
+        for (let i = 0; i < this.move_cap && availableMoves.length > 0; i++) {
             const index = Math.floor(Math.random() * availableMoves.length);
             const new_move = availableMoves.splice(index, 1)[0]; // remove it
             this.add_move(new_move);
