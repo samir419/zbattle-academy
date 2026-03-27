@@ -44,7 +44,8 @@ class Shop{
 			document.getElementById('item-shop'),
 			document.getElementById('card-shop'),
 			document.getElementById('food-market'),
-			document.getElementById('shop-gacha-roullete')
+			document.getElementById('shop-gacha-roullete'),
+			document.getElementById('player business')
 		]
 		this.tabButtons[0].onclick =()=>{
 			this.switch_tab('item-shop')
@@ -57,6 +58,9 @@ class Shop{
 		}
 		this.tabButtons[3].onclick =()=>{
 			this.switch_tab('shop-gacha-roullete')
+		}
+		this.tabButtons[4].onclick =()=>{
+			this.switch_tab('player business')
 		}
 		
 
@@ -113,6 +117,7 @@ class Shop{
 	    shopwoman_div.innerHTML="welcome to the food market"
 
 	    this.setup_gacha()
+	    this.set_business()
 	}
 	set_shop_data(items,elem,mode){
 		for (let i = 0; i < items.length; i++) {
@@ -176,7 +181,7 @@ class Shop{
 	            	data.money -= item.price;
 	            	const actions = {
 					    'level up': () => data.level += 1,
-					    'health up': () => data.health_cap += 100,
+					    'health up': () => {data.health_cap += 100;max_health+=100},
 					    'increase move cap': () => data.move_cap += 1
 					};
 
@@ -456,5 +461,103 @@ class Shop{
 		if(data.message=='tab switch'&&data.tab==this.elem.id){
 			this.handleOnSwitch()
 		}
+	}
+
+	set_business(){
+		let shop = this
+		document.getElementById('busines').innerHTML=" "
+		document.getElementById('asset shop').innerHTML=" "
+		let money = 0
+		let money_div = document.createElement("div")
+		let add_button = document.createElement('button')
+		add_button.textContent='work';add_button.className="btn"
+		let shop_assets_div = document.createElement("div") 
+		add_button.onclick=()=>{
+			let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+			data.money+=0.25
+			shop.event_handler.broadcast({message: 'save data',data});
+			render_p_data()
+		}
+		let asset_shop = [
+			{name:'stand (1/s)',wage:1,total:0,duration:10,time:0,price:100},
+			{name:'stand2 (2/s)',wage:2,total:0,duration:10,time:0,price:200},
+			{name:'stand3 (10/s)',wage:10,total:0,duration:10,time:0,price:1000},
+			{name:'stand4 (20/s)',wage:20,total:0,duration:10,time:0,price:2000}
+		]
+		let asset_shop_div = document.createElement('div')
+		asset_shop_div.innerHTML="<h2>assets shop</h2>"
+		for(let i=0;i<asset_shop.length;i++){
+			let div = document.createElement('div')
+			div.className="row"
+			let name = document.createElement('span')
+			name.textContent=`${asset_shop[i].name}:${asset_shop[i].price}`
+			let btn = document.createElement("button")
+			btn.textContent="buy"
+			btn.onclick=()=>{
+				let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+				if(data.money<asset_shop[i].price){
+					return
+				}
+				data.money-=asset_shop[i].price
+				data.assets.push(asset_shop[i])
+				shop.event_handler.broadcast({message: 'save data',data});
+				render_p_data()
+			}
+			div.append(name,btn)
+			asset_shop_div.append(div)
+		}
+
+		function render_p_data(){
+			let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+			document.getElementById('player-money').innerHTML = 'money:'+data.money+'z'
+			shop_assets_div.innerHTML=''
+			let assets = data.assets
+			for(let i=0;i<assets.length;i++){
+				let asset = document.createElement("div")
+				let wage = document.createElement("p")
+				let collect = document.createElement("button");collect.textContent='collect'
+				collect.onclick=()=>{
+					data.money+=assets[i].total;
+					assets[i].total=0;
+					shop.event_handler.broadcast({message: 'save data',data});
+					render_p_data()
+				}
+				let upgrade = document.createElement("button")
+				upgrade.textContent="upgrade"
+				upgrade.onclick=()=>{
+					if(data.money<assets[i].price*0.25){
+						return
+					}
+					data.money-=assets[i].price*0.25
+					assets[i].duration-=1
+					if(assets[i].duration<1)assets[i].duration=1
+					shop.event_handler.broadcast({message: 'save data',data});
+					render_p_data()
+				}
+				wage.innerHTML=`${assets[i].name}: ${assets[i].total}`
+				asset.append(wage,collect,upgrade)
+				shop_assets_div.append(asset)
+			}
+		}
+		function bus_update(){
+			setTimeout(() => {
+				let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+				let assets = data.assets
+		       for(let i=0;i<assets.length;i++){
+		       	assets[i].time++
+		       	if(assets[i].time==assets[i].duration){
+		       			assets[i].total+=assets[i].wage
+		       			assets[i].time=0
+		       		}
+		       }
+		       shop.event_handler.broadcast({message: 'save data',data});
+		       render_p_data()
+		       bus_update()
+		    }, 1000);
+		}
+		document.getElementById('busines').append(add_button,shop_assets_div)
+		document.getElementById('asset shop').append(asset_shop_div)
+		render_p_data()
+		bus_update()
 	}
 }
