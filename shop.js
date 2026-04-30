@@ -284,7 +284,7 @@ class Shop{
 	            const data = JSON.parse(localStorage.getItem('zbattle academy data'));
 	            if(mode=='buy'){
 	            	data.money -= itemprice;
-		            data.available_moves.push(item);
+		            data.available_moves.push(item.name);
 
 		            this.event_handler.broadcast({
 		                message: 'save data',
@@ -499,7 +499,7 @@ class Shop{
 					return
 				}
 				data.money-=asset_shop[i].price
-				data.assets.push(asset_shop[i])
+				data.assets.push({...asset_shop[i]})
 				shop.event_handler.broadcast({message: 'save data',data});
 				render_p_data()
 			}

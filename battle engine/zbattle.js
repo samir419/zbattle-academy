@@ -398,7 +398,7 @@ class Game {
             const move = enabled_moves[Math.floor(Math.random() * enabled_moves.length)];
 
             let helper_moves = [
-                 'Heal','Force Field','Power Up','Angel Guard','Beast Mode','Replenish'
+                 'Heal','Force Field','Power Up','Angel Guard','Beast Mode','Replenish','Repair'
             ]
 
             let target
