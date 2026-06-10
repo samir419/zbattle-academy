@@ -48,7 +48,7 @@ class Park{
 			this.handleOnSwitch()
 		}
 		if(data.message=='player win tennis'){
-			let player_data = JSON.parse(localStorage.getItem('zbattle academy data'))
+			let player_data = get_game_data()
 			player_data.money+=100
         	this.event_handler.broadcast({message:'save data',data:player_data})
         	this.event_handler.set_message({
@@ -58,19 +58,19 @@ class Park{
 		}
 		if(data.message=='player loose tennis'){
 			this.event_handler.set_message({text:'you lost',canClose:true,options:[]})
-			let player_data = JSON.parse(localStorage.getItem('zbattle academy data'))
+			let player_data = get_game_data()
 			player_data.money-=50
         	this.event_handler.broadcast({message:'save data',data:player_data})
 	        this.event_handler.broadcast({message:'time foward',hour:200})
 		}
 		if(data.message=='player loose obstacle race'){
-			let player_data = JSON.parse(localStorage.getItem('zbattle academy data'))
+			let player_data = get_game_data()
 			player_data.money+=data.coins
         	this.event_handler.broadcast({message:'save data',data:player_data})
 	        this.event_handler.broadcast({message:'time foward',hour:200})
 		}
 		if(data.message=='player loose music game'){
-			let player_data = JSON.parse(localStorage.getItem('zbattle academy data'))
+			let player_data = get_game_data()
 			player_data.money+=data.coins
         	this.event_handler.broadcast({message:'save data',data:player_data})
 		}

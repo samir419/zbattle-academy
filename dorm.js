@@ -26,14 +26,14 @@ class Dorm{
 			this.event_handler.broadcast({message:'get event list'})
 			let list = this.event_data.event_list
 			console.log(list)
-			let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+			let data = get_game_data()
 			for(let i=0;i<list.length;i++){
 				let div = document.createElement('div');div.className='flex row'
 				div.innerHTML=`${list[i].name} start-day:${list[i].start_day} end-day:${list[i].end_day} start-time:${list[i].start_time} end-time:${list[i].end_time}`
 				if(data.time.day>=list[i].start_day&&data.time.day<=list[i].end_day&&data.time.hour>=list[i].start_time&&data.time.hour<=list[i].end_time){
 					div.style.color = 'red'
 					div.onclick=()=>{
-						let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+						let data = get_game_data()
 						if(data.time.day>=list[i].start_day&&data.time.day<=list[i].end_day&&data.time.hour>=list[i].start_time&&data.time.hour<=list[i].end_time){
 							this.event_handler.broadcast({message:'switch',tab:list[i].location,event_data:list[i].event_data})
 						}else{
@@ -50,7 +50,7 @@ class Dorm{
 			this.switch_tab('kitchen')
 
 			let foods=[]
-			let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+			let data = get_game_data()
 			for(let i=0;i<data.items.length;i++){
 		 		foods.push(data.items[i])
 			}
@@ -63,7 +63,7 @@ class Dorm{
 			let missionContainer = document.getElementById('player-missions')
 			let statsContainer = document.getElementById('dorm-player-stats')
 
-			let data = JSON.parse(localStorage.getItem('zbattle academy data'))
+			let data = get_game_data()
 			if(!data) return
 
 			let stats = data.stats
@@ -181,7 +181,6 @@ class Dorm{
 			statsContainer.appendChild(defeatedList)
 
 			// -------- SAVE --------
-			localStorage.setItem('zbattle academy data', JSON.stringify(data))
 			this.event_handler.broadcast({message:'save data', data:data})
 		}
 		this.switch_tab('dorm-save')
@@ -201,7 +200,7 @@ class Dorm{
         		{
         			text:'ok',
         			func:function(){
-        				localStorage.removeItem('zbattle academy data');
+        				sessionStorage.removeItem('zbattle academy data');
 						location.reload();
         			}
         		}
@@ -210,7 +209,7 @@ class Dorm{
 		}
 	}
 	displayUserData() {
-	    let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+	    let data = get_game_data()
 	    let display = document.getElementById("dorm-player-data");
 	    let save_btn = document.getElementById("dorm-save-btn");
 	    let load_btn = document.getElementById("dorm-load-btn");
@@ -260,10 +259,7 @@ class Dorm{
 	                const loadedData = JSON.parse(reader.result);
 
 	                // Save to localStorage
-	                localStorage.setItem(
-	                    'zbattle academy data',
-	                    JSON.stringify(loadedData)
-	                );
+	                set_game_data(loadedData)
 
 	                // Re-render UI
 	                this.displayUserData();
@@ -278,7 +274,7 @@ class Dorm{
 
 	display_movesets(){
 		document.getElementById('player-movesets').innerHTML=''
-		let data = JSON.parse(localStorage.getItem('zbattle academy data'))
+		let data = get_game_data()
 		let index = 0
 		data.movesets.forEach(moveset=>{
 			let div = document.createElement('div')
@@ -297,7 +293,7 @@ class Dorm{
 	}
 	render_items(){
 		document.getElementById('dorm-items').innerHTML='<h2>items:</h2>'
-		let data = JSON.parse(localStorage.getItem('zbattle academy data'))
+		let data = get_game_data()
 		for(let i=0;i<data.items.length;i++){
 			document.getElementById('dorm-items').innerHTML+=data.items[i].name+', '
 		}
@@ -315,7 +311,7 @@ class Dorm{
 		this.render_items()
 	}
 	delete_moveset(index) {
-	    let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+	    let data = get_game_data()
 	    if (
 	        !data ||
 	        !Array.isArray(data.movesets) ||
@@ -338,7 +334,7 @@ class Dorm{
 		let available_list = document.getElementById("available-move-list")
 		let selected_list = document.getElementById("selected-move-list")
 		let finish_btn = document.getElementById("finish-moveset-creation")
-		let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+		let data = get_game_data()
 		available_list.innerHTML='';selected_list.innerHTML=''
 		let selected_moves = []
 		function render_selected_moves(){

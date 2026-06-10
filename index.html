@@ -522,7 +522,7 @@
                     document.getElementById('menu').style.display='block'
                 }
                 if(data.message=='save data'){
-                	localStorage.setItem('zbattle academy data', JSON.stringify(data.data))
+                	set_game_data(data.data)
                 }
 				this.subscribers.forEach(sub=>{
 					sub.handle_event(data)
@@ -566,7 +566,7 @@
 		let notif = new Notif()
 		event_handler.add_subscriber(notif)
 		let username = 'player'
-		if(!localStorage.getItem('zbattle academy data')){
+		if(!get_game_data()){
 		    username = prompt('enter your name')
 		    event_handler.set_message({
 				text:`welcome to zbattle academy ${username}. your goal is to defeat all battlers and become the ultimate champion`,
@@ -617,10 +617,10 @@
 			time:{day:0,hour:0}
 		}
 		//localStorage.setItem('zbattle academy data', JSON.stringify(game_data))
-		if(localStorage.getItem('zbattle academy data')){
-			game_data = JSON.parse(localStorage.getItem('zbattle academy data'))
+		if(get_game_data()){
+			game_data = get_game_data()
 		}else{
-			localStorage.setItem('zbattle academy data', JSON.stringify(game_data))
+			set_game_data(game_data)
 		}
 		console.log(game_data)
 		//localStorage.setItem('zbattle academy data', JSON.stringify(game_data))

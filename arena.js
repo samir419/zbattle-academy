@@ -57,7 +57,7 @@ class Arena{
 	    this.engine_elem.style.display = 'none'
 
 	    this.selected_set = []
-	    let data = JSON.parse(localStorage.getItem('zbattle academy data'))
+	    let data = get_game_data()
 	    this.opponents =[
 	    	{name:'battle bot',health:data.health_cap,move_cap:data.move_cap,moves:[],level:data.level,type:'cpu', img:'battle engine/assets/ZBATTLELOGO.png'},
 	    	{name:'level 1',health:500,moves:['Force Field','Repair',],level:1,type:'cpu',img:'battle engine/assets/profiles/aisha.jpg'},
@@ -85,7 +85,7 @@ class Arena{
 	}
 	render_movesets(){
 		document.getElementById('arena-moveset-list').innerHTML=''
-		let data = JSON.parse(localStorage.getItem('zbattle academy data'))
+		let data = get_game_data()
 		data.movesets.forEach(moveset=>{
 			let div = document.createElement('div')
 			for(let i=0;i<moveset.length;i++){
@@ -104,7 +104,7 @@ class Arena{
 	}
 	render_opponent_select(){
 		document.getElementById('opponent-list').innerHTML=''
-		let data = JSON.parse(localStorage.getItem('zbattle academy data'))
+		let data = get_game_data()
 		for(let i=0;i<this.opponents.length;i++){
 			let div = document.createElement('div');div.className='flex column outline'
 			let img = document.createElement('img');img.style.width='100px';img.style.height='100px'
@@ -155,7 +155,7 @@ class Arena{
 	single_1v1(game){
 		let match_data = {players:[]}
 	    match_data.format='teams'
-	    let data = JSON.parse(localStorage.getItem('zbattle academy data'))
+	    let data = get_game_data()
 	    let move_lst = []
 	    for(let i=0;i<data.move_cap;i++){
 	    	move_lst.push(this.selected_set[i])
@@ -487,7 +487,7 @@ class Arena{
         main_div.append(quit)
     }
     handle_post_game(data){
-    	let dt = JSON.parse(localStorage.getItem('zbattle academy data'))
+    	let dt = get_game_data()
         if(data.name==dt.name||data.name == 'player'){
         	for(let i=0;i<this.selected_opponents.length;i++){
         		dt.level+=Math.ceil(this.selected_opponents[i].level / 5)/2

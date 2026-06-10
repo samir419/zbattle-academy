@@ -1,7 +1,7 @@
 function set_character(char_name,event_handler,control_elem,dialogue_elem,image_elem){
 	control_elem.innerHTML=''
 	let influence_stats = {friendly:0,emotion:0}
-	let dt = JSON.parse(localStorage.getItem('zbattle academy data'))
+	let dt = get_game_data()
 	for(let i=0;i<dt.contacts.length;i++){
 		if(dt.contacts[i].name==char_name){
 			influence_stats.friendly=dt.contacts[i].friendly
@@ -20,7 +20,7 @@ function set_character(char_name,event_handler,control_elem,dialogue_elem,image_
 			let btn = document.createElement('button')
 			btn.textContent=data.options[i].text 
 			btn.onclick=()=>{
-				let player_data = JSON.parse(localStorage.getItem('zbattle academy data'))
+				let player_data = get_game_data()
 				for(let j=0;j<data.options[i].rewards.length;j++){
 					if(!player_data.items.includes(player_data.items.some(item => item.name === data.options[i].rewards[j].name))){
 						if(data.options[i].rewards[j].name=='number'){
@@ -59,7 +59,7 @@ function set_character(char_name,event_handler,control_elem,dialogue_elem,image_
 	let item = document.createElement('button')
 	item.textContent='gift item';item.className='btn primary-bg'
 	item.onclick=()=>{
-		let player_data = JSON.parse(localStorage.getItem('zbattle academy data'))
+		let player_data = get_game_data()
 		let options = []
 		for(let i=0; i<player_data.items.length;i++){
 			options.push({
@@ -107,5 +107,11 @@ function set_character(char_name,event_handler,control_elem,dialogue_elem,image_
 	let data = event_handler.fetch_api({name:'character engine',char:char_name,f:influence_stats.friendly,e:influence_stats.emotion})
 	dialogue_elem.innerHTML=data.intro
 	image_elem.src = data.image
+}
+function get_game_data(){
+	return JSON.parse(sessionStorage.getItem('zbattle academy data'));
+}
+function set_game_data(data){
+	sessionStorage.setItem('zbattle academy data', JSON.stringify(data))
 }
 let max_health=1500

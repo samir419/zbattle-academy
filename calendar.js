@@ -67,12 +67,12 @@ class Calendar{
 		this.init()
 	}
 	init(){
-		let data = JSON.parse(localStorage.getItem('zbattle academy data'))
+		let data = get_game_data()
 		this.time = data.time
 		document.getElementById('date-time').textContent=`day: ${this.time.day} time: ${this.time.hour}`
 	}
 	time_foward(hour){
-		let data = JSON.parse(localStorage.getItem('zbattle academy data'))
+		let data = get_game_data()
 		this.time.hour+=hour
 		if(this.time.hour>2400){
 			this.time.hour=0
@@ -85,7 +85,7 @@ class Calendar{
 	handle_event(data){
 		if(data.message=='tab switch'){
 			this.time_foward(100)
-			let data = JSON.parse(localStorage.getItem('zbattle academy data'))
+			let data = get_game_data()
 			let list = this.event_list
 			for(let i=0;i<list.length;i++){
 				if(data.time.day==list[i].start_day&&data.time.hour==list[i].start_time){

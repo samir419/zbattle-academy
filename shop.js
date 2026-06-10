@@ -60,7 +60,7 @@ class Shop{
 			this.switch_tab('shop-gacha-roullete')
 		}
 		this.tabButtons[4].onclick =()=>{
-			this.switch_tab('player business')
+			//this.switch_tab('player business')
 		}
 		
 
@@ -82,7 +82,7 @@ class Shop{
 		this.switch_tab('item-shop')
 	}
 	init(){
-		let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+		let data = get_game_data();
 		let player_money = document.getElementById('player-money')
 		let buyable_items = document.getElementById("buyable-items");buyable_items.innerHTML=''
 		let sellable_items = document.getElementById("sellable-items");sellable_items.innerHTML=''
@@ -117,7 +117,7 @@ class Shop{
 	    shopwoman_div.innerHTML="welcome to the food market"
 
 	    this.setup_gacha()
-	    this.set_business()
+	    //this.set_business()
 	}
 	set_shop_data(items,elem,mode){
 		for (let i = 0; i < items.length; i++) {
@@ -159,7 +159,7 @@ class Shop{
 
 	        // BUY CLICK
 	        buyBtn.onclick = () => {
-	            const data = JSON.parse(localStorage.getItem('zbattle academy data'));
+	            const data = get_game_data()
 
 	            // Not enough money
 	            if (data.money < item.price && mode == 'buy') {
@@ -176,7 +176,7 @@ class Shop{
 
 	        // YES CLICK
 	        yesBtn.onclick = () => {
-	            const data = JSON.parse(localStorage.getItem('zbattle academy data'));
+	            const data = get_game_data()
 	            if(mode=='buy'){
 	            	data.money -= item.price;
 	            	const actions = {
@@ -264,7 +264,7 @@ class Shop{
 
 	        // BUY CLICK
 	        buyBtn.onclick = () => {
-	            const data = JSON.parse(localStorage.getItem('zbattle academy data'));
+	            const data = get_game_data()
 
 	            // Not enough money
 	            if (data.money < itemprice && mode == 'buy') {
@@ -281,7 +281,7 @@ class Shop{
 
 	        // YES CLICK
 	        yesBtn.onclick = () => {
-	            const data = JSON.parse(localStorage.getItem('zbattle academy data'));
+	            const data = get_game_data()
 	            if(mode=='buy'){
 	            	data.money -= itemprice;
 		            data.available_moves.push(item.name);
@@ -339,7 +339,7 @@ class Shop{
 	        btn.textContent = 'Open';
 
 	        btn.onclick = () => {
-	            const data = JSON.parse(localStorage.getItem('zbattle academy data'));
+	            const data = get_game_data()
 
 	            if (data.money < cost) {
 	                result.textContent = 'Not enough money';
@@ -473,7 +473,7 @@ class Shop{
 		add_button.textContent='work';add_button.className="btn"
 		let shop_assets_div = document.createElement("div") 
 		add_button.onclick=()=>{
-			let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+			let data = get_game_data()
 			data.money+=0.25
 			shop.event_handler.broadcast({message: 'save data',data});
 			render_p_data()
@@ -494,7 +494,7 @@ class Shop{
 			let btn = document.createElement("button")
 			btn.textContent="buy"
 			btn.onclick=()=>{
-				let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+				let data = get_game_data()
 				if(data.money<asset_shop[i].price){
 					return
 				}
@@ -508,7 +508,7 @@ class Shop{
 		}
 
 		function render_p_data(){
-			let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+			let data = get_game_data()
 			document.getElementById('player-money').innerHTML = 'money:'+data.money+'z'
 			shop_assets_div.innerHTML=''
 			let assets = data.assets
@@ -541,7 +541,7 @@ class Shop{
 		}
 		function bus_update(){
 			setTimeout(() => {
-				let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+				let data = get_game_data()
 				let assets = data.assets
 		       for(let i=0;i<assets.length;i++){
 		       	assets[i].time++
