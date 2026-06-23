@@ -143,7 +143,7 @@ class Game {
                 move_arr.push(move.name);
             });
 
-            let saved_moves = localStorage.getItem('zbattle-saved-movesets');
+            let saved_moves = get_game_data()
 
             if (!saved_moves) {
                 saved_moves = [];
@@ -153,7 +153,7 @@ class Game {
 
             saved_moves.push(move_arr);
 
-            localStorage.setItem('zbattle-saved-movesets', JSON.stringify(saved_moves));
+            set_game_data(saved_moves)
             alert('move set saved');
         };
 

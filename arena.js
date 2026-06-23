@@ -103,8 +103,8 @@ class Arena{
 		})
 	}
 	render_opponent_select(){
-		document.getElementById('opponent-list').innerHTML=''
 		let data = get_game_data()
+		document.getElementById('opponent-list').innerHTML=''
 		for(let i=0;i<this.opponents.length;i++){
 			let div = document.createElement('div');div.className='flex column outline'
 			let img = document.createElement('img');img.style.width='100px';img.style.height='100px'

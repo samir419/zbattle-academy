@@ -402,7 +402,7 @@ raws={
 	items:[],
 	available_actions:[],
 	on_add:function(){
-		let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+		let data = get_game_data()
 
 		for (let i = 0; i < this.items.length; i++) {
 		    let exists = false;
@@ -420,7 +420,7 @@ raws={
 		    }
 		}
 
-		localStorage.setItem('zbattle academy data', JSON.stringify(data));
+		set_game_data(data)
 	}
 }
 
@@ -474,14 +474,14 @@ function init_cooking_game(data){
 
 				// Boiling finished
 				for (let i = 0; i < pot.items.length; i++) {
-					let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+					let data = get_game_data()
 					for(let j=0;j<data.items.length;j++){
 						if(data.items[j].name==pot.items[i].name){
 							data.items.splice(j,1)
 							console.log('removed'+data.items[j])
 						}
 					}
-					localStorage.setItem('zbattle academy data', JSON.stringify(data))
+					set_game_data(data)
 					console.log(pot.items[i])
 					pot.items[i].boil();
 				}
@@ -509,14 +509,14 @@ function init_cooking_game(data){
 		let portions = [];
 
 		for (let i = 0; i < plate.items.length; i++) {
-			let data = JSON.parse(localStorage.getItem('zbattle academy data'));
+			let data = get_game_data()
 			for(let j=0;j<data.items.length;j++){
 				if(data.items[j].name==plate.items[i].name){
 					data.items.splice(j,1)
 					console.log('removed'+data.items[j])
 				}
 			}
-			localStorage.setItem('zbattle academy data', JSON.stringify(data))
+			set_game_data(data)
 			let item = plate.items[i];
 			total.sweet += item.sweet;
 			total.salty += item.salty;
@@ -545,9 +545,9 @@ function init_cooking_game(data){
 		let price = basePrice + (quality * 2);
 		let dish = {name:'dish',price:price,portions:portions,quality:quality,quantity:1}
 		document.getElementById("food-stats").innerHTML = '';
-		let data = JSON.parse(localStorage.getItem('zbattle academy data'))
+		let data = get_game_data()
 		data.items.push(dish)
-		localStorage.setItem('zbattle academy data', JSON.stringify(data))
+		set_game_data(data)
 		console.log("Dish:", portions.join(", "));
 		console.log("Quality:", quality);
 		console.log("Price:", price);

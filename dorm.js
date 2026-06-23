@@ -44,6 +44,16 @@ class Dorm{
 				}
 				document.getElementById("dorm-event-list").append(div)
 			}
+			/*let canlendar_bg = document.createElement('div')
+			canlendar_bg.className="flex full row wrappable scrollable-y outline"
+			for(let i=0;i<60;i++){
+				let calendar_box = document.createElement('div')
+				calendar_box.className="flex column small-box"
+				calendar_box.style.border = "solid"
+				calendar_box.innerHTML=`<p>${i}</p>`
+				canlendar_bg.appendChild(calendar_box)
+			}
+			document.getElementById("dorm-event-list").appendChild(canlendar_bg)*/
 			
 		}
 		this.tabButtons[3].onclick =()=>{
@@ -222,6 +232,8 @@ class Dorm{
 	        <p><strong>Name:</strong> ${data.name}</p>
 	        <p><strong>Level:</strong> ${data.level}</p>
 	        <p><strong>Money:</strong> ${data.money}</p>
+	        <p><strong>health cap:</strong> ${data.health_cap}</p>
+	        <p><strong>move cap:</strong> ${data.move_cap}</p>
 	    `;
 
 	    // ---- SAVE DATA AS JSON FILE ----
